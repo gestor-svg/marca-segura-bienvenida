@@ -1,7 +1,7 @@
 // MARCA SEGURA — Paquete de Bienvenida — Service Worker
 // Sube el número de versión cada vez que subas cambios a la app,
 // igual que ya haces con "Nueva versión" en Apps Script.
-const CACHE_VERSION = 'ms-bienvenida-v1';
+const CACHE_VERSION = 'ms-bienvenida-v2';
 
 const URLS_TO_CACHE = [
   './',
@@ -20,7 +20,7 @@ const URLS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.min.js',
 ];
 
 self.addEventListener('install', (event) => {

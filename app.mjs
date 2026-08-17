@@ -34,6 +34,13 @@ const state = {
 
 const $ = (id) => document.getElementById(id);
 
+function setStatus(text) {
+  $('status').textContent = text;
+  // fuerza un repintado antes de seguir con trabajo pesado (importante en móvil)
+  return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+
 function dataUrlToBase64(dataUrl) {
   return dataUrl.split(',')[1];
 }
@@ -44,7 +51,7 @@ async function fileToUint8Array(file) {
 }
 
 async function handleFileUpload(file) {
-  $('status').textContent = 'Leyendo PDF y extrayendo datos…';
+  await setStatus('Leyendo PDF y extrayendo datos…');
   $('formSection').style.display = 'none';
   $('resultSection').style.display = 'none';
 
@@ -69,7 +76,7 @@ async function handleFileUpload(file) {
   }
 
   populateForm(state.extracted, state.clientLogoDataUrl);
-  $('status').textContent = 'Datos extraídos. Revisa y corrige si algo no cuadra antes de generar.';
+  await setStatus('Datos extraídos. Revisa y corrige si algo no cuadra antes de generar.');
   $('formSection').style.display = 'block';
 }
 
@@ -146,8 +153,12 @@ async function renderHojaToCanvas(html) {
 }
 
 async function generateAndDownload() {
-  $('status').textContent = 'Generando hojas de bienvenida…';
-  $('generateBtn').disabled = true;
+  const btn = $('generateBtn');
+  const originalBtnText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ Generando… no cierres esta pantalla';
+  $('resultSection').style.display = 'none';
+  await setStatus('Preparando datos…');
 
   try {
     const titulares = $('f_titulares').value.split(',').map(s => s.trim()).filter(Boolean);
@@ -186,7 +197,7 @@ async function generateAndDownload() {
       declaracionVenceStr: ventana ? formatMesAnio(ventana.limite) : '',
     };
 
-    $('status').textContent = 'Generando código QR de referido…';
+    await setStatus('Paso 1 de 5 — Generando código QR de referido…');
     const qrDataUrl = await generateQrDataUrl(data.marca, data.expediente);
 
     const assets = {
@@ -195,14 +206,14 @@ async function generateAndDownload() {
       clientLogoBase64: (tipo === 'mixta' && clientLogoDataUrl) ? dataUrlToBase64(clientLogoDataUrl) : null,
     };
 
-    $('status').textContent = 'Dibujando hoja 1 de 3…';
+    await setStatus('Paso 2 de 5 — Dibujando hoja 1 de 3 (portada)…');
     const canvas1 = await renderHojaToCanvas(buildHoja1(templateData, assets));
-    $('status').textContent = 'Dibujando hoja 2 de 3…';
+    await setStatus('Paso 3 de 5 — Dibujando hoja 2 de 3 (datos)…');
     const canvas2 = await renderHojaToCanvas(buildHoja2(templateData, assets));
-    $('status').textContent = 'Dibujando hoja 3 de 3…';
+    await setStatus('Paso 4 de 5 — Dibujando hoja 3 de 3 (opciones)…');
     const canvas3 = await renderHojaToCanvas(buildHoja3(templateData, assets));
 
-    $('status').textContent = 'Fusionando con el título original…';
+    await setStatus('Paso 5 de 5 — Fusionando con el título original…');
     const { PDFDocument } = window.PDFLib;
     const merged = await PDFDocument.create();
 
@@ -225,17 +236,44 @@ async function generateAndDownload() {
     const safeMarca = (data.marca || 'marca').replace(/[^a-z0-9]+/gi, '_');
     const downloadName = `${safeMarca}_Bienvenida_MarcaSegura.pdf`;
 
+    state.lastBlob = blob;
+    state.lastFileName = downloadName;
+    state.lastMarca = data.marca;
+
     const link = $('downloadLink');
     link.href = url;
     link.download = downloadName;
-    link.textContent = `Descargar ${downloadName}`;
+
+    // Botón de compartir nativo — abre el selector de Android (WhatsApp normal,
+    // WhatsApp Business, correo, etc.) igual que compartir cualquier archivo.
+    const shareBtn = $('shareBtn');
+    const file = new File([blob], downloadName, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      shareBtn.style.display = 'block';
+      shareBtn.onclick = async () => {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Paquete de bienvenida — ' + data.marca,
+            text: `Paquete de bienvenida de Marca Segura para ${data.marca}`,
+          });
+        } catch (e) {
+          if (e.name !== 'AbortError') console.warn('No se pudo compartir:', e);
+        }
+      };
+    } else {
+      shareBtn.style.display = 'none';
+    }
+
     $('resultSection').style.display = 'block';
-    $('status').textContent = '¡Listo! Tu paquete de bienvenida está preparado.';
+    $('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    await setStatus('');
   } catch (err) {
     console.error(err);
-    $('status').textContent = 'Ocurrió un error: ' + err.message;
+    await setStatus('❌ Ocurrió un error: ' + err.message);
   } finally {
-    $('generateBtn').disabled = false;
+    btn.disabled = false;
+    btn.textContent = originalBtnText;
   }
 }
 

@@ -331,7 +331,7 @@ const SHARED_STYLE = `<style>
     display:flex;
     align-items:flex-start;
     justify-content:center;
-    gap:36px;
+    gap:24px;
     flex-wrap:wrap;
     text-align:center;
   }
@@ -340,6 +340,10 @@ const SHARED_STYLE = `<style>
     flex-direction:column;
     align-items:center;
     gap:5px;
+  }
+  .price-col + .price-col{
+    border-left:1px solid var(--paper-line);
+    padding-left:32px;
   }
   .price-label{
     font-family:'IBM Plex Mono', monospace;
@@ -355,10 +359,11 @@ const SHARED_STYLE = `<style>
     font-weight:600;
   }
   .price-old{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:16px;
-    color:var(--blue-deep);
-    opacity:0.55;
+    font-family:'Fraunces', serif;
+    font-size:34px;
+    font-weight:700;
+    color:#1a1a1a;
+    line-height:1;
     text-decoration:line-through;
   }
   .price-new{

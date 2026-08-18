@@ -1,7 +1,7 @@
 // MARCA SEGURA — Paquete de Bienvenida — Service Worker
 // Sube el número de versión cada vez que subas cambios a la app,
 // igual que ya haces con "Nueva versión" en Apps Script.
-const CACHE_VERSION = 'ms-bienvenida-v3';
+const CACHE_VERSION = 'ms-bienvenida-v4';
 
 const URLS_TO_CACHE = [
   './',

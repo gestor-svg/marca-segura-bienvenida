@@ -526,7 +526,7 @@ export function buildHoja1(data, assets) {
 
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>${SHARED_STYLE.replace(/<\/?style>/g, '')} body{background:transparent;padding:0;}</style>
 </head><body>
 <div class="page p1" id="page-render-target">
@@ -554,7 +554,7 @@ export function buildHoja1(data, assets) {
 export function buildHoja2(data, assets) {
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>${SHARED_STYLE.replace(/<\/?style>/g, '')} body{background:transparent;padding:0;}</style>
 </head><body>
 <div class="page p2" id="page-render-target">
@@ -650,7 +650,7 @@ export function buildHoja2(data, assets) {
 export function buildHoja3(data, assets) {
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>${SHARED_STYLE.replace(/<\/?style>/g, '')} body{background:transparent;padding:0;}</style>
 </head><body>
 <div class="page p3" id="page-render-target">

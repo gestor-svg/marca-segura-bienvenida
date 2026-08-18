@@ -31,22 +31,34 @@ export async function extractClientLogoDataUrl(pdfjsLib, doc, pageNum) {
   canvas.width = bestImg.width;
   canvas.height = bestImg.height;
   const ctx = canvas.getContext('2d');
-  const imageData = ctx.createImageData(bestImg.width, bestImg.height);
 
-  const src = bestImg.data;
-  const dst = imageData.data;
-  if (src.length === bestImg.width * bestImg.height * 4) {
-    dst.set(src);
-  } else if (src.length === bestImg.width * bestImg.height * 3) {
-    for (let p = 0, s = 0; p < dst.length; p += 4, s += 3) {
-      dst[p] = src[s]; dst[p + 1] = src[s + 1]; dst[p + 2] = src[s + 2]; dst[p + 3] = 255;
+  // pdf.js puede exponer la imagen de dos formas distintas según el navegador
+  // y el tipo de codec: como ImageBitmap ya decodificado (.bitmap) o como
+  // buffer de píxeles crudo (.data). Cubrimos ambos casos.
+  if (bestImg.bitmap) {
+    ctx.drawImage(bestImg.bitmap, 0, 0, bestImg.width, bestImg.height);
+  } else if (bestImg.data) {
+    const imageData = ctx.createImageData(bestImg.width, bestImg.height);
+    const src = bestImg.data;
+    const dst = imageData.data;
+    if (src.length === bestImg.width * bestImg.height * 4) {
+      dst.set(src);
+    } else if (src.length === bestImg.width * bestImg.height * 3) {
+      for (let p = 0, s = 0; p < dst.length; p += 4, s += 3) {
+        dst[p] = src[s]; dst[p + 1] = src[s + 1]; dst[p + 2] = src[s + 2]; dst[p + 3] = 255;
+      }
+    } else {
+      return null; // formato de imagen no soportado (poco común en estos títulos)
     }
+    ctx.putImageData(imageData, 0, 0);
   } else {
-    return null; // formato de imagen no soportado (poco común en estos títulos)
+    return null;
   }
 
-  // Quita el fondo casi-blanco con un borde suavizado (feathering) para que
-  // no queden pixeles duros alrededor del logo.
+  // Releemos los píxeles ya dibujados (unifica ambas rutas anteriores) para
+  // aplicarles la remoción de fondo casi-blanco con borde suavizado.
+  const imageData = ctx.getImageData(0, 0, bestImg.width, bestImg.height);
+  const dst = imageData.data;
   for (let p = 0; p < dst.length; p += 4) {
     const r = dst[p], g = dst[p + 1], b = dst[p + 2];
     const dist = Math.abs(r - 255) + Math.abs(g - 255) + Math.abs(b - 255);
@@ -55,7 +67,6 @@ export async function extractClientLogoDataUrl(pdfjsLib, doc, pageNum) {
     else if (dist < 40) alpha = Math.round(((dist - 10) / 30) * 255);
     dst[p + 3] = Math.min(dst[p + 3], alpha);
   }
-
   ctx.putImageData(imageData, 0, 0);
 
   const bbox = getContentBBox(imageData, bestImg.width, bestImg.height);

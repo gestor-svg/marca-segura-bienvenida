@@ -253,28 +253,35 @@ const SHARED_STYLE = `<style>
     margin-top:20px;
     background:var(--blue-ink);
     color:var(--paper);
-    padding:15px 20px;
+    padding:20px 22px;
     display:flex;
-    gap:16px;
-    align-items:flex-start;
+    align-items:center;
   }
-  .alert-icon{
-    font-family:'Fraunces', serif;
-    font-size:24px;
-    color:var(--orange);
-    line-height:1;
+  .alert-icon-circle{
+    width:52px;
+    height:52px;
+    min-width:52px;
+    border-radius:50%;
+    background:var(--orange);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    margin-right:18px;
   }
+  .alert-icon-circle svg{ width:28px; height:28px; }
   .alert-title{
     font-family:'IBM Plex Mono', monospace;
-    font-size:10px;
+    font-size:11px;
     letter-spacing:2px;
     text-transform:uppercase;
     color:#FFCBA6;
-    margin-bottom:5px;
+    margin-bottom:6px;
+    font-weight:600;
   }
   .alert-text{
-    font-size:13px;
-    line-height:1.55;
+    font-size:14px;
+    line-height:1.6;
     max-width:600px;
   }
 
@@ -395,7 +402,6 @@ const SHARED_STYLE = `<style>
     margin-top:18px;
     display:flex;
     align-items:center;
-    gap:20px;
   }
   .qr-row img{
     width:110px;
@@ -403,13 +409,63 @@ const SHARED_STYLE = `<style>
     border:1.5px solid var(--orange);
     padding:6px;
     background:white;
+    margin-right:20px;
   }
   .qr-caption-title{
     font-family:'Fraunces', serif;
-    font-size:14px;
+    font-size:15px;
     font-weight:600;
     color:var(--blue-ink);
+    display:flex;
+    align-items:center;
   }
+  .qr-caption-icon{
+    width:26px;
+    height:26px;
+    min-width:26px;
+    border-radius:50%;
+    background:var(--orange);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-right:8px;
+  }
+  .next-page-block{
+    margin-top:22px;
+    background:var(--blue-ink);
+    border-radius:2px;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .next-page-icon{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    border-radius:50%;
+    background:var(--orange);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    margin-right:16px;
+  }
+  .next-page-icon svg{ width:20px; height:20px; }
+  .next-page-title{
+    font-family:'Fraunces', serif;
+    font-size:14px;
+    font-weight:600;
+    color:white;
+  }
+  .next-page-desc{
+    font-size:12.5px;
+    color:var(--paper);
+    opacity:0.9;
+    margin-top:2px;
+  }
+  .qr-caption-icon svg{ width:15px; height:15px; }
   .qr-caption-desc{
     font-size:12px;
     color:var(--blue-deep);
@@ -453,23 +509,26 @@ const SHARED_STYLE = `<style>
     margin-top:4px;
   }
   .growth-block{
-    margin-top:12px;
+    margin-top:14px;
     border:1px solid var(--paper-line);
     border-left:3px solid var(--orange);
-    padding:12px 18px;
+    padding:16px 20px;
     display:flex;
-    gap:14px;
-    align-items:flex-start;
+    align-items:center;
   }
-  .growth-num{
-    font-family:'Fraunces', serif;
-    font-size:20px;
-    font-weight:600;
-    color:var(--orange);
-    line-height:1;
+  .growth-icon{
+    width:46px;
+    height:46px;
+    min-width:46px;
+    border-radius:50%;
+    background:var(--orange);
+    display:flex;
+    align-items:center;
+    justify-content:center;
     flex-shrink:0;
-    width:20px;
+    margin-right:16px;
   }
+  .growth-icon svg{ width:24px; height:24px; }
   .growth-block-title{
     font-family:'Fraunces', serif;
     font-size:14.5px;
@@ -509,6 +568,14 @@ function esc(s) {
   if (s == null) return '';
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+// Íconos en línea (trazo blanco, pensados para ir sobre un círculo de color)
+const ICON_CALENDAR = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+const ICON_LICENSE = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 15l2 2 4-4"/></svg>`;
+const ICON_PERCENT = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`;
+const ICON_SHIELD = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3Z"/><path d="M9 12l2 2 4-4"/></svg>`;
+const ICON_GIFT = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>`;
+const ICON_NEXT_PAGE = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>`;
 
 export function buildHoja1(data, assets) {
   const titularLabel = data.titulares.length > 1 ? 'Titulares' : 'Titular';
@@ -593,7 +660,7 @@ export function buildHoja2(data, assets) {
     </div>
   </div>
   <div class="alert-block">
-    <div class="alert-icon">!</div>
+    <div class="alert-icon-circle">${ICON_CALENDAR}</div>
     <div>
       <div class="alert-title">Fecha clave — no la pierda de vista</div>
       <div class="alert-text">
@@ -608,7 +675,7 @@ export function buildHoja2(data, assets) {
     <div class="growth-eyebrow">Lleve su marca más lejos</div>
     <div class="growth-title">¿Qué puede hacer con su marca? Llévela al siguiente nivel</div>
     <div class="growth-block">
-      <div class="growth-num">1</div>
+      <div class="growth-icon">${ICON_LICENSE}</div>
       <div>
         <div class="growth-block-title">Cree una licencia de uso y cobre regalías</div>
         <div class="growth-block-desc">
@@ -619,7 +686,7 @@ export function buildHoja2(data, assets) {
       </div>
     </div>
     <div class="growth-block">
-      <div class="growth-num">2</div>
+      <div class="growth-icon">${ICON_PERCENT}</div>
       <div>
         <div class="growth-block-title">¿Sabía que puede deducir impuestos con su marca?</div>
         <div class="growth-block-desc">
@@ -631,7 +698,7 @@ export function buildHoja2(data, assets) {
       </div>
     </div>
     <div class="growth-block">
-      <div class="growth-num">3</div>
+      <div class="growth-icon">${ICON_SHIELD}</div>
       <div>
         <div class="growth-block-title">Proteja su marca en Amazon y Mercado Libre</div>
         <div class="growth-block-desc">
@@ -691,18 +758,25 @@ export function buildHoja3(data, assets) {
   </div>
   <div class="service-card">
     <div class="service-num">OPCIÓN 2</div>
-    <div class="service-title">Regale $1,000 pesos a quien lo necesite</div>
+    <div class="service-title">Ayúdele a alguien más a tener su marca</div>
     <div class="service-desc">
-      Escanee el código y comparta el mensaje con alguien que necesite registrar su marca. Al escribirnos,
-      le decimos que usted lo refirió, y <strong>esa persona recibe $1,000 pesos de descuento</strong> en el registro
-      de su marca — un regalo suyo, cortesía de Marca Segura.
+      Comparta este código con alguien que necesite registrar su marca. Al escanearlo, se abre un
+      WhatsApp directo con nosotros — y en cuanto esa persona haga su trámite, <strong>recibe $1,000 pesos
+      de descuento</strong>, cortesía suya.
     </div>
     <div class="qr-row">
       <img src="data:image/png;base64,${assets.qrBase64}" alt="QR de referido">
       <div>
-        <div class="qr-caption-title">Regale $1,000 pesos a alguien más</div>
-        <div class="qr-caption-desc">¿Conoce a alguien con un negocio que aún no protege su marca? Comparta este código. Cuando esa persona registre su marca con nosotros, recibe $1,000 pesos de descuento — cortesía suya, de parte de Marca Segura.</div>
+        <div class="qr-caption-title"><span class="qr-caption-icon">${ICON_GIFT}</span>Escanee y comparta</div>
+        <div class="qr-caption-desc">Ya tiene su marca — ayúdele a alguien más a tenerla. Comparta este código y su referido tendrá $1,000 pesos de descuento cuando haga su trámite con nosotros.</div>
       </div>
+    </div>
+  </div>
+  <div class="next-page-block">
+    <div class="next-page-icon">${ICON_NEXT_PAGE}</div>
+    <div>
+      <div class="next-page-title">En la siguiente página</div>
+      <div class="next-page-desc">Encontrará el título oficial de su marca, emitido por el IMPI.</div>
     </div>
   </div>
   <div class="p-footer">

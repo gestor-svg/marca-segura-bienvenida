@@ -226,8 +226,12 @@ async function generateAndDownload() {
     }
 
     const originalDoc = await PDFDocument.load(state.originalBytes);
-    const copiedPages = await merged.copyPages(originalDoc, originalDoc.getPageIndices());
-    copiedPages.forEach(p => merged.addPage(p));
+    // Solo incluimos la página del título oficial (con marca, registro, titular, etc.) —
+    // se omite la cédula de notificación y la hoja de "Establecimiento", que no le
+    // aportan nada al cliente en este paquete de bienvenida.
+    const titlePageIndex = Math.max(0, state.extracted.dataPageNum - 1);
+    const [copiedTitlePage] = await merged.copyPages(originalDoc, [titlePageIndex]);
+    merged.addPage(copiedTitlePage);
 
     const finalBytes = await merged.save();
     const blob = new Blob([finalBytes], { type: 'application/pdf' });

@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Examen de Viabilidad</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=Lora:ital@1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #0050c6;
+  --blue-ink: #0a2f66;
+  --orange: #fe6a00;
+  --bg: #f3f5fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f8;
+  --border: #dde2ee;
+  --ink: #1a2233;
+  --ink-muted: #5b6478;
+  --ink-faint: #8791a5;
+  --danger: #c62828;
+  --success: #1a7d4a;
+  --paper: #ffffff;
+  --paper-border: #d8dce6;
+  --shadow: 0 1px 2px rgba(20, 30, 60, 0.06), 0 8px 24px -12px rgba(20, 30, 60, 0.18);
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #5b9bff;
+    --blue-ink: #bcd4ff;
+    --orange: #ff8a3d;
+    --bg: #0f1420;
+    --surface: #161d2e;
+    --surface-2: #1d2536;
+    --border: #2b3550;
+    --ink: #e8ebf3;
+    --ink-muted: #a3acc4;
+    --ink-faint: #6f7994;
+    --danger: #ff6b6b;
+    --success: #4fd18a;
+    --paper: #12182a;
+    --paper-border: #2f3a58;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --blue: #5b9bff;
+  --blue-ink: #bcd4ff;
+  --orange: #ff8a3d;
+  --bg: #0f1420;
+  --surface: #161d2e;
+  --surface-2: #1d2536;
+  --border: #2b3550;
+  --ink: #e8ebf3;
+  --ink-muted: #a3acc4;
+  --ink-faint: #6f7994;
+  --danger: #ff6b6b;
+  --success: #4fd18a;
+  --paper: #12182a;
+  --paper-border: #2f3a58;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+a { color: var(--blue); }
+
+.app-shell {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand img {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-text .kicker {
+  font-family: "Poppins", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.brand-text h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 2px 0 0;
+  color: var(--ink);
+}
+
+.settings-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.settings-toggle:hover { border-color: var(--blue); color: var(--blue); }
+.settings-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+@media (min-width: 980px) {
+  .layout { grid-template-columns: minmax(0, 460px) minmax(0, 1fr); align-items: start; }
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.form-panel { padding: 22px; display: flex; flex-direction: column; gap: 22px; }
+
+.section-label {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 12px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field label { font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+.field .hint { font-size: 12px; color: var(--ink-faint); margin-top: -2px; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+input[type="text"], input[type="date"], input[type="number"], select, textarea {
+  font-family: "Work Sans", sans-serif;
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+}
+textarea { resize: vertical; min-height: 74px; line-height: 1.45; font-variant-numeric: normal; }
+input[type="number"] { font-variant-numeric: tabular-nums; }
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 20%, transparent);
+}
+
+input::placeholder, textarea::placeholder { color: var(--ink-faint); }
+
+.pct-input-wrap { position: relative; }
+.pct-input-wrap input { padding-right: 34px; }
+.pct-input-wrap span {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; color: var(--ink-faint); pointer-events: none;
+}
+
+.file-drop {
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.file-drop:hover { border-color: var(--blue); }
+.file-drop input[type="file"] { display: none; }
+.file-drop .thumb {
+  width: 44px; height: 44px; border-radius: 6px; background: var(--surface);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.file-drop .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.file-drop .txt { font-size: 13px; color: var(--ink-muted); }
+.file-drop .txt strong { color: var(--blue); font-weight: 600; }
+.file-drop .clear-btn {
+  margin-left: auto; font-size: 12px; color: var(--ink-faint); background: none; border: none;
+  cursor: pointer; text-decoration: underline; padding: 4px;
+}
+.file-drop .clear-btn:hover { color: var(--danger); }
+
+.class-block {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--surface-2);
+  position: relative;
+  margin-bottom: 14px;
+}
+.class-block + .class-block { margin-top: 14px; }
+.class-block-head {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.class-block-head .tag {
+  font-family: "Poppins", sans-serif; font-weight: 700; font-size: 12.5px; color: var(--blue);
+  letter-spacing: 0.02em;
+}
+.remove-class-btn {
+  background: none; border: none; color: var(--ink-faint); cursor: pointer; font-size: 18px;
+  line-height: 1; padding: 2px 6px; border-radius: 6px;
+}
+.remove-class-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+
+.add-class-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: "Poppins", sans-serif; font-weight: 600; font-size: 13.5px;
+  color: var(--blue); background: color-mix(in srgb, var(--blue) 8%, var(--surface));
+  border: 1px dashed var(--blue); border-radius: 8px; padding: 10px 14px; cursor: pointer;
+  width: 100%; justify-content: center; transition: background .15s;
+}
+.add-class-btn:hover { background: color-mix(in srgb, var(--blue) 16%, var(--surface)); }
+
+.select-row { display: flex; gap: 10px; }
+.select-row select { flex: 1; }
+
+.btn-primary {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--blue), color-mix(in srgb, var(--blue) 78%, #001a4d));
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--blue) 60%, transparent);
+  transition: transform .12s, box-shadow .12s;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--blue) 65%, transparent); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-secondary:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+.actions { display: flex; flex-direction: column; gap: 10px; }
+
+.status-msg {
+  font-size: 13px; border-radius: 8px; padding: 10px 12px; display: none;
+}
+.status-msg.show { display: block; }
+.status-msg.success { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
+.status-msg.warning { background: color-mix(in srgb, var(--orange) 14%, transparent); color: color-mix(in srgb, var(--orange) 80%, var(--ink)); }
+.status-msg.error { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+.status-msg.info { background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
+
+fieldset { border: none; padding: 0; margin: 0; }
+
+.settings-panel {
+  display: none;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  margin-bottom: 24px;
+}
+.settings-panel.open { display: block; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+@media (max-width: 620px) { .settings-grid { grid-template-columns: 1fr; } }
+.settings-panel .desc { font-size: 12.5px; color: var(--ink-faint); margin: -6px 0 16px; }
+
+.preview-col { display: flex; flex-direction: column; gap: 16px; }
+.preview-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.preview-toolbar .section-label { margin: 0; }
+
+.paper-wrap {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+/* The preview paper always renders as a literal white page — it is a
+   WYSIWYG stand-in for the exported PDF, which is always printed on white,
+   so it intentionally does not follow the app's light/dark tokens. */
+#previewPaper {
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  border: 1px solid #d8dce6;
+  box-shadow: var(--shadow);
+  padding: 20mm 22mm;
+  color: #1a2233;
+  flex-shrink: 0;
+}
+
+.pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 14mm; }
+.pv-header img { height: 15mm; width: auto; object-fit: contain; }
+.pv-header .pv-title {
+  font-family: "Lora", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 16.5px;
+  line-height: 1.35;
+  text-align: right;
+  color: #1a2233;
+  max-width: 62%;
+}
+.pv-title .brandname { font-style: italic; }
+
+.pv-date { text-align: right; font-size: 12.5px; margin-bottom: 8mm; color: #1a2233; }
+.pv-to { font-size: 12.5px; margin-bottom: 6mm; line-height: 1.6; color: #1a2233; }
+.pv-to .marca-line { text-transform: uppercase; }
+
+.pv-body p { font-size: 12px; line-height: 1.65; text-align: justify; margin: 0 0 5mm; color: #1a2233; }
+.pv-body .class-title { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 12.5px; margin: 6mm 0 3mm; color: #1a2233; }
+.pv-body .desc-label { font-weight: 700; }
+.pv-body .desc-text { text-transform: uppercase; }
+.pv-body .pct-line { font-weight: 700; text-decoration: underline; }
+.pv-body .concl-line { font-weight: 700; }
+
+.pv-logo-caption { font-size: 12px; margin: 4mm 0 4mm; color: #1a2233; }
+.pv-client-logo { display: flex; justify-content: center; margin: 4mm 0 8mm; }
+.pv-client-logo img { max-width: 55mm; max-height: 45mm; object-fit: contain; }
+.pv-empty-note { font-size: 11px; color: #8791a5; font-style: italic; }
+
+.pv-sign { text-align: center; margin-top: 10mm; color: #1a2233; }
+.pv-sign p { color: #1a2233; }
+.pv-sign .firma-img { height: 18mm; width: auto; margin: 0 auto 2mm; display: block; object-fit: contain; }
+.pv-sign .signer { font-size: 12.5px; font-weight: 600; }
+.pv-sign .site { font-size: 11px; letter-spacing: 0.04em; color: #5b6478; }
+
+.footnote {
+  text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 18px;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  .paper-wrap, .paper-wrap * { visibility: visible; }
+  .paper-wrap {
+    position: absolute; top: 0; left: 0; width: 100%; padding: 0; border: none; background: #fff;
+  }
+  #previewPaper { box-shadow: none; border: none; margin: 0 auto; }
+}
+
+</style>
+
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <img id="topbarLogo" alt="Marca Segura" />
+      <div class="brand-text">
+        <span class="kicker">Marca Segura</span>
+        <h1>Generador de Examen de Viabilidad</h1>
+      </div>
+    </div>
+    <button type="button" class="settings-toggle" id="settingsToggleBtn" aria-expanded="false" aria-controls="settingsPanel">
+      ⚙️ Configurar logo y firma
+    </button>
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <p class="section-label" style="margin-bottom:4px;">Configuración fija del despacho</p>
+    <p class="desc">Estos datos no cambian entre reportes. Se guardan en este navegador para que no tengas que volver a subirlos cada vez.</p>
+    <div class="settings-grid">
+      <div class="field">
+        <label for="firmLogoInput">Logotipo del despacho (Marca Segura)</label>
+        <div class="file-drop" id="firmLogoDrop">
+          <div class="thumb"><img id="firmLogoThumb" alt="" /></div>
+          <div class="txt"><strong>Subir</strong> o arrastrar imagen</div>
+          <button type="button" class="clear-btn" id="firmLogoReset">Restaurar</button>
+        </div>
+        <input type="file" id="firmLogoInput" accept="image/png,image/jpeg,image/webp" />
+      </div>
+      <div class="field">
+        <label for="signatureInput">Firma</label>
+        <div class="file-drop" id="signatureDrop">
+          <div class="thumb"><img id="signatureThumb" alt="" /></div>
+          <div class="txt"><strong>Subir</strong> o arrastrar imagen</div>
+          <button type="button" class="clear-btn" id="signatureReset">Restaurar</button>
+        </div>
+        <input type="file" id="signatureInput" accept="image/png,image/jpeg,image/webp" />
+      </div>
+      <div class="field">
+        <label for="signerNameInput">Nombre del firmante</label>
+        <input type="text" id="signerNameInput" value="Lic. Guillermo Vázquez" spellcheck="true" lang="es" />
+      </div>
+      <div class="field">
+        <label for="siteInput">Sitio web</label>
+        <input type="text" id="siteInput" value="MARCASEGURA.MX" spellcheck="true" lang="es" />
+      </div>
+      <div class="field">
+        <label for="cityInput">Ciudad y estado (fija)</label>
+        <input type="text" id="cityInput" value="Zapopan, Jalisco" spellcheck="true" lang="es" />
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <div class="panel form-panel">
+
+      <fieldset>
+        <p class="section-label">Datos del cliente</p>
+        <div class="field">
+          <label for="clientNameInput">Nombre del cliente</label>
+          <input type="text" id="clientNameInput" placeholder="Ej. Carlos Rivas" spellcheck="true" lang="es" />
+        </div>
+        <div class="field">
+          <label for="brandNameInput">Nombre de la marca / denominación</label>
+          <input type="text" id="brandNameInput" placeholder="Ej. THE HAPPY CLUB" spellcheck="true" lang="es" />
+        </div>
+        <div class="field">
+          <label for="examDateInput">Fecha del examen</label>
+          <input type="date" id="examDateInput" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Clases de Niza</p>
+        <div id="classesContainer"></div>
+        <button type="button" class="add-class-btn" id="addClassBtn">+ Agregar clase</button>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Logotipo del cliente</p>
+        <div class="field">
+          <label for="clientLogoInput">Logotipo propuesto por el cliente (opcional)</label>
+          <div class="file-drop" id="clientLogoDrop">
+            <div class="thumb"><img id="clientLogoThumb" alt="" /></div>
+            <div class="txt"><strong>Subir</strong> imagen del logo</div>
+            <button type="button" class="clear-btn" id="clientLogoReset">Quitar</button>
+          </div>
+          <input type="file" id="clientLogoInput" accept="image/png,image/jpeg,image/webp" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Observaciones y conclusión</p>
+        <div class="field">
+          <label for="notesInput">Observaciones generales (opcional)</label>
+          <textarea id="notesInput" placeholder="Ej. Cabe señalar que la denominación ya existe registrada en otras clases, por lo que la solicitud debe mostrar esfuerzos de diferenciación..." spellcheck="true" lang="es"></textarea>
+        </div>
+        <div class="field">
+          <label for="conclusionSelect">¿Procede el registro?</label>
+          <select id="conclusionSelect">
+            <option value="proceder">Se recomienda proceder con el registro</option>
+            <option value="reservas">Se recomienda proceder con reservas</option>
+            <option value="no-proceder">No se recomienda proceder con el registro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="conclusionNotesInput">Comentario sobre la conclusión</label>
+          <textarea id="conclusionNotesInput" placeholder="Explica brevemente el porqué de la recomendación..." spellcheck="true" lang="es"></textarea>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <div class="status-msg" id="statusMsg"></div>
+        <button type="button" class="btn-primary" id="generateBtn">⬇ Generar y descargar PDF</button>
+        <button type="button" class="btn-secondary" id="printBtn">🖨️ Imprimir vista previa (alternativa)</button>
+      </div>
+
+    </div>
+
+    <div class="preview-col">
+      <div class="preview-toolbar">
+        <p class="section-label">Vista previa</p>
+      </div>
+      <div class="paper-wrap">
+        <div id="previewPaper">
+          <div class="pv-header">
+            <img id="pvLogo" alt="Marca Segura" />
+            <div class="pv-title" id="pvTitle"></div>
+          </div>
+          <div class="pv-date" id="pvDate"></div>
+          <div class="pv-to" id="pvTo"></div>
+          <div class="pv-body" id="pvBody"></div>
+          <div id="pvLogoSection"></div>
+          <div class="pv-sign">
+            <p style="font-size:12.5px;margin:0 0 2mm;">Atentamente,</p>
+            <img class="firma-img" id="pvFirma" alt="Firma" />
+            <p class="signer" id="pvSigner"></p>
+            <p class="site" id="pvSite"></p>
+          </div>
+        </div>
+      </div>
+      <p class="footnote">Los datos se procesan en tu navegador; nada se sube a un servidor.</p>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script>
+window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
+// Sin firma por defecto: cada quien sube la suya en Configuracion (se guarda en su navegador).
+</script>
+<script>
+(function () {
+  "use strict";
+
+  var NICE_CLASSES = [
+    "1 — Productos químicos para industria, ciencia, fotografía, agricultura y silvicultura",
+    "2 — Pinturas, barnices, lacas, colorantes y tintas",
+    "3 — Productos cosméticos, perfumería y preparaciones de limpieza",
+    "4 — Aceites, grasas, lubricantes, combustibles y velas",
+    "5 — Productos farmacéuticos y preparaciones médicas",
+    "6 — Metales comunes, aleaciones y materiales de construcción metálicos",
+    "7 — Máquinas, herramientas mecánicas y motores",
+    "8 — Herramientas manuales, cuchillería y armas blancas",
+    "9 — Aparatos científicos, eléctricos, de grabación y ordenadores",
+    "10 — Aparatos quirúrgicos, médicos y odontológicos",
+    "11 — Aparatos de alumbrado, calefacción y agua",
+    "12 — Vehículos y aparatos de locomoción",
+    "13 — Armas de fuego, municiones y explosivos",
+    "14 — Metales preciosos, joyería y relojería",
+    "15 — Instrumentos musicales",
+    "16 — Papel, cartón, productos de imprenta y papelería",
+    "17 — Caucho, goma, materias plásticas y tubos flexibles",
+    "18 — Cuero, pieles y artículos de equipaje",
+    "19 — Materiales de construcción no metálicos",
+    "20 — Muebles, espejos y contenedores no metálicos",
+    "21 — Utensilios domésticos, cristalería y porcelana",
+    "22 — Cuerdas, redes, tiendas de campaña y velas",
+    "23 — Hilos e hilados para textiles",
+    "24 — Tejidos, ropa de hogar y cortinas",
+    "25 — Prendas de vestir, calzado y artículos de sombrerería",
+    "26 — Encajes, botones, flores artificiales y adornos",
+    "27 — Alfombras, felpudos y revestimientos de suelos",
+    "28 — Juegos, juguetes y artículos de deporte",
+    "29 — Carne, pescado, frutas conservadas y productos lácteos",
+    "30 — Café, té, cacao, pan, pastas y chocolate",
+    "31 — Productos agrícolas en bruto y animales vivos",
+    "32 — Cervezas y bebidas sin alcohol",
+    "33 — Bebidas alcohólicas",
+    "34 — Tabaco, cigarrillos y artículos para fumadores",
+    "35 — Publicidad y gestión de negocios comerciales",
+    "36 — Seguros, operaciones financieras e inmobiliarias",
+    "37 — Construcción, minería y perforación",
+    "38 — Telecomunicaciones",
+    "39 — Transporte, embalaje y organización de viajes",
+    "40 — Reciclaje, purificación y servicios de impresión",
+    "41 — Educación, entretenimiento y actividades deportivas",
+    "42 — Servicios científicos, tecnológicos y de software",
+    "43 — Restauración y hospedaje temporal",
+    "44 — Servicios médicos, veterinarios y de belleza",
+    "45 — Servicios jurídicos y de seguridad"
+  ].map(function (line) {
+    var idx = line.indexOf(" — ");
+    return { num: line.slice(0, idx), title: line.slice(idx + 3) };
+  });
+
+  // ---------- storage helpers ----------
+  function lsGet(key, fallback) {
+    try {
+      var v = localStorage.getItem(key);
+      return v === null ? fallback : v;
+    } catch (e) { return fallback; }
+  }
+  function lsSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+  }
+
+  // ---------- state ----------
+  var state = {
+    firmLogo: null,   // {dataUrl, w, h}
+    firma: null,      // {dataUrl, w, h}
+    clientLogo: null, // {dataUrl, w, h}
+    classes: []        // {id, num, desc, autoDesc, pct, comment}
+  };
+  var classSeq = 0;
+
+  function loadImgMeta(dataUrl) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () {
+        resolve({ dataUrl: dataUrl, w: img.naturalWidth || 1, h: img.naturalHeight || 1 });
+      };
+      img.onerror = function () { resolve({ dataUrl: dataUrl, w: 1, h: 1 }); };
+      img.src = dataUrl;
+    });
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Some deployments (e.g. hosted alongside the existing site's own icons)
+  // point the defaults at a plain image URL instead of embedding a data URI
+  // in the source. This fetches it once and converts it to a data URI so
+  // the rest of the app (preview <img> tags, jsPDF addImage) can treat it
+  // exactly like the embedded-constant case.
+  function fetchAsDataUrl(url) {
+    return fetch(url)
+      .then(function (res) { if (!res.ok) throw new Error("fetch failed"); return res.blob(); })
+      .then(function (blob) {
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function () { resolve(reader.result); };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      });
+  }
+
+  function resolveDefaultLogo() {
+    if (window.__MS_DEFAULT_LOGO__) return Promise.resolve(window.__MS_DEFAULT_LOGO__);
+    if (window.__MS_DEFAULT_LOGO_URL__) return fetchAsDataUrl(window.__MS_DEFAULT_LOGO_URL__).catch(function () { return null; });
+    return Promise.resolve(null);
+  }
+
+  function resolveDefaultFirma() {
+    if (window.__MS_DEFAULT_FIRMA__) return Promise.resolve(window.__MS_DEFAULT_FIRMA__);
+    if (window.__MS_DEFAULT_FIRMA_URL__) return fetchAsDataUrl(window.__MS_DEFAULT_FIRMA_URL__).catch(function () { return null; });
+    return Promise.resolve(null);
+  }
+
+  // ---------- DOM refs ----------
+  var $ = function (id) { return document.getElementById(id); };
+  var classesContainer = $("classesContainer");
+  var statusMsg = $("statusMsg");
+
+  function showStatus(text, kind) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg show " + (kind || "info");
+    if (kind === "success" || kind === "info") {
+      clearTimeout(showStatus._t);
+      showStatus._t = setTimeout(function () {
+        statusMsg.className = "status-msg";
+      }, 6000);
+    }
+  }
+
+  // ---------- settings panel ----------
+  var settingsToggleBtn = $("settingsToggleBtn");
+  var settingsPanel = $("settingsPanel");
+  settingsToggleBtn.addEventListener("click", function () {
+    var open = settingsPanel.classList.toggle("open");
+    settingsToggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  function setupFileDrop(dropId, inputId, thumbId, resetId, onSet, onReset) {
+    var drop = $(dropId), input = $(inputId), thumb = $(thumbId), resetBtn = $(resetId);
+    drop.addEventListener("click", function (e) {
+      if (e.target === resetBtn) return;
+      input.click();
+    });
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      fileToDataUrl(file).then(loadImgMeta).then(function (meta) {
+        thumb.src = meta.dataUrl;
+        onSet(meta);
+      });
+    });
+    resetBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      input.value = "";
+      onReset(thumb);
+    });
+    ["dragover"].forEach(function (evt) {
+      drop.addEventListener(evt, function (e) { e.preventDefault(); drop.style.borderColor = "var(--blue)"; });
+    });
+    ["dragleave", "drop"].forEach(function (evt) {
+      drop.addEventListener(evt, function (e) { e.preventDefault(); drop.style.borderColor = ""; });
+    });
+    drop.addEventListener("drop", function (e) {
+      var file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!file) return;
+      fileToDataUrl(file).then(loadImgMeta).then(function (meta) {
+        thumb.src = meta.dataUrl;
+        onSet(meta);
+      });
+    });
+  }
+
+  // firm logo
+  setupFileDrop("firmLogoDrop", "firmLogoInput", "firmLogoThumb", "firmLogoReset",
+    function (meta) {
+      state.firmLogo = meta;
+      lsSet("ms_firmLogo", meta.dataUrl);
+      $("pvLogo").src = meta.dataUrl;
+      $("topbarLogo").src = meta.dataUrl;
+    },
+    function (thumb) {
+      resolveDefaultLogo().then(function (def) {
+        if (!def) { showStatus("No hay un logo por defecto configurado; sube uno.", "warning"); return; }
+        loadImgMeta(def).then(function (meta) {
+          state.firmLogo = meta;
+          lsSet("ms_firmLogo", def);
+          thumb.src = def;
+          $("pvLogo").src = def;
+          $("topbarLogo").src = def;
+        });
+      });
+    });
+
+  // firma
+  setupFileDrop("signatureDrop", "signatureInput", "signatureThumb", "signatureReset",
+    function (meta) {
+      state.firma = meta;
+      lsSet("ms_firma", meta.dataUrl);
+      $("pvFirma").src = meta.dataUrl;
+    },
+    function (thumb) {
+      resolveDefaultFirma().then(function (def) {
+        if (!def) { showStatus("No hay una firma por defecto configurada; sube la tuya.", "warning"); return; }
+        loadImgMeta(def).then(function (meta) {
+          state.firma = meta;
+          lsSet("ms_firma", def);
+          thumb.src = def;
+          $("pvFirma").src = def;
+        });
+      });
+    });
+
+  // client logo (not persisted — changes per report)
+  setupFileDrop("clientLogoDrop", "clientLogoInput", "clientLogoThumb", "clientLogoReset",
+    function (meta) {
+      state.clientLogo = meta;
+      renderPreview();
+    },
+    function (thumb) {
+      state.clientLogo = null;
+      thumb.src = "";
+      renderPreview();
+    });
+
+  // settings text fields — persist
+  function bindPersistedText(inputId, storageKey) {
+    var el = $(inputId);
+    var stored = lsGet(storageKey, null);
+    if (stored !== null) el.value = stored;
+    el.addEventListener("input", function () {
+      lsSet(storageKey, el.value);
+      renderPreview();
+    });
+  }
+  bindPersistedText("signerNameInput", "ms_signerName");
+  bindPersistedText("siteInput", "ms_site");
+  bindPersistedText("cityInput", "ms_city");
+
+  // ---------- class blocks ----------
+  function addClassBlock(prefill) {
+    classSeq += 1;
+    var id = "cls" + classSeq;
+    var data = { id: id, num: "", desc: "", autoDesc: "", pct: "", comment: "" };
+    state.classes.push(data);
+
+    var wrap = document.createElement("div");
+    wrap.className = "class-block";
+    wrap.id = id;
+    wrap.innerHTML =
+      '<div class="class-block-head">' +
+        '<span class="tag">Clase</span>' +
+        '<button type="button" class="remove-class-btn" aria-label="Quitar clase">✕</button>' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>Clase de Niza</label>' +
+        '<select class="cls-select"><option value="">Selecciona una clase…</option>' +
+        NICE_CLASSES.map(function (c) {
+          return '<option value="' + c.num + '">' + c.num + ' — ' + c.title + '</option>';
+        }).join("") +
+        '</select>' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>Descripción propuesta</label>' +
+        '<textarea class="cls-desc" placeholder="Se sugiere al elegir la clase; edítala a tu gusto." spellcheck="true" lang="es"></textarea>' +
+      '</div>' +
+      '<div class="field-row">' +
+        '<div class="field">' +
+          '<label>% de éxito estimado</label>' +
+          '<div class="pct-input-wrap"><input type="number" class="cls-pct" min="0" max="100" step="1" placeholder="75" /><span>%</span></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>Comentario / justificación del porcentaje</label>' +
+        '<textarea class="cls-comment" placeholder="Ej. No existe coincidencia ortográfica ni fonética; se recomienda proceder..." spellcheck="true" lang="es"></textarea>' +
+      '</div>';
+
+    classesContainer.appendChild(wrap);
+
+    var select = wrap.querySelector(".cls-select");
+    var descArea = wrap.querySelector(".cls-desc");
+    var pctInput = wrap.querySelector(".cls-pct");
+    var commentArea = wrap.querySelector(".cls-comment");
+    var removeBtn = wrap.querySelector(".remove-class-btn");
+
+    select.addEventListener("change", function () {
+      data.num = select.value;
+      var cls = NICE_CLASSES.filter(function (c) { return c.num === select.value; })[0];
+      if (cls) {
+        var suggestion = cls.title.toUpperCase() + ".";
+        if (!descArea.value.trim() || descArea.value === data.autoDesc) {
+          descArea.value = suggestion;
+          data.desc = suggestion;
+        }
+        data.autoDesc = suggestion;
+      }
+      renderPreview();
+    });
+    descArea.addEventListener("input", function () { data.desc = descArea.value; renderPreview(); });
+    pctInput.addEventListener("input", function () { data.pct = pctInput.value; renderPreview(); });
+    commentArea.addEventListener("input", function () { data.comment = commentArea.value; renderPreview(); });
+    removeBtn.addEventListener("click", function () {
+      if (state.classes.length <= 1) {
+        showStatus("Debe quedar al menos una clase.", "warning");
+        return;
+      }
+      state.classes = state.classes.filter(function (c) { return c.id !== id; });
+      wrap.remove();
+      renderPreview();
+    });
+
+    if (prefill) {
+      select.value = prefill.num || "";
+      if (prefill.num) select.dispatchEvent(new Event("change"));
+      if (prefill.desc) { descArea.value = prefill.desc; data.desc = prefill.desc; }
+      if (prefill.pct) { pctInput.value = prefill.pct; data.pct = prefill.pct; }
+    }
+
+    renderPreview();
+  }
+
+  $("addClassBtn").addEventListener("click", function () { addClassBlock(); });
+
+  // ---------- top-level fields ----------
+  ["clientNameInput", "brandNameInput", "examDateInput", "notesInput", "conclusionSelect", "conclusionNotesInput"].forEach(function (id) {
+    $(id).addEventListener("input", renderPreview);
+    $(id).addEventListener("change", renderPreview);
+  });
+
+  // ---------- preview rendering ----------
+  function fmtDateLong(isoStr) {
+    if (!isoStr) return "";
+    var parts = isoStr.split("-");
+    if (parts.length !== 3) return isoStr;
+    var months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+    var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10) - 1, d = parseInt(parts[2], 10);
+    return d + " de " + months[m] + " de " + y;
+  }
+
+  function escapeHtml(s) {
+    return (s || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function conclusionLabel(val) {
+    if (val === "no-proceder") return "No se recomienda proceder con el registro.";
+    if (val === "reservas") return "Se recomienda proceder con reservas.";
+    return "Se recomienda proceder con el registro.";
+  }
+
+  function renderPreview() {
+    var clientName = $("clientNameInput").value.trim();
+    var brandName = $("brandNameInput").value.trim();
+    var examDate = $("examDateInput").value;
+    var city = $("cityInput").value.trim() || "Zapopan, Jalisco";
+    var dateLong = fmtDateLong(examDate);
+
+    $("pvTitle").innerHTML = "Examen de Viabilidad<br>aplicado a la denominación<br>“" + escapeHtml(brandName || "…") + "” ante el IMPI";
+    $("pvDate").textContent = city + (dateLong ? (" a " + dateLong) : "");
+    $("pvTo").innerHTML = escapeHtml(clientName || "Nombre del cliente") + "<br><span class='marca-line'>" + escapeHtml(brandName || "Nombre de la marca") + "</span>";
+
+    var bodyHtml = "";
+    bodyHtml += "<p>Después del análisis practicado al nombre “" + escapeHtml(brandName || "…") + "” con fecha de elaboración del " +
+      (dateLong || "…") + "; sugerimos las siguientes clases para registrar así como nuestros comentarios:</p>";
+
+    state.classes.forEach(function (c, i) {
+      var cls = NICE_CLASSES.filter(function (x) { return x.num === c.num; })[0];
+      var label = cls ? (c.num + ") Clase " + cls.num) : (i + 1) + ") Clase —";
+      bodyHtml += "<p class='class-title'>" + (i + 1) + ") Clase " + escapeHtml(c.num || "—") + "</p>";
+      bodyHtml += "<p><span class='desc-label'>Descripción propuesta:</span></p>";
+      bodyHtml += "<p class='desc-text'>" + escapeHtml(c.desc || "—") + "</p>";
+      var pct = c.pct !== "" && c.pct !== null && c.pct !== undefined ? c.pct : "—";
+      bodyHtml += "<p class='pct-line'>% de Éxito en la solicitud de la denominación (Nombre): " + pct + "%</p>";
+      if (c.comment) bodyHtml += "<p>" + escapeHtml(c.comment) + "</p>";
+    });
+
+    var notes = $("notesInput").value.trim();
+    if (notes) bodyHtml += "<p>" + escapeHtml(notes) + "</p>";
+
+    var conclVal = $("conclusionSelect").value;
+    var conclNotes = $("conclusionNotesInput").value.trim();
+    bodyHtml += "<p class='concl-line'>" + conclusionLabel(conclVal) + "</p>";
+    if (conclNotes) bodyHtml += "<p>" + escapeHtml(conclNotes) + "</p>";
+
+    $("pvBody").innerHTML = bodyHtml;
+
+    var logoSection = $("pvLogoSection");
+    if (state.clientLogo) {
+      logoSection.innerHTML =
+        "<p class='pv-logo-caption'>Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:</p>" +
+        "<div class='pv-client-logo'><img src='" + state.clientLogo.dataUrl + "' alt='Logo del cliente' /></div>";
+    } else {
+      logoSection.innerHTML = "<p class='pv-empty-note'>Sin logotipo del cliente adjunto.</p>";
+    }
+
+    $("pvSigner").textContent = $("signerNameInput").value.trim() || "Lic. Guillermo Vázquez";
+    $("pvSite").textContent = ($("siteInput").value.trim() || "MARCASEGURA.MX").toUpperCase();
+  }
+
+  // ---------- PDF generation ----------
+  function mimeFromDataUrl(dataUrl) {
+    var m = /^data:image\/(png|jpe?g|webp);/i.exec(dataUrl || "");
+    if (!m) return "PNG";
+    var t = m[1].toLowerCase();
+    if (t === "jpg" || t === "jpeg") return "JPEG";
+    if (t === "webp") return "WEBP";
+    return "PNG";
+  }
+
+  function buildPdf() {
+    var jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+    var doc = new jsPDFCtor({ unit: "mm", format: "a4" });
+
+    var pageW = 210, pageH = 297;
+    var marginL = 25, marginR = 25, marginBottom = 22, marginTop = 20;
+    var contentW = pageW - marginL - marginR;
+    var y = marginTop;
+
+    function ensureSpace(h) {
+      if (y + h > pageH - marginBottom) {
+        doc.addPage();
+        y = marginTop;
+        if (state.firmLogo) {
+          try {
+            var ar = state.firmLogo.h / state.firmLogo.w;
+            var w = 30, h2 = w * ar;
+            doc.addImage(state.firmLogo.dataUrl, mimeFromDataUrl(state.firmLogo.dataUrl), marginL, y, w, h2);
+          } catch (e) { /* ignore */ }
+        }
+        y += 16;
+      }
+    }
+
+    function para(text, opts) {
+      opts = opts || {};
+      var size = opts.size || 10.5;
+      var font = opts.font || "helvetica";
+      var style = opts.style || "normal";
+      var align = opts.align || "justify";
+      var gapAfter = opts.gapAfter != null ? opts.gapAfter : 4.2;
+      var lineHeight = opts.lineHeight || (size * 0.42);
+      doc.setFont(font, style);
+      doc.setFontSize(size);
+      var lines = doc.splitTextToSize(text, contentW);
+      var blockH = lines.length * lineHeight;
+      ensureSpace(blockH + gapAfter);
+      lines.forEach(function (line, idx) {
+        var opt = {};
+        var xPos = marginL;
+        if (align === "right") { xPos = marginL + contentW; opt.align = "right"; }
+        else if (align === "center") { xPos = marginL + contentW / 2; opt.align = "center"; }
+        else if (align === "justify" && idx < lines.length - 1) { opt.align = "justify"; opt.maxWidth = contentW; }
+        doc.text(line, xPos, y + idx * lineHeight, opt);
+      });
+      y += blockH + gapAfter;
+    }
+
+    function underlineLastPara(text, size, gapAfter) {
+      // draws bold + manual underline for a short emphasis line
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(size);
+      var lines = doc.splitTextToSize(text, contentW);
+      var lineHeight = size * 0.42;
+      var blockH = lines.length * lineHeight;
+      ensureSpace(blockH + gapAfter);
+      lines.forEach(function (line, idx) {
+        var ly = y + idx * lineHeight;
+        doc.text(line, marginL, ly);
+        var w = doc.getTextWidth(line);
+        doc.setLineWidth(0.25);
+        doc.line(marginL, ly + 0.9, marginL + w, ly + 0.9);
+      });
+      y += blockH + gapAfter;
+    }
+
+    function addImageCentered(meta, maxW, maxH, gapAfter) {
+      if (!meta) return;
+      var ar = meta.h / meta.w;
+      var w = maxW, h = w * ar;
+      if (h > maxH) { h = maxH; w = h / ar; }
+      ensureSpace(h + gapAfter);
+      var x = marginL + (contentW - w) / 2;
+      try { doc.addImage(meta.dataUrl, mimeFromDataUrl(meta.dataUrl), x, y, w, h); } catch (e) { /* ignore */ }
+      y += h + gapAfter;
+    }
+
+    // ---- header ----
+    var brandName = ($("brandNameInput").value || "").trim();
+    var clientName = ($("clientNameInput").value || "").trim();
+    var city = ($("cityInput").value || "Zapopan, Jalisco").trim();
+    var examDate = $("examDateInput").value;
+    var dateLong = fmtDateLong(examDate);
+
+    if (state.firmLogo) {
+      try {
+        var ar0 = state.firmLogo.h / state.firmLogo.w;
+        var lw = 42, lh = lw * ar0;
+        doc.addImage(state.firmLogo.dataUrl, mimeFromDataUrl(state.firmLogo.dataUrl), marginL, y, lw, lh);
+      } catch (e) { /* ignore */ }
+    }
+
+    doc.setFont("times", "italic");
+    doc.setFontSize(17);
+    var titleColW = contentW * 0.62;
+    var titleLines = ["Examen de Viabilidad", "aplicado a la denominación"]
+      .concat(doc.splitTextToSize("“" + (brandName || "—") + "” ante el IMPI", titleColW));
+    var titleLineH = 7.4;
+    var titleBlockH = titleLines.length * titleLineH;
+    var titleTopY = y + 6;
+    titleLines.forEach(function (line, idx) {
+      doc.text(line, marginL + contentW, titleTopY + idx * titleLineH, { align: "right" });
+    });
+
+    y = Math.max(y + 24, titleTopY + titleBlockH) + 6;
+
+    // ---- date + addressee ----
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    var dateText = city + (dateLong ? (" a " + dateLong) : "");
+    ensureSpace(6);
+    doc.text(dateText, marginL + contentW, y, { align: "right" });
+    y += 12;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    ensureSpace(6);
+    doc.text(clientName || "—", marginL, y);
+    y += 5.5;
+    doc.setFont("helvetica", "bold");
+    doc.text((brandName || "—").toUpperCase(), marginL, y);
+    y += 10;
+
+    // ---- intro paragraph ----
+    para(
+      "Después del análisis practicado al nombre “" + (brandName || "—") + "” con fecha de elaboración del " +
+      (dateLong || "—") + "; sugerimos las siguientes clases para registrar así como nuestros comentarios:",
+      { size: 11, gapAfter: 6 }
+    );
+
+    // ---- classes ----
+    state.classes.forEach(function (c, i) {
+      para((i + 1) + ") Clase " + (c.num || "—"), { size: 12.5, font: "helvetica", style: "bold", gapAfter: 4, align: "left" });
+      para("Descripción propuesta:", { size: 10.5, style: "bold", gapAfter: 2, align: "left" });
+      para((c.desc || "—").toUpperCase(), { size: 10.5, gapAfter: 5 });
+
+      var pct = (c.pct !== "" && c.pct !== null && c.pct !== undefined) ? c.pct : "—";
+      underlineLastPara("% de Éxito en la solicitud de la denominación (Nombre): " + pct + "%", 10.5, 3);
+      if (c.comment) para(c.comment, { size: 10.5, gapAfter: 6 });
+      else y += 3;
+    });
+
+    // ---- general notes ----
+    var notes = ($("notesInput").value || "").trim();
+    if (notes) para(notes, { size: 10.5, gapAfter: 6 });
+
+    // ---- conclusion ----
+    var conclVal = $("conclusionSelect").value;
+    underlineLastPara(conclusionLabel(conclVal), 10.5, 3);
+    var conclNotes = ($("conclusionNotesInput").value || "").trim();
+    if (conclNotes) para(conclNotes, { size: 10.5, gapAfter: 6 });
+
+    // ---- client logo ----
+    if (state.clientLogo) {
+      para("Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:", { size: 10.5, align: "left", gapAfter: 4 });
+      addImageCentered(state.clientLogo, 55, 45, 8);
+    }
+
+    // ---- signature ----
+    var signBlockH = 8 + 20 + 6 + 5 + 5;
+    ensureSpace(signBlockH);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text("Atentamente,", marginL + contentW / 2, y, { align: "center" });
+    y += 6;
+    if (state.firma) {
+      var arf = state.firma.h / state.firma.w;
+      var fw = 40, fh = fw * arf;
+      var fx = marginL + (contentW - fw) / 2;
+      try { doc.addImage(state.firma.dataUrl, mimeFromDataUrl(state.firma.dataUrl), fx, y, fw, fh); } catch (e) { /* ignore */ }
+      y += fh + 5;
+    }
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text(($("signerNameInput").value || "Lic. Guillermo Vázquez").trim(), marginL + contentW / 2, y, { align: "center" });
+    y += 5;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9.5);
+    doc.text((($("siteInput").value || "MARCASEGURA.MX").trim()).toUpperCase(), marginL + contentW / 2, y, { align: "center" });
+
+    return doc;
+  }
+
+  function validate() {
+    var clientName = $("clientNameInput").value.trim();
+    var brandName = $("brandNameInput").value.trim();
+    var examDate = $("examDateInput").value;
+    if (!clientName) return "Falta el nombre del cliente.";
+    if (!brandName) return "Falta el nombre de la marca.";
+    if (!examDate) return "Falta la fecha del examen.";
+    if (!state.classes.length || !state.classes.some(function (c) { return c.num; })) {
+      return "Selecciona al menos una clase de Niza.";
+    }
+    return null;
+  }
+
+  async function handleGenerate() {
+    var err = validate();
+    if (err) { showStatus(err, "warning"); return; }
+
+    var generateBtn = $("generateBtn");
+    generateBtn.disabled = true;
+    showStatus("Generando PDF…", "info");
+
+    var doc;
+    try {
+      doc = buildPdf();
+    } catch (e) {
+      console.error(e);
+      showStatus("Ocurrió un error al construir el PDF.", "error");
+      generateBtn.disabled = false;
+      return;
+    }
+
+    var brandName = ($("brandNameInput").value || "reporte").trim().replace(/[^a-zA-Z0-9]+/g, "_");
+    var examDate = $("examDateInput").value || "";
+    var filename = "Examen_Viabilidad_" + brandName + (examDate ? ("_" + examDate) : "") + ".pdf";
+
+    var buffer = doc.output("arraybuffer");
+
+    // Path 1: Claude Artifact "downloads" capability (available when this page
+    // runs inside a published Claude artifact view).
+    try {
+      var downloads = (window.claude && typeof window.claude.use === "function") ? await window.claude.use("downloads") : null;
+      if (downloads) {
+        try {
+          await downloads.save({ filename: filename, data: buffer });
+          showStatus("PDF descargado correctamente.", "success");
+          generateBtn.disabled = false;
+          return;
+        } catch (err2) {
+          if (err2 && err2.code === "declined") {
+            showStatus("Descarga cancelada.", "info");
+            generateBtn.disabled = false;
+            return;
+          }
+          console.warn("downloads.save failed", err2);
+        }
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+
+    // Path 2: plain browser download (works when this page is hosted normally,
+    // e.g. on GitHub Pages — this <a download> trick is inert inside the
+    // sandboxed Claude artifact viewer, which is why Path 1 is tried first).
+    try {
+      var blob = new Blob([buffer], { type: "application/pdf" });
+      var blobUrl = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(function () { URL.revokeObjectURL(blobUrl); }, 4000);
+      showStatus("PDF descargado correctamente.", "success");
+      generateBtn.disabled = false;
+      return;
+    } catch (e2) {
+      console.warn("blob download failed", e2);
+    }
+
+    showStatus("No se pudo descargar el archivo directamente en este visor. Usa el botón “Imprimir vista previa” para guardarlo como PDF.", "warning");
+    generateBtn.disabled = false;
+  }
+
+  $("generateBtn").addEventListener("click", handleGenerate);
+  $("printBtn").addEventListener("click", function () { window.print(); });
+
+  // ---------- init ----------
+  function init() {
+    var today = new Date();
+    var iso = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+    $("examDateInput").value = iso;
+
+    var storedCity = lsGet("ms_city", null);
+    if (storedCity) $("cityInput").value = storedCity;
+    var storedSigner = lsGet("ms_signerName", null);
+    if (storedSigner) $("signerNameInput").value = storedSigner;
+    var storedSite = lsGet("ms_site", null);
+    if (storedSite) $("siteInput").value = storedSite;
+
+    var storedLogo = lsGet("ms_firmLogo", null);
+    var storedFirma = lsGet("ms_firma", null);
+
+    Promise.all([
+      storedLogo ? Promise.resolve(storedLogo) : resolveDefaultLogo(),
+      storedFirma ? Promise.resolve(storedFirma) : resolveDefaultFirma()
+    ]).then(function (urls) {
+      var logoUrl = urls[0], firmaUrl = urls[1];
+      return Promise.all([
+        logoUrl ? loadImgMeta(logoUrl) : Promise.resolve(null),
+        firmaUrl ? loadImgMeta(firmaUrl) : Promise.resolve(null)
+      ]).then(function (results) {
+        state.firmLogo = results[0];
+        state.firma = results[1];
+        if (logoUrl) {
+          $("firmLogoThumb").src = logoUrl;
+          $("topbarLogo").src = logoUrl;
+          $("pvLogo").src = logoUrl;
+        } else {
+          $("topbarLogo").style.display = "none";
+          $("pvLogo").style.display = "none";
+        }
+        if (firmaUrl) {
+          $("signatureThumb").src = firmaUrl;
+          $("pvFirma").src = firmaUrl;
+        } else {
+          $("pvFirma").style.display = "none";
+        }
+        addClassBlock();
+        renderPreview();
+      });
+    });
+  }
+
+  init();
+})();
+
+</script>
+
+</body>
+</html>

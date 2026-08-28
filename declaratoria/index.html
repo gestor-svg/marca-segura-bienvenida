@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Declaratoria de Uso</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0050C6">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../icon-apple-touch.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MS Declaratoria">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+:root {
+  --blue: #0050c6;
+  --blue-ink: #0a2f66;
+  --orange: #fe6a00;
+  --bg: #f3f5fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f8;
+  --border: #dde2ee;
+  --ink: #1a2233;
+  --ink-muted: #5b6478;
+  --ink-faint: #8791a5;
+  --danger: #c62828;
+  --success: #1a7d4a;
+  --shadow: 0 1px 2px rgba(20, 30, 60, 0.06), 0 8px 24px -12px rgba(20, 30, 60, 0.18);
+  --radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #5b9bff;
+    --blue-ink: #bcd4ff;
+    --orange: #ff8a3d;
+    --bg: #0f1420;
+    --surface: #161d2e;
+    --surface-2: #1d2536;
+    --border: #2b3550;
+    --ink: #e8ebf3;
+    --ink-muted: #a3acc4;
+    --ink-faint: #6f7994;
+    --danger: #ff6b6b;
+    --success: #4fd18a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+  }
+}
+:root[data-theme="dark"] {
+  --blue: #5b9bff;
+  --blue-ink: #bcd4ff;
+  --orange: #ff8a3d;
+  --bg: #0f1420;
+  --surface: #161d2e;
+  --surface-2: #1d2536;
+  --border: #2b3550;
+  --ink: #e8ebf3;
+  --ink-muted: #a3acc4;
+  --ink-faint: #6f7994;
+  --danger: #ff6b6b;
+  --success: #4fd18a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; overflow-x: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+a { color: var(--blue); }
+[hidden] { display: none !important; }
+
+.app-shell { max-width: 760px; margin: 0 auto; padding: 24px 18px 64px; }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { height: 32px; width: auto; display: block; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text .kicker { font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
+.brand-text h1 { font-family: "Poppins", sans-serif; font-size: 18px; font-weight: 700; margin: 2px 0 0; color: var(--ink); }
+
+.settings-toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  padding: 9px 16px; cursor: pointer; transition: border-color .15s, color .15s;
+}
+.settings-toggle:hover { border-color: var(--blue); color: var(--blue); }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--ink-muted); text-decoration: none; margin-bottom: 16px; cursor: pointer; background: none; border: none; padding: 0;
+}
+.back-link:hover { color: var(--blue); }
+
+/* ---- menu screen ---- */
+.menu-intro { margin: 4px 0 22px; }
+.menu-intro h2 { font-family: "Poppins", sans-serif; font-size: 19px; margin: 0 0 4px; }
+.menu-intro p { font-size: 13.5px; color: var(--ink-muted); margin: 0; line-height: 1.5; }
+
+.doc-card-list { display: flex; flex-direction: column; gap: 14px; }
+button.doc-card {
+  display: flex; align-items: center; gap: 16px; text-align: left;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; cursor: pointer; box-shadow: var(--shadow);
+  transition: transform .12s, box-shadow .12s, border-color .12s;
+  font-family: inherit; color: inherit;
+}
+button.doc-card:hover { border-color: var(--blue); transform: translateY(-1px); }
+button.doc-card:active { transform: scale(0.99); }
+.doc-card .icon {
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 23px;
+  background: color-mix(in srgb, var(--blue) 12%, var(--surface));
+}
+.doc-card.declaracion .icon { background: color-mix(in srgb, var(--orange) 14%, var(--surface)); }
+.doc-card .txt { flex: 1; min-width: 0; }
+.doc-card .txt strong { display: block; font-size: 15px; margin-bottom: 2px; font-family: "Poppins", sans-serif; }
+.doc-card .txt span { display: block; font-size: 12.5px; color: var(--ink-muted); line-height: 1.4; }
+.doc-card .homoclave {
+  display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.03em;
+  color: var(--blue); background: color-mix(in srgb, var(--blue) 10%, var(--surface));
+  border-radius: 999px; padding: 2px 8px; margin-top: 5px;
+}
+.doc-card .arrow { font-size: 18px; color: var(--ink-faint); flex-shrink: 0; }
+
+/* ---- form screen ---- */
+.form-header { margin-bottom: 18px; }
+.form-header .homoclave-badge {
+  display: inline-block; font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.05em; color: var(--blue); background: color-mix(in srgb, var(--blue) 10%, var(--surface));
+  border-radius: 999px; padding: 3px 10px; margin-bottom: 8px;
+}
+.form-header h2 { font-family: "Poppins", sans-serif; font-size: 18px; margin: 0; line-height: 1.35; }
+
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; }
+.form-panel { padding: 20px; }
+
+.section-label { font-family: "Poppins", sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 14px; }
+.section-label .n { color: var(--blue); margin-right: 4px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field label { font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+.field .hint { font-size: 11.5px; color: var(--ink-faint); margin-top: -2px; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-row.thirds { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 520px) { .field-row, .field-row.thirds { grid-template-columns: 1fr 1fr; } }
+
+input[type="text"], input[type="date"], input[type="email"], select, textarea {
+  font-family: "Work Sans", sans-serif; font-size: 14.5px; color: var(--ink);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; width: 100%; transition: border-color .15s, box-shadow .15s;
+}
+textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 20%, transparent); }
+input::placeholder, textarea::placeholder { color: var(--ink-faint); }
+
+/* segmented toggle: persona física / moral */
+.segmented { display: flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; gap: 3px; }
+.segmented button {
+  flex: 1; font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--ink-muted); background: transparent; border: none; border-radius: 7px;
+  padding: 9px 10px; cursor: pointer; transition: background .15s, color .15s;
+}
+.segmented button.active { background: var(--surface); color: var(--blue); box-shadow: var(--shadow); }
+
+/* radio pill group: tipo de tramite */
+.pill-group { display: flex; flex-direction: column; gap: 8px; }
+.pill-option {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2);
+  cursor: pointer; transition: border-color .15s, background .15s;
+}
+.pill-option:hover { border-color: var(--blue); }
+.pill-option input { accent-color: var(--blue); width: 16px; height: 16px; flex-shrink: 0; }
+.pill-option span { font-size: 13.5px; color: var(--ink); }
+.pill-option.checked { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 8%, var(--surface-2)); }
+
+/* clase digit boxes */
+.clase-row { display: flex; align-items: center; gap: 10px; }
+.clase-row select { max-width: 320px; }
+
+/* checklist for anexos */
+.checklist { display: flex; flex-direction: column; gap: 4px; }
+.check-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 4px; border-bottom: 1px solid var(--border); }
+.check-item:last-child { border-bottom: none; }
+.check-item input[type="checkbox"] { accent-color: var(--blue); width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; }
+.check-item label { font-size: 13px; color: var(--ink); line-height: 1.45; cursor: pointer; }
+.check-item .poder-input { margin-top: 8px; }
+
+.file-drop {
+  border: 1.5px dashed var(--border); border-radius: 8px; padding: 14px;
+  display: flex; align-items: center; gap: 12px; background: var(--surface-2);
+  cursor: pointer; transition: border-color .15s;
+}
+.file-drop:hover { border-color: var(--blue); }
+.file-drop input[type="file"] { display: none; }
+.file-drop .thumb {
+  width: 44px; height: 44px; border-radius: 6px; background: var(--surface);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.file-drop .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.file-drop .txt { font-size: 13px; color: var(--ink-muted); }
+.file-drop .txt strong { color: var(--blue); font-weight: 600; }
+.file-drop .clear-btn { margin-left: auto; font-size: 12px; color: var(--ink-faint); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 4px; }
+.file-drop .clear-btn:hover { color: var(--danger); }
+
+.firma-note { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); font-size: 12.5px; color: var(--ink-muted); }
+.firma-note img { height: 20px; width: auto; object-fit: contain; }
+.firma-note.warn { color: color-mix(in srgb, var(--orange) 80%, var(--ink)); background: color-mix(in srgb, var(--orange) 10%, var(--surface-2)); border-color: color-mix(in srgb, var(--orange) 40%, var(--border)); }
+
+.btn-primary {
+  font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15px; color: #fff;
+  background: linear-gradient(135deg, var(--blue), color-mix(in srgb, var(--blue) 78%, #001a4d));
+  border: none; border-radius: 10px; padding: 14px 20px; cursor: pointer; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--blue) 60%, transparent);
+  transition: transform .12s, box-shadow .12s;
+}
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  font-family: "Poppins", sans-serif; font-weight: 600; font-size: 13.5px; color: var(--ink-muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 11px 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-secondary:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+.status-msg { font-size: 13px; border-radius: 8px; padding: 10px 12px; display: none; margin-top: 12px; }
+.status-msg.show { display: block; }
+.status-msg.success { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
+.status-msg.warning { background: color-mix(in srgb, var(--orange) 14%, transparent); color: color-mix(in srgb, var(--orange) 80%, var(--ink)); }
+.status-msg.error { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+.status-msg.info { background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
+
+.settings-panel { display: none; padding: 18px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); margin-bottom: 18px; }
+.settings-panel.open { display: block; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+@media (max-width: 560px) { .settings-grid { grid-template-columns: 1fr; } }
+.settings-panel .desc { font-size: 12.5px; color: var(--ink-faint); margin: -4px 0 14px; }
+
+.footnote { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 18px; }
+
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <img src="../icon-192.png" alt="Marca Segura" />
+      <div class="brand-text">
+        <span class="kicker">Marca Segura</span>
+        <h1 id="topTitle">Declaratoria de Uso</h1>
+      </div>
+    </div>
+    <button class="settings-toggle" id="settingsToggle" type="button">⚙️ Configuración</button>
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <div class="section-label">Firma archivada</div>
+    <p class="desc">Se usa para estampar la firma en el PDF y se comparte con las demás herramientas de Marca Segura (se guarda en este navegador).</p>
+    <div class="settings-grid">
+      <div class="field">
+        <label>Nombre completo de quien firma (por defecto)</label>
+        <input type="text" id="cfgSignerName" placeholder="Ej. Guillermo Vázquez García" />
+      </div>
+      <div class="field">
+        <label>Firma (PNG, fondo transparente)</label>
+        <div class="file-drop" id="cfgFirmaDrop">
+          <div class="thumb" id="cfgFirmaThumb">✍️</div>
+          <div class="txt" id="cfgFirmaTxt"><strong>Sube tu firma</strong> (PNG, fondo transparente).</div>
+          <button type="button" class="clear-btn" id="cfgFirmaClear" hidden>Quitar</button>
+          <input type="file" id="cfgFirmaInput" accept="image/png" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="../menu/" class="back-link">🗂️ Ver todas las herramientas de Marca Segura</a>
+
+  <div id="menuScreen">
+    <div class="menu-intro">
+      <h2>¿Qué formato necesitas llenar?</h2>
+      <p>Se llenan los campos oficiales del PDF de IMPI y se estampa tu firma archivada. Todo se procesa en tu navegador — nada se sube a ningún servidor.</p>
+    </div>
+    <div class="doc-card-list">
+      <button type="button" class="doc-card renovacion" data-doc="renovacion">
+        <div class="icon">🔄</div>
+        <div class="txt">
+          <strong>Renovación y Declaratoria de Uso</strong>
+          <span>Renueva el registro y declara el uso real y efectivo en un solo trámite.</span>
+          <span class="homoclave">IMPI-00-002</span>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+      <button type="button" class="doc-card declaracion" data-doc="declaracion">
+        <div class="icon">📝</div>
+        <div class="txt">
+          <strong>Solo Declaratoria de Uso</strong>
+          <span>Únicamente la declaración de uso real y efectivo (sin renovación).</span>
+          <span class="homoclave">IMPI-00-014</span>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+    </div>
+  </div>
+
+  <div id="formScreen" hidden>
+    <button type="button" class="back-link" id="backToMenu">‹ Cambiar tipo de trámite</button>
+    <div id="formHost"></div>
+  </div>
+
+  <p class="footnote">Uso interno · MARCASEGURA.MX</p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------------
+  // Data: Nice classification (reused short list)
+  // ---------------------------------------------------------------------
+  var NICE_CLASSES = [
+    "1 — Productos químicos para industria, ciencia, fotografía, agricultura y silvicultura",
+    "2 — Pinturas, barnices, lacas, colorantes y tintas",
+    "3 — Productos cosméticos, perfumería y preparaciones de limpieza",
+    "4 — Aceites, grasas, lubricantes, combustibles y velas",
+    "5 — Productos farmacéuticos y preparaciones médicas",
+    "6 — Metales comunes, aleaciones y materiales de construcción metálicos",
+    "7 — Máquinas, herramientas mecánicas y motores",
+    "8 — Herramientas manuales, cuchillería y armas blancas",
+    "9 — Aparatos científicos, eléctricos, de grabación y ordenadores",
+    "10 — Aparatos quirúrgicos, médicos y odontológicos",
+    "11 — Aparatos de alumbrado, calefacción y agua",
+    "12 — Vehículos y aparatos de locomoción",
+    "13 — Armas de fuego, municiones y explosivos",
+    "14 — Metales preciosos, joyería y relojería",
+    "15 — Instrumentos musicales",
+    "16 — Papel, cartón, productos de imprenta y papelería",
+    "17 — Caucho, goma, materias plásticas y tubos flexibles",
+    "18 — Cuero, pieles y artículos de equipaje",
+    "19 — Materiales de construcción no metálicos",
+    "20 — Muebles, espejos y contenedores no metálicos",
+    "21 — Utensilios domésticos, cristalería y porcelana",
+    "22 — Cuerdas, redes, tiendas de campaña y velas",
+    "23 — Hilos e hilados para textiles",
+    "24 — Tejidos, ropa de hogar y cortinas",
+    "25 — Prendas de vestir, calzado y artículos de sombrerería",
+    "26 — Encajes, botones, flores artificiales y adornos",
+    "27 — Alfombras, felpudos y revestimientos de suelos",
+    "28 — Juegos, juguetes y artículos de deporte",
+    "29 — Carne, pescado, frutas conservadas y productos lácteos",
+    "30 — Café, té, cacao, pan, pastas y chocolate",
+    "31 — Productos agrícolas en bruto y animales vivos",
+    "32 — Cervezas y bebidas sin alcohol",
+    "33 — Bebidas alcohólicas",
+    "34 — Tabaco, cigarrillos y artículos para fumadores",
+    "35 — Publicidad y gestión de negocios comerciales",
+    "36 — Seguros, operaciones financieras e inmobiliarias",
+    "37 — Construcción, minería y perforación",
+    "38 — Telecomunicaciones",
+    "39 — Transporte, embalaje y organización de viajes",
+    "40 — Reciclaje, purificación y servicios de impresión",
+    "41 — Educación, entretenimiento y actividades deportivas",
+    "42 — Servicios científicos, tecnológicos y de software",
+    "43 — Restauración y hospedaje temporal",
+    "44 — Servicios médicos, veterinarios y de belleza",
+    "45 — Servicios jurídicos y de seguridad"
+  ].map(function (line) {
+    var idx = line.indexOf(" — ");
+    return { num: line.slice(0, idx), title: line.slice(idx + 3) };
+  });
+
+  // ---------------------------------------------------------------------
+  // Data: tipo de trámite radio options (same 5 options / same PDF state
+  // names on both documents, confirmed against the real AcroForm widgets)
+  // ---------------------------------------------------------------------
+  var TIPO_TRAMITE_OPTIONS = [
+    { value: "Opción1", label: "Registro de Marca" },
+    { value: "Opción2", label: "Registro de Marca Colectiva" },
+    { value: "Opción3", label: "Registro de Aviso Comercial" },
+    { value: "Opción4", label: "Publicación de Nombre Comercial" },
+    { value: "Opción5", label: "Registro de Marca de Certificación" }
+  ];
+
+  // ---------------------------------------------------------------------
+  // Data: document definitions — exact AcroForm field names, extracted
+  // directly from the two real IMPI PDFs (pdf-lib / pypdf inspection).
+  // The "firma" field name contains a genuine byte-level quirk in the
+  // source PDF (0xFF where "fi" should be) — kept verbatim on purpose.
+  // ---------------------------------------------------------------------
+  var DOC_DEFS = {
+    renovacion: {
+      key: "renovacion",
+      homoclave: "IMPI-00-002",
+      titleShort: "Renovación y Declaratoria de Uso",
+      titleFull: "Solicitud de Renovación y Declaración de Uso Real y Efectivo de Signos Distintivos",
+      icon: "🔄",
+      cardDesc: "Formato IMPI-00-002. Renueva el registro y declara el uso real y efectivo en un solo trámite.",
+      pdfAsset: "assets/impi-00-002.pdf",
+      outPrefix: "renovacion-declaratoria-uso",
+      fields: {
+        dd: "  DD MM AAAA", mm: "Text4", aaaa: "Text5",
+        tipoRadio: "Group1",
+        numeroRegistro: "Número de registro",
+        claseD1: "Text34", claseD2: "Text35",
+        declaraTexto: "Text1",
+        declaraContinua: "Continúa en anexo",
+        curp: "CURP", nombres: "Nombres", apellido1: "Primer apellido", apellido2: "Segundo apellido",
+        nacionalidadFisica: "Nacionalidad", telefonoFisica: "Teléfono número extensión",
+        continuaFisica: "Continúa en anexo_2",
+        rfc: "RFC", denominacion: "Denominación o razón social", nacionalidadMoral: "Nacionalidad_2",
+        telefonoMoral: "Text6", continuaMoral: "Continúa en anexo_3",
+        cp: "Código postal",
+        calle: "Calle Por ejemplo Avenida Insurgentes Sur Boulevard Ávila Camacho Calzada Corredor etc",
+        numExt: "Número exterior", numInt: "Número interior",
+        colonia: "Colonia Por ejemplo Ampliación Juárez Residencial Hidalgo Fraccionamiento Sección etc",
+        municipio: "Municipio o demarcación territorial", entidad: "Entidad federativa",
+        correo: "Correo electrónico",
+        nombreFirma: "Nombre y ÿrma del solicitante o de su representante",
+        poderNumero: "undefined"
+      },
+      firmaRect: [48.7, 145.6, 563.0, 174.4],
+      anexoKeys: ["1", "2", "3", "4", "5", "6"],
+      anexoLabels: [
+        "Comprobante de pago por la renovación, así como por la declaración de uso. Original.",
+        "Hoja adicional complementaria al punto “El titular declara que usa dentro del territorio nacional el signo distintivo en los productos o servicios que se precisan a continuación”.",
+        "Hoja adicional complementaria al punto “Datos Generales de las Personas”, sólo en caso de cotitularidad. Original.",
+        "Documento que acredita la personalidad del mandatario, en su caso. Original o copia certificada.",
+        "Número del Registro General de Poderes.",
+        "Traducción de los documentos presentados en idioma distinto al español, en su caso. Original."
+      ],
+      poderAnexoIndex: 4
+    },
+    declaracion: {
+      key: "declaracion",
+      homoclave: "IMPI-00-014",
+      titleShort: "Solo Declaratoria de Uso",
+      titleFull: "Declaración de Uso Real y Efectivo de Signos Distintivos",
+      icon: "📝",
+      cardDesc: "Formato IMPI-00-014. Únicamente la declaración de uso real y efectivo (sin renovación).",
+      pdfAsset: "assets/impi-00-014.pdf",
+      outPrefix: "declaratoria-uso",
+      fields: {
+        dd: "  DD MM AAAA", mm: "Text4", aaaa: "Text5",
+        tipoRadio: "Group15",
+        numeroRegistro: "Número de registro",
+        claseD1: "Text11", claseD2: "Text12",
+        declaraTexto: "Text16",
+        declaraContinua: "Continúa en anexo",
+        curp: "CURP", nombres: "Nombres", apellido1: "Primer apellido", apellido2: "Segundo apellido",
+        nacionalidadFisica: "Nacionalidad", telefonoFisica: "Teléfono número extensión",
+        continuaFisica: "Continúa en anexo_2",
+        rfc: "RFC", denominacion: "Denominación o razón social", nacionalidadMoral: "Nacionalidad_2",
+        telefonoMoral: "Text6", continuaMoral: "Continúa en anexo_3",
+        cp: "Código postal_2",
+        calle: "Calle Por ejemplo Avenida Insurgentes Sur Boulevard Ávila Camacho Calzada Corredor etc_2",
+        numExt: "Número exterior_2", numInt: "Número interior_2",
+        colonia: "Colonia Por ejemplo Ampliación Juárez Residencial Hidalgo Fraccionamiento Sección etc_2",
+        municipio: "Municipio o demarcación territorial_2", entidad: "Entidad federativa_2",
+        correo: "Correo electrónico",
+        nombreFirma: "Nombre y ÿrma del solicitante o de su representante",
+        poderNumero: "undefined"
+      },
+      firmaRect: [49.9, 146.6, 564.2, 175.4],
+      anexoKeys: ["1", "2", "3", "4", "5", "6", "7"],
+      anexoLabels: [
+        "Comprobante de pago. Original.",
+        "Hoja adicional complementaria al punto “Datos Generales de las Personas”, sólo en caso de cotitularidad. Original.",
+        "Hoja adicional complementaria al punto “El titular declara que usa dentro del territorio nacional el signo distintivo en los productos o servicios que se precisan a continuación”.",
+        "Documento que acredita la personalidad del mandatario, en su caso. Original o copia certificada.",
+        "Número del Registro General de Poderes.",
+        "Traducción de los documentos presentados en idioma distinto al español, en su caso. Original.",
+        "Legalización o apostilla de los documentos anexos provenientes del extranjero, en su caso. Original."
+      ],
+      poderAnexoIndex: 4
+    }
+  };
+
+  // ---------------------------------------------------------------------
+  // small helpers
+  // ---------------------------------------------------------------------
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function lsGet(key, fallback) {
+    try { var v = localStorage.getItem(key); return v === null ? fallback : v; }
+    catch (e) { return fallback; }
+  }
+  function lsSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+  }
+  function escapeHtml(s) {
+    return (s || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pad2(n) { n = String(n || "").trim(); return n.length >= 2 ? n : ("0" + n).slice(-2); }
+
+  function fileToDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  function dataUrlToBytes(dataUrl) {
+    var base64 = dataUrl.split(",")[1];
+    var bin = atob(base64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+  function loadImgMeta(dataUrl) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () { resolve({ dataUrl: dataUrl, w: img.naturalWidth, h: img.naturalHeight }); };
+      img.onerror = function () { resolve(null); };
+      img.src = dataUrl;
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // app state
+  // ---------------------------------------------------------------------
+  var state = {
+    docKey: null,
+    personaType: "fisica",
+    firma: null // {dataUrl, w, h}
+  };
+
+  // ---------------------------------------------------------------------
+  // screens
+  // ---------------------------------------------------------------------
+  function showMenu() {
+    state.docKey = null;
+    $("menuScreen").hidden = false;
+    $("formScreen").hidden = true;
+    $("topTitle").textContent = "Declaratoria de Uso";
+  }
+
+  function showForm(docKey) {
+    state.docKey = docKey;
+    state.personaType = "fisica";
+    buildForm(docKey);
+    $("menuScreen").hidden = true;
+    $("formScreen").hidden = false;
+    $("topTitle").textContent = DOC_DEFS[docKey].titleShort;
+    window.scrollTo(0, 0);
+  }
+
+  // ---------------------------------------------------------------------
+  // build form markup for a given doc type
+  // ---------------------------------------------------------------------
+  function buildForm(docKey) {
+    var def = DOC_DEFS[docKey];
+    var host = $("formHost");
+    host.innerHTML = "";
+
+    var header = el("div", "form-header",
+      '<span class="homoclave-badge">' + def.homoclave + '</span>' +
+      "<h2>" + escapeHtml(def.titleFull) + "</h2>");
+    host.appendChild(header);
+
+    // ---- Panel: trámite ----
+    var pTramite = el("div", "panel");
+    var pTramiteBody = el("div", "form-panel");
+    pTramiteBody.appendChild(el("div", "section-label", '<span class="n">1.</span>Datos del trámite'));
+
+    var dateRow = el("div", "field");
+    dateRow.appendChild(el("label", null, "Fecha de solicitud del trámite"));
+    var dateInput = el("input");
+    dateInput.type = "date";
+    dateInput.id = "f_fecha";
+    dateRow.appendChild(dateInput);
+    pTramiteBody.appendChild(dateRow);
+
+    var tipoField = el("div", "field");
+    tipoField.appendChild(el("label", null, "Marca con una X sólo una casilla"));
+    var pillGroup = el("div", "pill-group");
+    TIPO_TRAMITE_OPTIONS.forEach(function (opt, i) {
+      var label = el("label", "pill-option" + (i === 0 ? " checked" : ""));
+      label.innerHTML =
+        '<input type="radio" name="tipoTramite" value="' + opt.value + '"' + (i === 0 ? " checked" : "") + ' />' +
+        "<span>" + opt.label + "</span>";
+      pillGroup.appendChild(label);
+      label.addEventListener("click", function () {
+        pillGroup.querySelectorAll(".pill-option").forEach(function (o) { o.classList.remove("checked"); });
+        label.classList.add("checked");
+      });
+    });
+    tipoField.appendChild(pillGroup);
+    pTramiteBody.appendChild(tipoField);
+
+    var numRegRow = el("div", "field");
+    numRegRow.appendChild(el("label", null, "Número de registro" + (docKey === "renovacion" ? " a renovar" : "")));
+    var numRegInput = el("input");
+    numRegInput.type = "text"; numRegInput.id = "f_numeroRegistro";
+    numRegInput.placeholder = "Ej. 2456789";
+    numRegInput.setAttribute("inputmode", "numeric");
+    numRegRow.appendChild(numRegInput);
+    pTramiteBody.appendChild(numRegRow);
+
+    pTramite.appendChild(pTramiteBody);
+    host.appendChild(pTramite);
+
+    // ---- Panel: clase y uso ----
+    var pClase = el("div", "panel");
+    var pClaseBody = el("div", "form-panel");
+    pClaseBody.appendChild(el("div", "section-label", '<span class="n">2.</span>Clase y declaración de uso'));
+
+    var claseField = el("div", "field");
+    claseField.appendChild(el("label", null, "Clase de Niza"));
+    var claseRow = el("div", "clase-row");
+    var claseSelect = el("select");
+    claseSelect.id = "f_clase";
+    NICE_CLASSES.forEach(function (c) {
+      var o = document.createElement("option");
+      o.value = c.num; o.textContent = c.num + " — " + c.title;
+      claseSelect.appendChild(o);
+    });
+    claseRow.appendChild(claseSelect);
+    claseField.appendChild(claseRow);
+    pClaseBody.appendChild(claseField);
+
+    var declaraField = el("div", "field");
+    declaraField.appendChild(el("label", null, "Productos o servicios sobre los que declara el uso"));
+    var declaraTa = el("textarea");
+    declaraTa.id = "f_declara"; declaraTa.setAttribute("spellcheck", "true"); declaraTa.setAttribute("lang", "es");
+    declaraTa.placeholder = "Describe los productos o servicios amparados por el signo distintivo…";
+    declaraField.appendChild(declaraTa);
+    pClaseBody.appendChild(declaraField);
+
+    var continuaField = el("div", "check-item");
+    continuaField.innerHTML =
+      '<input type="checkbox" id="f_declaraContinua" />' +
+      '<label for="f_declaraContinua">Continúa en anexo (la descripción no cabe en el espacio disponible)</label>';
+    pClaseBody.appendChild(continuaField);
+
+    pClase.appendChild(pClaseBody);
+    host.appendChild(pClase);
+
+    // ---- Panel: titular ----
+    var pTitular = el("div", "panel");
+    var pTitularBody = el("div", "form-panel");
+    pTitularBody.appendChild(el("div", "section-label", '<span class="n">3.</span>Titular del registro'));
+
+    var segField = el("div", "field");
+    var seg = el("div", "segmented");
+    seg.innerHTML =
+      '<button type="button" data-persona="fisica" class="active">Persona física</button>' +
+      '<button type="button" data-persona="moral">Persona moral</button>';
+    segField.appendChild(seg);
+    pTitularBody.appendChild(segField);
+
+    var fisicaWrap = el("div", "persona-fisica");
+    fisicaWrap.appendChild(fieldInput("f_curp", "CURP"));
+    fisicaWrap.appendChild(fieldInput("f_nombres", "Nombre(s)"));
+    var row1 = el("div", "field-row");
+    row1.appendChild(fieldInput("f_apellido1", "Primer apellido"));
+    row1.appendChild(fieldInput("f_apellido2", "Segundo apellido"));
+    fisicaWrap.appendChild(row1);
+    var row2 = el("div", "field-row");
+    row2.appendChild(fieldInput("f_nacionalidadFisica", "Nacionalidad"));
+    row2.appendChild(fieldInput("f_telefonoFisica", "Teléfono (número, extensión)"));
+    fisicaWrap.appendChild(row2);
+    var contFisica = el("div", "check-item");
+    contFisica.innerHTML = '<input type="checkbox" id="f_continuaFisica" /><label for="f_continuaFisica">Continúa en anexo (más de un titular persona física)</label>';
+    fisicaWrap.appendChild(contFisica);
+    pTitularBody.appendChild(fisicaWrap);
+
+    var moralWrap = el("div", "persona-moral");
+    moralWrap.hidden = true;
+    moralWrap.appendChild(fieldInput("f_rfc", "RFC"));
+    moralWrap.appendChild(fieldInput("f_denominacion", "Denominación o razón social"));
+    var row3 = el("div", "field-row");
+    row3.appendChild(fieldInput("f_nacionalidadMoral", "Nacionalidad"));
+    row3.appendChild(fieldInput("f_telefonoMoral", "Teléfono (número, extensión)"));
+    moralWrap.appendChild(row3);
+    var contMoral = el("div", "check-item");
+    contMoral.innerHTML = '<input type="checkbox" id="f_continuaMoral" /><label for="f_continuaMoral">Continúa en anexo (más de un titular persona moral)</label>';
+    moralWrap.appendChild(contMoral);
+    pTitularBody.appendChild(moralWrap);
+
+    seg.querySelectorAll("button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        seg.querySelectorAll("button").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        state.personaType = btn.getAttribute("data-persona");
+        fisicaWrap.hidden = state.personaType !== "fisica";
+        moralWrap.hidden = state.personaType !== "moral";
+      });
+    });
+
+    pTitular.appendChild(pTitularBody);
+    host.appendChild(pTitular);
+
+    // ---- Panel: domicilio ----
+    var pDom = el("div", "panel");
+    var pDomBody = el("div", "form-panel");
+    pDomBody.appendChild(el("div", "section-label", '<span class="n">4.</span>Domicilio para oír y recibir notificaciones'));
+    pDomBody.appendChild(fieldInput("f_cp", "Código postal"));
+    pDomBody.appendChild(fieldInput("f_calle", "Calle", "Ej. Avenida Insurgentes Sur, Boulevard Ávila Camacho…"));
+    var row4 = el("div", "field-row");
+    row4.appendChild(fieldInput("f_numExt", "Número exterior"));
+    row4.appendChild(fieldInput("f_numInt", "Número interior"));
+    pDomBody.appendChild(row4);
+    pDomBody.appendChild(fieldInput("f_colonia", "Colonia", "Ej. Ampliación Juárez, Residencial Hidalgo…"));
+    var row5 = el("div", "field-row");
+    row5.appendChild(fieldInput("f_municipio", "Municipio o demarcación territorial"));
+    row5.appendChild(fieldInput("f_entidad", "Entidad federativa"));
+    pDomBody.appendChild(row5);
+    pDomBody.appendChild(fieldInput("f_correo", "Correo electrónico", null, "email"));
+    pDom.appendChild(pDomBody);
+    host.appendChild(pDom);
+
+    // ---- Panel: anexos ----
+    var pAnexo = el("div", "panel");
+    var pAnexoBody = el("div", "form-panel");
+    pAnexoBody.appendChild(el("div", "section-label", '<span class="n">5.</span>Documentos anexos'));
+    var checklist = el("div", "checklist");
+    def.anexoLabels.forEach(function (label, i) {
+      var item = el("div", "check-item");
+      var cid = "f_anexo_" + def.anexoKeys[i];
+      var inner = document.createElement("div");
+      inner.style.flex = "1";
+      var cb = document.createElement("input");
+      cb.type = "checkbox"; cb.id = cid;
+      var lab = document.createElement("label");
+      lab.setAttribute("for", cid);
+      lab.textContent = label;
+      item.appendChild(cb);
+      item.appendChild(inner);
+      inner.appendChild(lab);
+      if (i === def.poderAnexoIndex) {
+        var poderIn = el("input", "poder-input");
+        poderIn.type = "text"; poderIn.id = "f_poderNumero";
+        poderIn.placeholder = "Número del Registro General de Poderes";
+        inner.appendChild(poderIn);
+      }
+      checklist.appendChild(item);
+    });
+    pAnexoBody.appendChild(checklist);
+    pAnexo.appendChild(pAnexoBody);
+    host.appendChild(pAnexo);
+
+    // ---- Panel: firma ----
+    var pFirma = el("div", "panel");
+    var pFirmaBody = el("div", "form-panel");
+    pFirmaBody.appendChild(el("div", "section-label", '<span class="n">6.</span>Nombre y firma del titular o su mandatario'));
+    pFirmaBody.appendChild(fieldInput("f_nombreFirma", "Nombre completo de quien firma"));
+    var firmaNoteWrap = el("div");
+    firmaNoteWrap.id = "firmaNoteWrap";
+    pFirmaBody.appendChild(firmaNoteWrap);
+    pFirma.appendChild(pFirmaBody);
+    host.appendChild(pFirma);
+    renderFirmaNote();
+
+    // ---- actions ----
+    var actions = el("div");
+    var genBtn = el("button", "btn-primary", "📄 Generar PDF");
+    genBtn.type = "button";
+    genBtn.id = "generateBtn";
+    genBtn.addEventListener("click", function () { handleGenerate(); });
+    actions.appendChild(genBtn);
+    var statusMsg = el("div", "status-msg");
+    statusMsg.id = "statusMsg";
+    actions.appendChild(statusMsg);
+    host.appendChild(actions);
+
+    // prefill defaults
+    var today = new Date();
+    dateInput.value = today.toISOString().slice(0, 10);
+    var storedSigner = lsGet("ms_signerName", "");
+    if (storedSigner) $("f_nombreFirma").value = storedSigner;
+  }
+
+  function fieldInput(id, labelText, placeholder, type) {
+    var wrap = el("div", "field");
+    wrap.appendChild(el("label", null, labelText));
+    var input = el("input");
+    input.type = type || "text";
+    input.id = id;
+    if (placeholder) input.placeholder = placeholder;
+    input.setAttribute("spellcheck", "true");
+    input.setAttribute("lang", "es");
+    wrap.appendChild(input);
+    return wrap;
+  }
+
+  function renderFirmaNote() {
+    var wrap = $("firmaNoteWrap");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    if (state.firma) {
+      var note = el("div", "firma-note");
+      note.innerHTML = '<img src="' + state.firma.dataUrl + '" alt="Firma" /><span>Se usará tu firma archivada (configúrala en ⚙️ Configuración si necesitas cambiarla).</span>';
+      wrap.appendChild(note);
+    } else {
+      var warn = el("div", "firma-note warn");
+      warn.textContent = "No hay firma archivada todavía. Ábrela en ⚙️ Configuración para que se estampe automáticamente en el PDF.";
+      wrap.appendChild(warn);
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // PDF generation
+  // ---------------------------------------------------------------------
+  function setText(form, name, value) {
+    if (!value) return;
+    try { form.getTextField(name).setText(String(value)); } catch (e) { /* field missing/mismatched type */ }
+  }
+  function setCheck(form, name, checked) {
+    if (!checked) return;
+    try { form.getCheckBox(name).check(); } catch (e) { /* ignore */ }
+  }
+  function setRadio(form, name, value) {
+    if (!value) return;
+    try { form.getRadioGroup(name).select(value); } catch (e) { /* ignore */ }
+  }
+
+  function handleGenerate() {
+    var def = DOC_DEFS[state.docKey];
+    var statusEl = $("statusMsg");
+    var genBtn = $("generateBtn");
+
+    function setStatus(kind, text) {
+      statusEl.className = "status-msg show " + kind;
+      statusEl.textContent = text;
+    }
+
+    var numeroRegistro = $("f_numeroRegistro").value.trim();
+    if (!numeroRegistro) { setStatus("error", "Falta el número de registro."); return; }
+
+    genBtn.disabled = true;
+    setStatus("info", "Generando PDF…");
+
+    Promise.resolve()
+      .then(function () { return fetch(def.pdfAsset); })
+      .then(function (res) {
+        if (!res.ok) throw new Error("No se pudo cargar la plantilla del formato.");
+        return res.arrayBuffer();
+      })
+      .then(function (templateBytes) { return PDFLib.PDFDocument.load(templateBytes); })
+      .then(function (pdfDoc) {
+        var form = pdfDoc.getForm();
+        var f = def.fields;
+
+        var dateVal = $("f_fecha").value; // yyyy-mm-dd
+        if (dateVal) {
+          var parts = dateVal.split("-");
+          setText(form, f.dd, parts[2]);
+          setText(form, f.mm, parts[1]);
+          setText(form, f.aaaa, parts[0]);
+        }
+
+        var tipoEl = document.querySelector('input[name="tipoTramite"]:checked');
+        setRadio(form, f.tipoRadio, tipoEl ? tipoEl.value : null);
+
+        setText(form, f.numeroRegistro, numeroRegistro);
+
+        var claseNum = $("f_clase").value;
+        var claseDigits = pad2(claseNum);
+        setText(form, f.claseD1, claseDigits.charAt(0));
+        setText(form, f.claseD2, claseDigits.charAt(1));
+
+        setText(form, f.declaraTexto, $("f_declara").value.trim());
+        setCheck(form, f.declaraContinua, $("f_declaraContinua").checked);
+
+        if (state.personaType === "fisica") {
+          setText(form, f.curp, $("f_curp").value.trim());
+          setText(form, f.nombres, $("f_nombres").value.trim());
+          setText(form, f.apellido1, $("f_apellido1").value.trim());
+          setText(form, f.apellido2, $("f_apellido2").value.trim());
+          setText(form, f.nacionalidadFisica, $("f_nacionalidadFisica").value.trim());
+          setText(form, f.telefonoFisica, $("f_telefonoFisica").value.trim());
+          setCheck(form, f.continuaFisica, $("f_continuaFisica").checked);
+        } else {
+          setText(form, f.rfc, $("f_rfc").value.trim());
+          setText(form, f.denominacion, $("f_denominacion").value.trim());
+          setText(form, f.nacionalidadMoral, $("f_nacionalidadMoral").value.trim());
+          setText(form, f.telefonoMoral, $("f_telefonoMoral").value.trim());
+          setCheck(form, f.continuaMoral, $("f_continuaMoral").checked);
+        }
+
+        setText(form, f.cp, $("f_cp").value.trim());
+        setText(form, f.calle, $("f_calle").value.trim());
+        setText(form, f.numExt, $("f_numExt").value.trim());
+        setText(form, f.numInt, $("f_numInt").value.trim());
+        setText(form, f.colonia, $("f_colonia").value.trim());
+        setText(form, f.municipio, $("f_municipio").value.trim());
+        setText(form, f.entidad, $("f_entidad").value.trim());
+        setText(form, f.correo, $("f_correo").value.trim());
+
+        def.anexoKeys.forEach(function (key) {
+          var cb = $("f_anexo_" + key);
+          if (cb && cb.checked) setCheck(form, key, true);
+        });
+        var poderInput = $("f_poderNumero");
+        if (poderInput) setText(form, f.poderNumero, poderInput.value.trim());
+
+        setText(form, f.nombreFirma, $("f_nombreFirma").value.trim());
+
+        // stamp the archived firma image just above the printed
+        // "Nombre y firma..." line (fixed per-document coordinates).
+        var stampPromise = Promise.resolve();
+        if (state.firma) {
+          stampPromise = pdfDoc.embedPng(dataUrlToBytes(state.firma.dataUrl)).then(function (img) {
+            var rect = def.firmaRect; // [x1,y1,x2,y2]
+            var maxW = 60, maxH = 17;
+            var ar = state.firma.h / state.firma.w;
+            var w = maxW, h = w * ar;
+            if (h > maxH) { h = maxH; w = h / ar; }
+            var cx = (rect[0] + rect[2]) / 2;
+            var x = cx - w / 2;
+            var y = rect[3] + 2; // just above the field's top edge
+            var page = pdfDoc.getPages()[0];
+            page.drawImage(img, { x: x, y: y, width: w, height: h });
+          }).catch(function () { /* ignore firma failures, keep going */ });
+        }
+
+        return stampPromise.then(function () {
+          try { form.flatten(); } catch (e) { /* keep unflattened if it fails */ }
+          return pdfDoc.save();
+        });
+      })
+      .then(function (bytes) {
+        var blob = new Blob([bytes], { type: "application/pdf" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        var suffix = numeroRegistro.replace(/[^a-zA-Z0-9-]/g, "") || "formato";
+        a.href = url;
+        a.download = def.outPrefix + "-" + suffix + ".pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        setStatus("success", "✅ PDF generado y descargado.");
+      })
+      .catch(function (err) {
+        console.error(err);
+        setStatus("error", "No se pudo generar el PDF. " + (err && err.message ? err.message : ""));
+      })
+      .finally(function () {
+        genBtn.disabled = false;
+      });
+  }
+
+  // ---------------------------------------------------------------------
+  // settings panel (firma + nombre de quien firma — shared with the
+  // rest of the Marca Segura tools via the same localStorage keys)
+  // ---------------------------------------------------------------------
+  function setupSettings() {
+    var toggle = $("settingsToggle");
+    var panel = $("settingsPanel");
+    toggle.addEventListener("click", function () { panel.classList.toggle("open"); });
+
+    var signerInput = $("cfgSignerName");
+    signerInput.value = lsGet("ms_signerName", "");
+    signerInput.addEventListener("input", function () {
+      lsSet("ms_signerName", signerInput.value);
+      var liveNameInput = $("f_nombreFirma");
+      if (liveNameInput && !liveNameInput.dataset.userEdited) liveNameInput.value = signerInput.value;
+    });
+
+    var drop = $("cfgFirmaDrop");
+    var input = $("cfgFirmaInput");
+    var thumb = $("cfgFirmaThumb");
+    var txt = $("cfgFirmaTxt");
+    var clearBtn = $("cfgFirmaClear");
+
+    function refreshFirmaUI() {
+      if (state.firma) {
+        thumb.innerHTML = '<img src="' + state.firma.dataUrl + '" alt="Firma" />';
+        txt.innerHTML = "<strong>Firma cargada.</strong> Toca para cambiarla.";
+        clearBtn.hidden = false;
+      } else {
+        thumb.innerHTML = "✍️";
+        txt.innerHTML = '<strong>Sube tu firma</strong> (PNG, fondo transparente).';
+        clearBtn.hidden = true;
+      }
+      renderFirmaNote();
+    }
+
+    drop.addEventListener("click", function (e) {
+      if (e.target === clearBtn) return;
+      input.click();
+    });
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      fileToDataUrl(file).then(loadImgMeta).then(function (meta) {
+        if (!meta) return;
+        state.firma = meta;
+        lsSet("ms_firma", meta.dataUrl);
+        refreshFirmaUI();
+      });
+    });
+    clearBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      state.firma = null;
+      lsSet("ms_firma", "");
+      input.value = "";
+      refreshFirmaUI();
+    });
+
+    var stored = lsGet("ms_firma", null);
+    if (stored) {
+      loadImgMeta(stored).then(function (meta) {
+        if (meta) { state.firma = meta; refreshFirmaUI(); }
+      });
+    } else {
+      refreshFirmaUI();
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // init
+  // ---------------------------------------------------------------------
+  function init() {
+    setupSettings();
+
+    document.querySelectorAll(".doc-card").forEach(function (card) {
+      card.addEventListener("click", function () {
+        showForm(card.getAttribute("data-doc"));
+      });
+    });
+    $("backToMenu").addEventListener("click", showMenu);
+
+    showMenu();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    // Esta herramienta no usa service worker propio: siempre carga
+    // la versión más reciente, sin caché que actualizar manualmente.
+  }
+</script>
+</body>
+</html>

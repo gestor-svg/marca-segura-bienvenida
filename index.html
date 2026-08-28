@@ -1,207 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marca Segura — Generador de Paquete de Bienvenida</title>
-
-<!-- PWA: instalable en el teléfono -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0E51C4">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-apple-touch.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MS Bienvenida">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.min.js"></script>
-<script>
-  // pdf.js necesita saber dónde está su worker
-  window.addEventListener('DOMContentLoaded', () => {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  });
-</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marca Segura — Herramientas</title>
+<meta name="theme-color" content="#0050C6">
 <style>
-  :root{
-    --blue:#0E51C4; --blue-deep:#0A3C93; --blue-ink:#0A2E70;
-    --orange:#F77507; --paper:#F7F5F0; --paper-line:#E4E1D9;
+  :root {
+    --blue: #0050C6;
+    --blue-deep: #0A3C93;
+    --blue-ink: #0A2E70;
+    --orange: #FE6A00;
+    --bg: #F3F5FB;
+    --border: #DDE2EE;
   }
-  *{box-sizing:border-box;}
-  body{
-    font-family:-apple-system,Segoe UI,Roboto,sans-serif;
-    background:var(--paper);
-    color:var(--blue-ink);
-    max-width:640px;
-    margin:0 auto;
-    padding:32px 20px 80px;
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--blue-ink);
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 36px 20px 60px;
   }
-  h1{ font-size:22px; margin-bottom:4px; }
-  .subtitle{ color:var(--blue-deep); font-size:14px; margin-bottom:28px; }
-  .card{
-    background:white;
-    border:1px solid var(--paper-line);
-    border-radius:10px;
-    padding:22px;
-    margin-bottom:20px;
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .brand img { height: 34px; width: auto; }
+  .brand span { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); }
+  h1 { font-size: 21px; margin: 2px 0 30px; }
+  .card-list { display: flex; flex-direction: column; gap: 14px; }
+  a.card, div.card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .12s, box-shadow .12s;
   }
-  label{ display:block; font-size:12px; font-weight:600; color:var(--blue-deep); margin:14px 0 4px; }
-  label:first-child{ margin-top:0; }
-  input[type=text], input[type=url], textarea, select{
-    width:100%;
-    padding:9px 11px;
-    border:1px solid var(--paper-line);
-    border-radius:6px;
-    font-size:14px;
-    font-family:inherit;
-    color:var(--blue-ink);
+  a.card:active { transform: scale(0.98); }
+  a.card { box-shadow: 0 1px 2px rgba(20,30,60,0.05), 0 8px 20px -12px rgba(20,30,60,0.15); }
+  .card .icon {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
   }
-  textarea{ min-height:60px; resize:vertical; }
-  input[type=file]{ margin-top:6px; }
-  .row2{ display:flex; gap:14px; }
-  .row2 > div{ flex:1; }
-  button{
-    background:var(--orange);
-    color:white;
-    border:none;
-    padding:13px 22px;
-    border-radius:8px;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    width:100%;
-    margin-top:18px;
+  .card.bienvenida .icon { background: color-mix(in srgb, var(--blue) 12%, white); }
+  .card.viabilidad .icon { background: color-mix(in srgb, var(--orange) 14%, white); }
+  .card.declaratoria .icon { background: color-mix(in srgb, var(--blue) 12%, white); }
+  .card.cotizaciones .icon { background: #eef0f5; }
+  .card .txt { flex: 1; min-width: 0; }
+  .card .txt strong { display: block; font-size: 15.5px; margin-bottom: 2px; }
+  .card .txt span { display: block; font-size: 12.5px; color: var(--blue-deep); opacity: 0.85; line-height: 1.4; }
+  .card .arrow { font-size: 18px; color: var(--blue-deep); opacity: 0.5; flex-shrink: 0; }
+  .card.disabled { opacity: 0.6; cursor: default; }
+  .badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--blue-deep);
+    background: #eef0f5;
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-top: 4px;
   }
-  button:disabled{ opacity:0.6; cursor:not-allowed; }
-  #status{
-    font-size:14px;
-    font-weight:600;
-    color:var(--blue);
-    margin-top:14px;
-    min-height:20px;
-    text-align:center;
-  }
-  #logoPreview{ max-width:200px; max-height:100px; display:none; margin-top:8px; background:#eee; padding:8px; border-radius:6px; }
-  #logoPreviewLabel{ font-size:12px; color:var(--blue-deep); margin-top:10px; }
-  #downloadLink, #shareBtn{
-    display:block;
-    width:100%;
-    text-align:center;
-    background:var(--blue);
-    color:white;
-    text-decoration:none;
-    padding:14px 20px;
-    border-radius:8px;
-    font-weight:600;
-    font-size:15px;
-    border:none;
-    cursor:pointer;
-    margin-bottom:12px;
-  }
-  #shareBtn{ background:var(--orange); }
-  .result-check{ font-size:38px; text-align:center; margin-bottom:6px; }
-  .result-title{ font-size:19px; font-weight:700; text-align:center; margin-bottom:4px; }
-  .result-sub{ font-size:13px; color:var(--blue-deep); text-align:center; margin-bottom:20px; }
-  .whatsapp-note{ font-size:12px; color:var(--blue-deep); opacity:0.8; text-align:center; margin-top:10px; }
-  .config-note{ font-size:11.5px; color:var(--blue-deep); opacity:0.75; margin-top:6px; }
+  .footnote { text-align: center; font-size: 11.5px; color: var(--blue-deep); opacity: 0.6; margin-top: 34px; }
 </style>
 </head>
 <body>
 
-<a href="menu/" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--blue-deep);opacity:0.75;text-decoration:none;margin-bottom:14px;">🗂️ Ver todas las herramientas de Marca Segura</a>
-<h1>Marca Segura — Paquete de Bienvenida</h1>
-<div class="subtitle">Sube el título del IMPI y genera automáticamente las 3 hojas de bienvenida, listas para enviar por WhatsApp.</div>
-
-<div class="card">
-  <label>Título de registro de marca (PDF del IMPI)</label>
-  <input type="file" id="fileInput" accept="application/pdf">
-  <div id="status"></div>
+<div class="brand">
+  <img src="../icon-192.png" alt="Marca Segura" />
+  <span>Marca Segura</span>
 </div>
+<h1>¿Qué necesitas generar hoy?</h1>
 
-<div class="card" id="formSection" style="display:none;">
-  <h3 style="margin-top:0;">Datos extraídos — revisa y corrige si hace falta</h3>
-
-  <label>Marca</label>
-  <input type="text" id="f_marca">
-
-  <div class="row2">
-    <div>
-      <label>Registro</label>
-      <input type="text" id="f_registro">
+<div class="card-list">
+  <a class="card bienvenida" href="../">
+    <div class="icon">🎉</div>
+    <div class="txt">
+      <strong>Kit de Bienvenida</strong>
+      <span>Sube el título del IMPI y genera las 3 hojas de bienvenida para el cliente.</span>
     </div>
-    <div>
-      <label>Expediente</label>
-      <input type="text" id="f_expediente">
+    <div class="arrow">›</div>
+  </a>
+
+  <a class="card viabilidad" href="../examen-viabilidad/">
+    <div class="icon">🛡️</div>
+    <div class="txt">
+      <strong>Examen de Viabilidad</strong>
+      <span>Arma el reporte de viabilidad con clases de Niza, % de éxito y tu firma.</span>
+    </div>
+    <div class="arrow">›</div>
+  </a>
+
+  <a class="card declaratoria" href="../declaratoria/">
+    <div class="icon">📝</div>
+    <div class="txt">
+      <strong>Declaratoria de Uso</strong>
+      <span>Llena y descarga los formatos IMPI de Renovación y/o Declaratoria de Uso, con tu firma.</span>
+    </div>
+    <div class="arrow">›</div>
+  </a>
+
+  <div class="card cotizaciones disabled">
+    <div class="icon">🧾</div>
+    <div class="txt">
+      <strong>Cotizaciones</strong>
+      <span>Generador de cotizaciones para clientes.</span>
+      <span class="badge">Próximamente</span>
     </div>
   </div>
-
-  <label>Titular(es) — separados por coma</label>
-  <textarea id="f_titulares"></textarea>
-
-  <label>Domicilio</label>
-  <textarea id="f_domicilio"></textarea>
-
-  <div class="row2">
-    <div>
-      <label>Clase</label>
-      <input type="text" id="f_clase">
-    </div>
-    <div>
-      <label>Tipo de marca</label>
-      <select id="f_tipo">
-        <option value="nominativa">Nominativa (sin logo)</option>
-        <option value="mixta">Mixta (con logo)</option>
-      </select>
-    </div>
-  </div>
-
-  <label>Se aplica a (descripción)</label>
-  <textarea id="f_seAplicaA"></textarea>
-
-  <div class="row2">
-    <div>
-      <label>Fecha de registro</label>
-      <input type="text" id="f_fechaEmision">
-    </div>
-    <div>
-      <label>Fecha de vigencia</label>
-      <input type="text" id="f_fechaVigencia">
-    </div>
-  </div>
-
-  <img id="logoPreview">
-  <div id="logoPreviewLabel"></div>
-  <label>Reemplazar / subir logo del cliente manualmente (opcional)</label>
-  <input type="file" id="manualLogoUpload" accept="image/png,image/jpeg">
-
-  <label>URL de tu Apps Script de referidos (ver referidos_qr.gs)</label>
-  <input type="url" id="webappUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
-  <div class="config-note">Se guarda en este navegador para que no tengas que volver a pegarla cada vez.</div>
-
-  <button id="generateBtn">Generar paquete de bienvenida</button>
 </div>
 
-<div class="card" id="resultSection" style="display:none;">
-  <div class="result-check">✅</div>
-  <div class="result-title">¡Listo!</div>
-  <div class="result-sub">Tu paquete de bienvenida está preparado.</div>
-  <button id="shareBtn" style="display:none;">Compartir por WhatsApp</button>
-  <a id="downloadLink" href="#" download>Descargar al dispositivo</a>
-  <div class="whatsapp-note">Al compartir, Android te va a dejar elegir entre WhatsApp y WhatsApp Business.</div>
-</div>
+<p class="footnote">Uso interno · MARCASEGURA.MX</p>
 
-<script type="module" src="app.mjs"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js').catch(err => {
-        console.warn('No se pudo registrar el service worker:', err);
-      });
-    });
-  }
-</script>
 </body>
 </html>

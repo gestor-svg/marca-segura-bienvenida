@@ -511,6 +511,10 @@ fieldset { border: none; padding: 0; margin: 0; }
           </div>
           <input type="file" id="clientLogoInput" accept="image/png,image/jpeg,image/webp" />
         </div>
+        <div class="field">
+          <label for="logoCaptionInput">Leyenda sobre el logotipo</label>
+          <textarea id="logoCaptionInput">Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:</textarea>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -909,7 +913,7 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
   $("addClassBtn").addEventListener("click", function () { addClassBlock(); });
 
   // ---------- top-level fields ----------
-  ["clientNameInput", "brandNameInput", "examDateInput", "notesInput", "conclusionSelect", "conclusionNotesInput"].forEach(function (id) {
+  ["clientNameInput", "brandNameInput", "examDateInput", "notesInput", "conclusionSelect", "conclusionNotesInput", "logoCaptionInput"].forEach(function (id) {
     $(id).addEventListener("input", renderPreview);
     $(id).addEventListener("change", renderPreview);
   });
@@ -989,9 +993,10 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     $("pvBody").innerHTML = bodyHtml;
 
     var logoSection = $("pvLogoSection");
+    var logoCaption = $("logoCaptionInput").value.trim() || "Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:";
     if (state.clientLogo) {
       logoSection.innerHTML =
-        "<p class='pv-logo-caption'>Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:</p>" +
+        textToParagraphsHtml(logoCaption, "pv-logo-caption") +
         "<div class='pv-client-logo'><img src='" + state.clientLogo.dataUrl + "' alt='Logo del cliente' /></div>";
     } else {
       logoSection.innerHTML = "<p class='pv-empty-note'>Sin logotipo del cliente adjunto.</p>";
@@ -1165,7 +1170,7 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
 
     // ---- client logo ----
     if (state.clientLogo) {
-      para("Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:", { size: 10.5, align: "left", gapAfter: 4 });
+      para(($("logoCaptionInput").value.trim() || "Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:"), { size: 10.5, align: "left", gapAfter: 4 });
       addImageCentered(state.clientLogo, 85, 70, 8);
     }
 

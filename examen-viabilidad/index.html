@@ -930,6 +930,22 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     });
   }
 
+  // Convierte texto libre (con saltos de línea reales) en HTML con párrafos
+  // de verdad: una línea en blanco separa párrafos (<p> nuevo), un solo
+  // salto de línea dentro del mismo párrafo se vuelve <br>. Sin esto, el
+  // navegador colapsa cualquier \n a un espacio dentro de un solo <p>.
+  function textToParagraphsHtml(text, className) {
+    var cls = className ? " class='" + className + "'" : "";
+    var paragraphs = (text || "").replace(/\r\n/g, "\n").split(/\n\s*\n/);
+    return paragraphs
+      .map(function (p) { return p.trim(); })
+      .filter(function (p) { return p.length > 0; })
+      .map(function (p) {
+        return "<p" + cls + ">" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>";
+      })
+      .join("");
+  }
+
   function conclusionLabel(val) {
     if (val === "no-proceder") return "No se recomienda proceder con el registro.";
     if (val === "reservas") return "Se recomienda proceder con reservas.";
@@ -959,16 +975,16 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
       bodyHtml += "<p class='desc-text'>" + escapeHtml(c.desc || "—") + "</p>";
       var pct = c.pct !== "" && c.pct !== null && c.pct !== undefined ? c.pct : "—";
       bodyHtml += "<p class='pct-line'>% de Éxito en la solicitud de la denominación (Nombre): " + pct + "%</p>";
-      if (c.comment) bodyHtml += "<p>" + escapeHtml(c.comment) + "</p>";
+      if (c.comment) bodyHtml += textToParagraphsHtml(c.comment);
     });
 
     var notes = $("notesInput").value.trim();
-    if (notes) bodyHtml += "<p>" + escapeHtml(notes) + "</p>";
+    if (notes) bodyHtml += textToParagraphsHtml(notes);
 
     var conclVal = $("conclusionSelect").value;
     var conclNotes = $("conclusionNotesInput").value.trim();
     bodyHtml += "<p class='concl-line'>" + conclusionLabel(conclVal) + "</p>";
-    if (conclNotes) bodyHtml += "<p>" + escapeHtml(conclNotes) + "</p>";
+    if (conclNotes) bodyHtml += textToParagraphsHtml(conclNotes);
 
     $("pvBody").innerHTML = bodyHtml;
 

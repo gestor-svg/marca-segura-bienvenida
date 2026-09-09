@@ -397,6 +397,12 @@ fieldset { border: none; padding: 0; margin: 0; }
 .pv-logo-caption { font-size: 12px; margin: 4mm 0 4mm; color: #1a2233; }
 .pv-client-logo { display: flex; justify-content: center; margin: 4mm 0 8mm; }
 .pv-client-logo img { max-width: 55mm; max-height: 45mm; object-fit: contain; }
+.pv-similar-logos { display: flex; flex-wrap: wrap; gap: 6mm; justify-content: center; margin: 4mm 0 8mm; }
+.pv-similar-logos img { max-width: 35mm; max-height: 30mm; object-fit: contain; border: 0.3mm solid #d7dbe3; padding: 2mm; }
+.similar-logo-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.similar-logo-thumbs .slt { position: relative; width: 64px; height: 64px; border: 1px solid #d7dbe3; border-radius: 6px; overflow: hidden; background: #fff; }
+.similar-logo-thumbs .slt img { width: 100%; height: 100%; object-fit: contain; }
+.similar-logo-thumbs .slt button { position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.6); color: #fff; border: none; width: 18px; height: 18px; line-height: 18px; font-size: 12px; cursor: pointer; }
 .pv-empty-note { font-size: 11px; color: #8791a5; font-style: italic; }
 
 .pv-sign { text-align: center; margin-top: 10mm; color: #1a2233; }
@@ -514,6 +520,15 @@ fieldset { border: none; padding: 0; margin: 0; }
         <div class="field">
           <label for="logoCaptionInput">Leyenda sobre el logotipo</label>
           <textarea id="logoCaptionInput">Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:</textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Logos similares encontrados</p>
+        <div class="field">
+          <label for="similarLogosInput">Agregar logos parecidos hallados en la búsqueda (opcional, puedes seleccionar varios)</label>
+          <input type="file" id="similarLogosInput" accept="image/png,image/jpeg,image/webp,image/gif" multiple />
+          <div class="similar-logo-thumbs" id="similarLogosThumbs"></div>
         </div>
       </fieldset>
 
@@ -649,6 +664,7 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     firmLogo: null,   // {dataUrl, w, h}
     firma: null,      // {dataUrl, w, h}
     clientLogo: null, // {dataUrl, w, h}
+    similarLogos: [], // [{id, dataUrl, w, h}]
     classes: []        // {id, num, desc, autoDesc, pct, comment}
   };
   var classSeq = 0;
@@ -833,6 +849,44 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
       renderPreview();
     });
 
+  // similar logos found in search — multiple images for visual comparison
+  var similarLogoIdSeq = 0;
+  function renderSimilarLogosThumbs() {
+    var wrap = $("similarLogosThumbs");
+    wrap.innerHTML = "";
+    state.similarLogos.forEach(function (item) {
+      var box = document.createElement("div");
+      box.className = "slt";
+      var img = document.createElement("img");
+      img.src = item.dataUrl;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "×";
+      btn.addEventListener("click", function () {
+        state.similarLogos = state.similarLogos.filter(function (l) { return l.id !== item.id; });
+        renderSimilarLogosThumbs();
+        renderPreview();
+      });
+      box.appendChild(img);
+      box.appendChild(btn);
+      wrap.appendChild(box);
+    });
+  }
+  function addSimilarLogoFiles(fileList) {
+    Array.prototype.slice.call(fileList || []).forEach(function (file) {
+      fileToDataUrl(file).then(normalizeImageDataUrl).then(loadImgMeta).then(function (meta) {
+        meta.id = "sl" + (++similarLogoIdSeq);
+        state.similarLogos.push(meta);
+        renderSimilarLogosThumbs();
+        renderPreview();
+      });
+    });
+  }
+  $("similarLogosInput").addEventListener("change", function () {
+    addSimilarLogoFiles(this.files);
+    this.value = "";
+  });
+
   // settings text fields — persist
   function bindPersistedText(inputId, storageKey) {
     var el = $(inputId);
@@ -1013,13 +1067,19 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
 
     var logoSection = $("pvLogoSection");
     var logoCaption = $("logoCaptionInput").value.trim() || "Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:";
+    var logoHtml = "";
     if (state.clientLogo) {
-      logoSection.innerHTML =
+      logoHtml +=
         textToParagraphsHtml(logoCaption, "pv-logo-caption") +
         "<div class='pv-client-logo'><img src='" + state.clientLogo.dataUrl + "' alt='Logo del cliente' /></div>";
-    } else {
-      logoSection.innerHTML = "";
     }
+    if (state.similarLogos.length) {
+      logoHtml += "<p class='pv-logo-caption'>Logos similares encontrados para comparación:</p>";
+      logoHtml += "<div class='pv-similar-logos'>" +
+        state.similarLogos.map(function (l) { return "<img src='" + l.dataUrl + "' alt='Logo similar' />"; }).join("") +
+        "</div>";
+    }
+    logoSection.innerHTML = logoHtml;
 
     $("pvSigner").textContent = $("signerNameInput").value.trim() || "Lic. Guillermo Vázquez";
     $("pvSite").textContent = ($("siteInput").value.trim() || "MARCASEGURA.MX").toUpperCase();
@@ -1191,6 +1251,31 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     if (state.clientLogo) {
       para(($("logoCaptionInput").value.trim() || "Referente al logotipo propuesto, no hay impedimento de usar el logotipo propuesto:"), { size: 10.5, align: "left", gapAfter: 4 });
       addImageCentered(state.clientLogo, 85, 70, 8);
+    }
+
+    // ---- similar logos found in search ----
+    if (state.similarLogos.length) {
+      para("Logos similares encontrados para comparación:", { size: 10.5, align: "left", gapAfter: 4 });
+      var slCols = 3;
+      var slGap = 5;
+      var slW = (contentW - slGap * (slCols - 1)) / slCols;
+      var slMaxH = 30;
+      var slRowH = 0;
+      state.similarLogos.forEach(function (meta, idx) {
+        var col = idx % slCols;
+        if (col === 0) {
+          if (idx > 0) y += slRowH + slGap;
+          ensureSpace(slMaxH + slGap);
+          slRowH = 0;
+        }
+        var ar = meta.h / meta.w;
+        var w = slW, h = w * ar;
+        if (h > slMaxH) { h = slMaxH; w = h / ar; }
+        var x = marginL + col * (slW + slGap) + (slW - w) / 2;
+        try { doc.addImage(meta.dataUrl, mimeFromDataUrl(meta.dataUrl), x, y, w, h); } catch (e) { /* ignore */ }
+        if (h > slRowH) slRowH = h;
+      });
+      y += slRowH + 8;
     }
 
     // ---- signature ----

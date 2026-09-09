@@ -999,7 +999,7 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
         textToParagraphsHtml(logoCaption, "pv-logo-caption") +
         "<div class='pv-client-logo'><img src='" + state.clientLogo.dataUrl + "' alt='Logo del cliente' /></div>";
     } else {
-      logoSection.innerHTML = "<p class='pv-empty-note'> </p>";
+      logoSection.innerHTML = "";
     }
 
     $("pvSigner").textContent = $("signerNameInput").value.trim() || "Lic. Guillermo Vázquez";

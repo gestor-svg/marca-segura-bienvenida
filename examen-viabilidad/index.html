@@ -448,7 +448,7 @@ fieldset { border: none; padding: 0; margin: 0; }
           <div class="txt"><strong>Subir</strong> o arrastrar imagen</div>
           <button type="button" class="clear-btn" id="firmLogoReset">Restaurar</button>
         </div>
-        <input type="file" id="firmLogoInput" accept="image/png,image/jpeg,image/webp" />
+        <input type="file" id="firmLogoInput" accept="image/png,image/jpeg,image/webp,image/gif" />
       </div>
       <div class="field">
         <label for="signatureInput">Firma</label>
@@ -457,7 +457,7 @@ fieldset { border: none; padding: 0; margin: 0; }
           <div class="txt"><strong>Subir</strong> o arrastrar imagen</div>
           <button type="button" class="clear-btn" id="signatureReset">Restaurar</button>
         </div>
-        <input type="file" id="signatureInput" accept="image/png,image/jpeg,image/webp" />
+        <input type="file" id="signatureInput" accept="image/png,image/jpeg,image/webp,image/gif" />
       </div>
       <div class="field">
         <label for="signerNameInput">Nombre del firmante</label>
@@ -509,7 +509,7 @@ fieldset { border: none; padding: 0; margin: 0; }
             <div class="txt"><strong>Subir</strong> imagen del logo</div>
             <button type="button" class="clear-btn" id="clientLogoReset">Quitar</button>
           </div>
-          <input type="file" id="clientLogoInput" accept="image/png,image/jpeg,image/webp" />
+          <input type="file" id="clientLogoInput" accept="image/png,image/jpeg,image/webp,image/gif" />
         </div>
         <div class="field">
           <label for="logoCaptionInput">Leyenda sobre el logotipo</label>
@@ -673,6 +673,25 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     });
   }
 
+  // El PDF (jsPDF) no sabe leer GIF, y un PDF no puede animar de todos modos.
+  // Si el archivo subido es GIF, lo convertimos a PNG (imagen fija) justo al
+  // subirlo, así se ve igual en la vista previa y sí aparece en el PDF.
+  function normalizeImageDataUrl(dataUrl) {
+    if (!/^data:image\/gif/i.test(dataUrl || "")) return Promise.resolve(dataUrl);
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || 1;
+        canvas.height = img.naturalHeight || 1;
+        canvas.getContext("2d").drawImage(img, 0, 0);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.onerror = function () { resolve(dataUrl); };
+      img.src = dataUrl;
+    });
+  }
+
   // Some deployments (e.g. hosted alongside the existing site's own icons)
   // point the defaults at a plain image URL instead of embedding a data URI
   // in the source. This fetches it once and converts it to a data URI so
@@ -736,7 +755,7 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     input.addEventListener("change", function () {
       var file = input.files && input.files[0];
       if (!file) return;
-      fileToDataUrl(file).then(loadImgMeta).then(function (meta) {
+      fileToDataUrl(file).then(normalizeImageDataUrl).then(loadImgMeta).then(function (meta) {
         thumb.src = meta.dataUrl;
         onSet(meta);
       });
@@ -755,7 +774,7 @@ window.__MS_DEFAULT_LOGO_URL__ = "../icon-512.png";
     drop.addEventListener("drop", function (e) {
       var file = e.dataTransfer.files && e.dataTransfer.files[0];
       if (!file) return;
-      fileToDataUrl(file).then(loadImgMeta).then(function (meta) {
+      fileToDataUrl(file).then(normalizeImageDataUrl).then(loadImgMeta).then(function (meta) {
         thumb.src = meta.dataUrl;
         onSet(meta);
       });

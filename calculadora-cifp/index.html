@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Calculadora CIFP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #0050c6;
+  --blue-ink: #0a2f66;
+  --orange: #fe6a00;
+  --bg: #f3f5fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f8;
+  --border: #dde2ee;
+  --ink: #1a2233;
+  --ink-muted: #5b6478;
+  --ink-faint: #8791a5;
+  --danger: #c62828;
+  --success: #1a7d4a;
+  --shadow: 0 1px 2px rgba(20, 30, 60, 0.06), 0 8px 24px -12px rgba(20, 30, 60, 0.18);
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #5b9bff;
+    --blue-ink: #bcd4ff;
+    --orange: #ff8a3d;
+    --bg: #0f1420;
+    --surface: #161d2e;
+    --surface-2: #1d2536;
+    --border: #2b3550;
+    --ink: #e8ebf3;
+    --ink-muted: #a3acc4;
+    --ink-faint: #6f7994;
+    --danger: #ff6b6b;
+    --success: #4fd18a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --blue: #5b9bff;
+  --blue-ink: #bcd4ff;
+  --orange: #ff8a3d;
+  --bg: #0f1420;
+  --surface: #161d2e;
+  --surface-2: #1d2536;
+  --border: #2b3550;
+  --ink: #e8ebf3;
+  --ink-muted: #a3acc4;
+  --ink-faint: #6f7994;
+  --danger: #ff6b6b;
+  --success: #4fd18a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { min-height: 100vh; overflow-x: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+.app-shell { max-width: 1360px; margin: 0 auto; padding: 28px 24px 64px; }
+
+.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.topbar img { height: 34px; width: auto; display: block; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text .kicker {
+  font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange);
+}
+.brand-text h1 { font-family: "Poppins", sans-serif; font-size: 20px; font-weight: 700; margin: 2px 0 0; color: var(--ink); }
+.subtitle { font-size: 13.5px; color: var(--ink-muted); margin: 6px 0 0; max-width: 720px; line-height: 1.5; }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+@media (min-width: 1020px) { .layout { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); align-items: start; } }
+
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.form-panel { padding: 22px; display: flex; flex-direction: column; gap: 20px; }
+
+.section-label {
+  font-family: "Poppins", sans-serif; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 10px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+.field label { font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+.field .hint { font-size: 11.5px; color: var(--ink-faint); margin-top: -2px; line-height: 1.4; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+input[type="text"], input[type="number"], select {
+  font-family: "Work Sans", sans-serif; font-size: 14.5px; color: var(--ink);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; width: 100%; transition: border-color .15s, box-shadow .15s;
+}
+input[type="number"] { font-variant-numeric: tabular-nums; }
+input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 20%, transparent); }
+input[readonly] { color: var(--ink-muted); cursor: not-allowed; }
+
+.pct-input-wrap, .currency-input-wrap { position: relative; }
+.pct-input-wrap input { padding-right: 30px; }
+.pct-input-wrap span { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--ink-faint); pointer-events: none; }
+.currency-input-wrap input { padding-left: 28px; }
+.currency-input-wrap span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--ink-faint); pointer-events: none; }
+
+fieldset { border: none; padding: 0; margin: 0; }
+
+.btn-primary {
+  font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15px; color: #fff;
+  background: linear-gradient(135deg, var(--blue), color-mix(in srgb, var(--blue) 78%, #001a4d));
+  border: none; border-radius: 10px; padding: 14px 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--blue) 60%, transparent);
+  transition: transform .12s, box-shadow .12s;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--blue) 65%, transparent); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  font-family: "Poppins", sans-serif; font-weight: 600; font-size: 13.5px; color: var(--ink-muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 11px 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-secondary:hover { border-color: var(--ink-muted); color: var(--ink); }
+.btn-secondary:disabled { opacity: .5; cursor: not-allowed; }
+
+.export-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.results-col { display: flex; flex-direction: column; gap: 16px; }
+
+.results-placeholder {
+  padding: 60px 28px; text-align: center; color: var(--ink-faint); font-size: 14px; line-height: 1.6;
+}
+
+#resultsPaper { padding: 24px; display: none; flex-direction: column; gap: 20px; background: var(--surface); }
+#resultsPaper.show { display: flex; }
+
+.results-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.results-header h2 { font-family: "Poppins", sans-serif; font-size: 18px; margin: 0 0 4px; color: var(--ink); }
+.results-header .client-line { font-size: 13px; color: var(--ink-muted); }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.stat-card {
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.stat-card .stat-label { font-size: 12px; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.stat-card .stat-value { font-family: "Poppins", sans-serif; font-size: 22px; font-weight: 700; color: var(--blue-ink); }
+.stat-card .stat-sub { font-size: 12px; color: var(--ink-faint); line-height: 1.4; }
+.stat-card.accent .stat-value { color: var(--success); }
+.stat-card.warn .stat-value { color: var(--danger); }
+
+.ahorro-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.ahorro-item { flex: 1; min-width: 140px; text-align: center; padding: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.ahorro-item .yr { font-size: 11.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .05em; }
+.ahorro-item .val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 16px; color: var(--blue-ink); margin-top: 2px; }
+
+.narrative {
+  background: color-mix(in srgb, var(--blue) 6%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--blue) 25%, var(--border));
+  border-radius: 10px; padding: 16px 18px; font-size: 13.5px; line-height: 1.65; color: var(--ink);
+}
+.narrative strong { color: var(--blue-ink); }
+
+.disclaimer { font-size: 11.5px; color: var(--ink-faint); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 12px; }
+
+.status-msg { font-size: 13px; border-radius: 8px; padding: 10px 12px; display: none; }
+.status-msg.show { display: block; }
+.status-msg.info { background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
+.status-msg.error { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+
+.footnote { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 18px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="topbar">
+    <img src="../icon-512.png" alt="Marca Segura" />
+    <div class="brand-text">
+      <span class="kicker">Marca Segura</span>
+      <h1>Calculadora de Impacto Financiero y Protección de Marcas (CIFP)</h1>
+    </div>
+  </div>
+  <p class="subtitle">Diagnóstico financiero para transformar el registro de marcas de "gasto en trámite" a "inversión con retorno medible". Captura los datos del cliente y genera el reporte de impacto en segundos.</p>
+
+  <div class="layout">
+
+    <div class="panel form-panel">
+      <fieldset>
+        <p class="section-label">Datos del cliente</p>
+        <div class="field">
+          <label for="clientName">Nombre del cliente / empresa</label>
+          <input type="text" id="clientName" placeholder="Ej. Grupo XYZ" />
+        </div>
+        <div class="field">
+          <label for="numMarcas">Número de marcas a proteger</label>
+          <input type="number" id="numMarcas" min="1" step="1" value="27" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Datos financieros</p>
+        <div class="field">
+          <label for="ingresos">Ingresos anuales atribuibles a las marcas</label>
+          <div class="currency-input-wrap"><span>$</span><input type="number" id="ingresos" min="0" step="1000" placeholder="0" /></div>
+          <span class="hint">Facturación anual vinculada al uso de la(s) marca(s).</span>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="tasaISR">Tasa de ISR aplicable</label>
+            <div class="pct-input-wrap"><input type="number" id="tasaISR" min="0" max="100" step="0.1" value="30" /><span>%</span></div>
+          </div>
+          <div class="field">
+            <label for="tasaAmortizacion">Tasa de amortización anual</label>
+            <div class="pct-input-wrap"><input type="number" id="tasaAmortizacion" min="0" max="100" step="0.5" value="15" /><span>%</span></div>
+          </div>
+        </div>
+        <span class="hint" style="margin-top:-6px;">Deducción del activo intangible conforme a la LISR (ajustable según criterio contable / SAT). Validar con contador aliado.</span>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Valuación de marca (Relief-from-Royalty)</p>
+        <div class="field">
+          <label for="fortaleza">Fortaleza de marca</label>
+          <select id="fortaleza">
+            <option value="baja">Baja (regalía 1% – 3%)</option>
+            <option value="media" selected>Media (regalía 4% – 7%)</option>
+            <option value="alta">Alta (regalía 8% – 15%)</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="tasaRegalia">Tasa de regalía aplicada</label>
+            <div class="pct-input-wrap"><input type="number" id="tasaRegalia" min="0" max="100" step="0.1" value="5.5" /><span>%</span></div>
+          </div>
+          <div class="field">
+            <label for="aniosVida">Años de vida útil</label>
+            <input type="number" id="aniosVida" min="1" step="1" value="10" />
+          </div>
+        </div>
+        <span class="hint" style="margin-top:-6px;">Valor del intangible = Ingresos anuales × Tasa de regalía × Años de vida útil.</span>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Costo del servicio</p>
+        <div class="field">
+          <label for="costoPorMarca">Costo por marca (registro + mantenimiento de declaratoria de uso)</label>
+          <div class="currency-input-wrap"><span>$</span><input type="number" id="costoPorMarca" min="0" step="500" value="15000" /></div>
+        </div>
+        <div class="field">
+          <label for="costoTotal">Costo total del servicio</label>
+          <div class="currency-input-wrap"><span>$</span><input type="number" id="costoTotal" readonly /></div>
+          <span class="hint">Se calcula automáticamente: número de marcas × costo por marca.</span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Riesgo de litigio por no registrar</p>
+        <div class="field">
+          <label for="nivelRiesgo">Nivel de riesgo del mercado</label>
+          <select id="nivelRiesgo">
+            <option value="medio" selected>Medio (mercado competido)</option>
+            <option value="alto">Alto (mercado muy competido)</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="probLitigio">Probabilidad de litigio</label>
+            <div class="pct-input-wrap"><input type="number" id="probLitigio" min="0" max="100" step="1" value="30" /><span>%</span></div>
+          </div>
+          <div class="field">
+            <label for="costoDefensa">Costo promedio de defensa legal</label>
+            <div class="currency-input-wrap"><span>$</span><input type="number" id="costoDefensa" min="0" step="1000" value="350000" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <button type="button" class="btn-primary" id="calcBtn">🧮 Calcular diagnóstico financiero</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+    <div class="results-col">
+      <div class="panel" id="resultsPlaceholder">
+        <p class="results-placeholder">Completa los datos del cliente y presiona <strong>Calcular diagnóstico financiero</strong> para generar el reporte de impacto.</p>
+      </div>
+
+      <div class="export-actions" id="exportActions" style="display:none;">
+        <button type="button" class="btn-secondary" id="exportJpegBtn">🖼 Exportar JPEG</button>
+        <button type="button" class="btn-secondary" id="exportPdfBtn">📄 Exportar PDF</button>
+      </div>
+
+      <div class="panel" id="resultsPaper">
+        <div class="results-header">
+          <div>
+            <h2>Diagnóstico de Impacto Financiero</h2>
+            <div class="client-line" id="clientLine">Cliente: —</div>
+          </div>
+          <img src="../icon-512.png" alt="Marca Segura" style="height:28px;" />
+        </div>
+
+        <div>
+          <p class="section-label">Impacto financiero</p>
+          <div class="stat-grid">
+            <div class="stat-card accent">
+              <span class="stat-label">Beneficio fiscal anual</span>
+              <span class="stat-value" id="rBeneficioAnual">—</span>
+              <span class="stat-sub">Ahorro deducible cada año por amortización del intangible.</span>
+            </div>
+            <div class="stat-card accent">
+              <span class="stat-label">ROI de la inversión</span>
+              <span class="stat-value" id="rRoi">—</span>
+              <span class="stat-sub" id="rRoiSub">Retorno sobre el costo total del servicio, a 10 años.</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Punto de equilibrio</span>
+              <span class="stat-value" id="rEquilibrio">—</span>
+              <span class="stat-sub">Meses para recuperar la inversión solo con el beneficio fiscal.</span>
+            </div>
+            <div class="stat-card warn">
+              <span class="stat-label">Costo de no actuar</span>
+              <span class="stat-value" id="rRiesgo">—</span>
+              <span class="stat-sub">Valor esperado de un litigio de marca (probabilidad × costo de defensa), sin contar pérdida de mercado.</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Valor del patrimonio protegido</span>
+              <span class="stat-value" id="rValorIntangible">—</span>
+              <span class="stat-sub">Valuación del portafolio de marcas como activo intangible.</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Costo real por marca</span>
+              <span class="stat-value" id="rCostoPorMarca">—</span>
+              <span class="stat-sub" id="rCostoPorMarcaSub">Precio del servicio puesto en perspectiva.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="section-label">Ahorro fiscal proyectado</p>
+          <div class="ahorro-row">
+            <div class="ahorro-item"><div class="yr">1 año</div><div class="val" id="rAhorro1">—</div></div>
+            <div class="ahorro-item"><div class="yr">5 años</div><div class="val" id="rAhorro5">—</div></div>
+            <div class="ahorro-item"><div class="yr">10 años</div><div class="val" id="rAhorro10">—</div></div>
+          </div>
+        </div>
+
+        <div class="narrative" id="narrativeBox"></div>
+
+        <p class="disclaimer">Los resultados son proyecciones financieras orientativas, no garantías fiscales ni dictámenes legales. La valuación del intangible y el ahorro en ISR deben validarse con un contador aliado antes de presentarse como garantía al cliente.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="footnote">Marca Segura · Calculadora de Impacto Financiero y Protección de Marcas (CIFP)</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function $(id) { return document.getElementById(id); }
+
+var FORTALEZA_RANGES = {
+  baja: { min: 1, max: 3, mid: 2 },
+  media: { min: 4, max: 7, mid: 5.5 },
+  alta: { min: 8, max: 15, mid: 11.5 }
+};
+
+var RIESGO_PRESETS = {
+  medio: { prob: 30, costo: 350000 },
+  alto: { prob: 40, costo: 500000 }
+};
+
+function fmtMoney(n) {
+  if (!isFinite(n)) return "—";
+  return n.toLocaleString("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
+}
+
+function fmtPct(n) {
+  if (!isFinite(n)) return "—";
+  return (n >= 0 ? "+" : "") + n.toLocaleString("es-MX", { maximumFractionDigits: 0 }) + "%";
+}
+
+function updateCostoTotal() {
+  var n = parseFloat($("numMarcas").value) || 0;
+  var c = parseFloat($("costoPorMarca").value) || 0;
+  $("costoTotal").value = Math.round(n * c);
+}
+
+$("numMarcas").addEventListener("input", updateCostoTotal);
+$("costoPorMarca").addEventListener("input", updateCostoTotal);
+
+$("fortaleza").addEventListener("change", function () {
+  var r = FORTALEZA_RANGES[this.value];
+  $("tasaRegalia").value = r.mid;
+});
+
+$("nivelRiesgo").addEventListener("change", function () {
+  var r = RIESGO_PRESETS[this.value];
+  $("probLitigio").value = r.prob;
+  $("costoDefensa").value = r.costo;
+});
+
+function showStatus(msg, type) {
+  var el = $("statusMsg");
+  el.textContent = msg;
+  el.className = "status-msg show " + (type || "info");
+}
+
+function clearStatus() {
+  var el = $("statusMsg");
+  el.className = "status-msg";
+}
+
+$("calcBtn").addEventListener("click", function () {
+  clearStatus();
+
+  var clientName = $("clientName").value.trim();
+  var numMarcas = parseFloat($("numMarcas").value) || 0;
+  var ingresos = parseFloat($("ingresos").value) || 0;
+  var tasaISR = parseFloat($("tasaISR").value) || 0;
+  var tasaAmortizacion = parseFloat($("tasaAmortizacion").value) || 0;
+  var tasaRegalia = parseFloat($("tasaRegalia").value) || 0;
+  var aniosVida = parseFloat($("aniosVida").value) || 0;
+  var costoPorMarca = parseFloat($("costoPorMarca").value) || 0;
+  var probLitigio = parseFloat($("probLitigio").value) || 0;
+  var costoDefensa = parseFloat($("costoDefensa").value) || 0;
+
+  if (numMarcas <= 0) { showStatus("Captura el número de marcas a proteger.", "error"); return; }
+  if (ingresos <= 0) { showStatus("Captura los ingresos anuales atribuibles a las marcas.", "error"); return; }
+
+  updateCostoTotal();
+  var costoTotal = numMarcas * costoPorMarca;
+
+  var valorIntangible = ingresos * (tasaRegalia / 100) * aniosVida;
+  var beneficioFiscalAnual = valorIntangible * (tasaAmortizacion / 100) * (tasaISR / 100);
+  var ahorro1 = beneficioFiscalAnual * 1;
+  var ahorro5 = beneficioFiscalAnual * 5;
+  var ahorro10 = beneficioFiscalAnual * 10;
+  var roi10 = costoTotal > 0 ? ((ahorro10 - costoTotal) / costoTotal) * 100 : NaN;
+  var riesgoEconomico = (probLitigio / 100) * costoDefensa;
+  var mesesEquilibrio = beneficioFiscalAnual > 0 ? costoTotal / (beneficioFiscalAnual / 12) : NaN;
+  var costoRealPorMarca = numMarcas > 0 ? costoTotal / numMarcas : NaN;
+
+  $("clientLine").textContent = "Cliente: " + (clientName || "—") + " · " + numMarcas + " marca(s)";
+  $("rBeneficioAnual").textContent = fmtMoney(beneficioFiscalAnual);
+  $("rRoi").textContent = isFinite(roi10) ? fmtPct(roi10) : "—";
+  $("rEquilibrio").textContent = isFinite(mesesEquilibrio) ? Math.max(0, Math.round(mesesEquilibrio)) + " meses" : "—";
+  $("rRiesgo").textContent = fmtMoney(riesgoEconomico);
+  $("rValorIntangible").textContent = fmtMoney(valorIntangible);
+  $("rCostoPorMarca").textContent = fmtMoney(costoRealPorMarca);
+  $("rCostoPorMarcaSub").textContent = fmtMoney(costoTotal) + " en total entre " + numMarcas + " marca(s).";
+  $("rAhorro1").textContent = fmtMoney(ahorro1);
+  $("rAhorro5").textContent = fmtMoney(ahorro5);
+  $("rAhorro10").textContent = fmtMoney(ahorro10);
+
+  var narrative = "Con un valor estimado de patrimonio de marca de <strong>" + fmtMoney(valorIntangible) + "</strong>, " +
+    "el cliente recupera su inversión en aproximadamente <strong>" + (isFinite(mesesEquilibrio) ? Math.max(0, Math.round(mesesEquilibrio)) + " meses</strong> " : "— </strong> ") +
+    "solo con el beneficio fiscal, y proyecta un ahorro acumulado de <strong>" + fmtMoney(ahorro10) + "</strong> en 10 años " +
+    "(ROI " + (isFinite(roi10) ? fmtPct(roi10) : "—") + "). No registrar sus marcas lo expone a un riesgo económico estimado de <strong>" + fmtMoney(riesgoEconomico) + "</strong> " +
+    "por litigio o pérdida de identidad de marca. El costo real es de <strong>" + fmtMoney(costoRealPorMarca) + " por marca</strong>, frente a un riesgo varias veces mayor de no actuar.";
+  $("narrativeBox").innerHTML = narrative;
+
+  $("resultsPlaceholder").style.display = "none";
+  $("resultsPaper").className = "panel show";
+  $("exportActions").style.display = "flex";
+  showStatus("Diagnóstico calculado. Ya puedes exportarlo en JPEG o PDF.", "info");
+});
+
+function withResultsCanvas(cb) {
+  var node = $("resultsPaper");
+  html2canvas(node, { scale: 2, backgroundColor: getComputedStyle(node).backgroundColor || "#ffffff" }).then(cb);
+}
+
+$("exportJpegBtn").addEventListener("click", function () {
+  withResultsCanvas(function (canvas) {
+    var link = document.createElement("a");
+    link.download = "diagnostico-cifp.jpg";
+    link.href = canvas.toDataURL("image/jpeg", 0.95);
+    link.click();
+  });
+});
+
+$("exportPdfBtn").addEventListener("click", function () {
+  withResultsCanvas(function (canvas) {
+    var jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+    var imgData = canvas.toDataURL("image/jpeg", 0.95);
+    var pdf = new jsPDFCtor({ orientation: "portrait", unit: "mm", format: "a4" });
+    var pageWidth = pdf.internal.pageSize.getWidth();
+    var pageHeight = pdf.internal.pageSize.getHeight();
+    var imgWidth = pageWidth - 20;
+    var imgHeight = (canvas.height * imgWidth) / canvas.width;
+    var y = 10;
+    if (imgHeight > pageHeight - 20) { imgHeight = pageHeight - 20; imgWidth = (canvas.width * imgHeight) / canvas.height; }
+    pdf.addImage(imgData, "JPEG", (pageWidth - imgWidth) / 2, y, imgWidth, imgHeight);
+    pdf.save("diagnostico-cifp.pdf");
+  });
+});
+
+updateCostoTotal();
+</script>
+</body>
+</html>

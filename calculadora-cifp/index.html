@@ -410,9 +410,14 @@ fieldset { border: none; padding: 0; margin: 0; }
             <p class="section-label" style="margin-top:16px;">Comparativo · Escenario B (Persona Física licencia a la empresa)</p>
             <div class="stat-grid">
               <div class="stat-card">
-                <span class="stat-label">Escenario B · Persona Física licencia a la empresa</span>
+                <span class="stat-label">Gasto deducible anual</span>
+                <span class="stat-value" id="rGastoDeducibleB">—</span>
+                <span class="stat-sub" id="rGastoDeducibleBSub">100% de la regalía pagada a la Persona Física, deducible por la empresa en el año en que se paga.</span>
+              </div>
+              <div class="stat-card accent">
+                <span class="stat-label">Ahorro fiscal (ISR que te ahorras)</span>
                 <span class="stat-value" id="rBeneficioB">—</span>
-                <span class="stat-sub" id="rBeneficioBSub">Ahorro fiscal anual de la empresa por deducir el 100% de la regalía pagada.</span>
+                <span class="stat-sub" id="rBeneficioBSub">No es lo mismo que el gasto deducible: es el ISR que la empresa deja de pagar por deducir ese gasto.</span>
               </div>
             </div>
             <div class="ahorro-row">
@@ -585,8 +590,10 @@ $("calcBtn").addEventListener("click", function () {
   $("comparativoBox").style.display = "block";
 
   if (hayEscenarioB) {
+    $("rGastoDeducibleB").textContent = fmtMoney(gastoDeducibleAnualB);
+    $("rGastoDeducibleBSub").textContent = "100% de la regalía pagada a la Persona Física (" + fmtMoney(regaliaMensual) + "/mes), deducible por la empresa en el año en que se paga.";
     $("rBeneficioB").textContent = fmtMoney(beneficioFiscalAnualB);
-    $("rBeneficioBSub").textContent = "Ahorro fiscal anual de la empresa por deducir el 100% de la regalía pagada (" + fmtMoney(gastoDeducibleAnualB) + " al año, " + fmtMoney(regaliaMensual) + "/mes).";
+    $("rBeneficioBSub").textContent = "El gasto deducible (" + fmtMoney(gastoDeducibleAnualB) + ") reduce la utilidad gravable; el ahorro real en ISR es ese monto × " + fmtPctPlain(tasaISR) + " de tasa.";
     $("rAhorroB1").textContent = fmtMoney(beneficioFiscalAnualB * 1);
     $("rAhorroB5").textContent = fmtMoney(beneficioFiscalAnualB * 5);
     $("rAhorroB10").textContent = fmtMoney(beneficioFiscalAnualB * 10);

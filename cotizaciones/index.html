@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=Lora:ital@1&display=swap" rel="stylesheet">
 <style>
 :root {
   --blue: #0050c6;
@@ -47,6 +47,8 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); fo
 body { min-height: 100vh; overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } }
 
+a { color: var(--blue); }
+
 .app-shell { max-width: 1360px; margin: 0 auto; padding: 28px 24px 64px; }
 
 .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -70,16 +72,17 @@ body { min-height: 100vh; overflow-x: hidden; }
 .field .hint { font-size: 11.5px; color: var(--ink-faint); margin-top: -2px; line-height: 1.4; }
 
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .field-row, .field-row-3 { grid-template-columns: 1fr; } }
 
-input[type="text"], input[type="number"], select, textarea {
+input[type="text"], input[type="date"], input[type="number"], select, textarea {
   font-family: "Work Sans", sans-serif; font-size: 14.5px; color: var(--ink);
   background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 12px; width: 100%; transition: border-color .15s, box-shadow .15s;
 }
 textarea { resize: vertical; min-height: 64px; font-size: 13px; line-height: 1.5; }
 input[type="number"] { font-variant-numeric: tabular-nums; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 20%, transparent); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,80,198,0.2); }
 
 .currency-input-wrap { position: relative; }
 .currency-input-wrap input { padding-left: 28px; }
@@ -96,29 +99,36 @@ fieldset { border: none; padding: 0; margin: 0; }
 .tramite-row-head select { flex: 1; }
 .remove-row-btn { flex-shrink: 0; background: none; border: 1px solid var(--border); color: var(--ink-faint); border-radius: 8px; width: 38px; height: 38px; font-size: 16px; cursor: pointer; }
 .remove-row-btn:hover { color: var(--danger); border-color: var(--danger); }
-.qty-field { display: flex; align-items: center; gap: 8px; }
-.qty-field label { font-size: 12.5px; color: var(--ink-muted); white-space: nowrap; }
-.qty-field input { width: 80px; }
-.row-preview { font-size: 12px; color: var(--ink-faint); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 8px; }
-.row-preview b { color: var(--ink-muted); }
-.no-price-warn { color: var(--danger); font-weight: 600; }
+
+.qty-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qty-cols .field { margin-bottom: 0; }
+.qty-cols .field label { font-size: 12px; }
+
+.cost-field-row { display: flex; align-items: flex-end; gap: 8px; }
+.cost-field-row .field { flex: 1; margin-bottom: 0; }
+.reset-cost-btn { flex-shrink: 0; background: none; border: 1px solid var(--border); color: var(--ink-faint); border-radius: 8px; padding: 10px 10px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.reset-cost-btn:hover { border-color: var(--blue); color: var(--blue); }
+.cost-manual-tag { font-size: 10.5px; color: var(--orange); font-weight: 600; }
+
+.no-price-warn { color: var(--danger); font-size: 12px; font-weight: 600; }
 
 .add-row-btn { align-self: flex-start; background: none; border: 1px dashed var(--blue); color: var(--blue); font-family: "Poppins", sans-serif; font-weight: 600; font-size: 13px; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
-.add-row-btn:hover { background: color-mix(in srgb, var(--blue) 8%, transparent); }
+.add-row-btn:hover { background: rgba(0,80,198,0.08); }
 
 .catalog-item { border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; background: var(--surface); }
 .catalog-item h4 { font-family: "Poppins", sans-serif; font-size: 13.5px; margin: 0 0 8px; color: var(--blue-ink); }
 
 .btn-primary {
   font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15px; color: #fff;
-  background: linear-gradient(135deg, var(--blue), color-mix(in srgb, var(--blue) 78%, #001a4d));
+  background: linear-gradient(135deg, var(--blue), #003a91);
   border: none; border-radius: 10px; padding: 14px 20px; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--blue) 60%, transparent);
+  box-shadow: 0 8px 20px -8px rgba(0,80,198,0.6);
   transition: transform .12s, box-shadow .12s;
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--blue) 65%, transparent); }
+.btn-primary:hover { transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
 .btn-secondary {
   font-family: "Poppins", sans-serif; font-weight: 600; font-size: 13.5px; color: var(--ink-muted);
@@ -127,46 +137,61 @@ fieldset { border: none; padding: 0; margin: 0; }
 }
 .btn-secondary:hover { border-color: var(--ink-muted); color: var(--ink); }
 
-.export-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-.results-col { display: flex; flex-direction: column; gap: 16px; }
-.results-placeholder { padding: 60px 28px; text-align: center; color: var(--ink-faint); font-size: 14px; line-height: 1.6; }
-
-#resultsPaper { padding: 24px; display: none; flex-direction: column; gap: 20px; background: var(--surface); }
-#resultsPaper.show { display: flex; }
-
-.results-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-.results-header h2 { font-family: "Poppins", sans-serif; font-size: 18px; margin: 0 0 4px; color: var(--ink); }
-.results-header .client-line { font-size: 13px; color: var(--ink-muted); }
-.results-header .date-line { font-size: 12px; color: var(--ink-faint); }
-
-.item-card { border: 1px solid var(--border); border-radius: 10px; padding: 18px; background: var(--surface-2); }
-.item-card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
-.item-card-head h3 { font-family: "Poppins", sans-serif; font-size: 16px; margin: 0; color: var(--blue-ink); }
-.item-card-head .item-qty { font-size: 12px; color: var(--ink-faint); }
-
-.item-block { margin-bottom: 12px; }
-.item-block:last-child { margin-bottom: 0; }
-.item-block .lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 5px; }
-.item-block ul { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.55; }
-.item-block .tiempo-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15px; color: var(--blue-ink); }
-
-.item-cost-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
-.item-cost-row .cost-label { font-size: 13px; color: var(--ink-muted); }
-.item-cost-row .cost-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 19px; color: var(--success); }
-
-.total-box { background: color-mix(in srgb, var(--blue) 6%, var(--surface)); border: 1px solid color-mix(in srgb, var(--blue) 25%, var(--border)); border-radius: 10px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-.total-box .total-label { font-family: "Poppins", sans-serif; font-weight: 600; font-size: 14px; color: var(--blue-ink); }
-.total-box .total-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 26px; color: var(--blue-ink); }
-
-.disclaimer { font-size: 11.5px; color: var(--ink-faint); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 12px; }
+.actions { display: flex; flex-direction: column; gap: 10px; }
 
 .status-msg { font-size: 13px; border-radius: 8px; padding: 10px 12px; display: none; }
 .status-msg.show { display: block; }
-.status-msg.info { background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
-.status-msg.error { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+.status-msg.info { background: rgba(0,80,198,0.12); color: var(--blue); }
+.status-msg.success { background: rgba(26,125,78,0.14); color: var(--success); }
+.status-msg.warning { background: rgba(254,106,0,0.14); color: #a04c00; }
+.status-msg.error { background: rgba(198,40,40,0.14); color: var(--danger); }
+
+.preview-col { display: flex; flex-direction: column; gap: 16px; }
+.preview-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.preview-toolbar .section-label { margin: 0; }
+
+.paper-wrap { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; justify-content: center; overflow-x: auto; }
+
+/* The preview paper always renders as a literal white page — it is a
+   WYSIWYG stand-in for the exported PDF, so it does not follow app theming. */
+#previewPaper { width: 210mm; min-height: 297mm; background: #ffffff; border: 1px solid #d8dce6; box-shadow: var(--shadow); padding: 20mm 22mm; color: #1a2233; flex-shrink: 0; }
+
+.pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 10mm; }
+.pv-header img { height: 15mm; width: auto; object-fit: contain; }
+.pv-header .pv-title { font-family: "Lora", "Times New Roman", serif; font-style: italic; font-size: 17px; line-height: 1.5; text-align: right; color: #1a2233; }
+
+.pv-date { text-align: right; font-size: 12.5px; margin-bottom: 8mm; color: #1a2233; }
+.pv-to { font-size: 12.5px; margin-bottom: 6mm; line-height: 1.6; color: #1a2233; }
+
+.pv-body p { font-size: 12px; line-height: 1.6; text-align: justify; margin: 0 0 5mm; color: #1a2233; }
+
+.pv-item { border: 0.3mm solid #d8dce6; border-radius: 2mm; padding: 5mm; margin-bottom: 5mm; background: #f7f9fd; }
+.pv-item-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; margin-bottom: 3mm; flex-wrap: wrap; }
+.pv-item-head .name { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13px; color: #0a2f66; }
+.pv-item-head .qty { font-size: 11px; color: #5b6478; }
+.pv-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #8791a5; margin: 3mm 0 1.5mm; }
+.pv-item ul { margin: 0; padding-left: 5mm; font-size: 11.5px; line-height: 1.55; }
+.pv-tiempo-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 12.5px; color: #0a2f66; }
+.pv-item-cost { display: flex; justify-content: space-between; align-items: center; border-top: 0.3mm dashed #d8dce6; margin-top: 3mm; padding-top: 3mm; }
+.pv-item-cost .lbl2 { font-size: 11.5px; color: #5b6478; }
+.pv-item-cost .val2 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 14px; color: #1a7d4a; }
+.pv-item-cost .nota { font-size: 10px; color: #8791a5; font-weight: 400; }
+
+.pv-total { display: flex; justify-content: space-between; align-items: center; background: #eaf1fc; border: 0.3mm solid #bcd4ff; border-radius: 2mm; padding: 5mm; margin-top: 2mm; }
+.pv-total .lbl3 { font-family: "Poppins", sans-serif; font-weight: 600; font-size: 12.5px; color: #0a2f66; }
+.pv-total .val3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 20px; color: #0a2f66; }
+
+.pv-disclaimer { font-size: 10px; color: #8791a5; line-height: 1.5; border-top: 0.3mm dashed #d8dce6; padding-top: 3mm; margin-top: 6mm; }
+.pv-empty-note { font-size: 12px; color: #8791a5; font-style: italic; }
 
 .footnote { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 18px; }
+
+@media print {
+  body * { visibility: hidden; }
+  .paper-wrap, .paper-wrap * { visibility: visible; }
+  .paper-wrap { position: absolute; top: 0; left: 0; width: 100%; padding: 0; border: none; background: #fff; }
+  #previewPaper { box-shadow: none; border: none; margin: 0 auto; }
+}
 </style>
 </head>
 <body>
@@ -179,16 +204,20 @@ fieldset { border: none; padding: 0; margin: 0; }
       <h1>Cotizador de Trámites</h1>
     </div>
   </div>
-  <p class="subtitle">Captura el nombre del cliente, elige el o los trámites que quiere cotizar y genera al instante una cotización con lo que incluye, cuánto tarda, qué requisitos necesita y cuánto cuesta.</p>
+  <p class="subtitle">Captura el nombre del cliente, elige el o los trámites que quiere cotizar (con cuántas marcas y clases aplican a cada uno) y ve al instante la cotización lista para enviar — con lo que incluye, cuánto tarda, requisitos y costo.</p>
 
   <div class="layout">
 
     <div class="panel form-panel">
       <fieldset>
-        <p class="section-label">Datos del cliente</p>
+        <p class="section-label">Datos de la cotización</p>
         <div class="field">
           <label for="clientName">Nombre del cliente</label>
           <input type="text" id="clientName" placeholder="Ej. Carlos Rivas" />
+        </div>
+        <div class="field">
+          <label for="quoteDate">Fecha</label>
+          <input type="date" id="quoteDate" />
         </div>
       </fieldset>
 
@@ -200,427 +229,644 @@ fieldset { border: none; padding: 0; margin: 0; }
 
       <fieldset>
         <button type="button" class="section-toggle" id="catalogToggle" aria-expanded="false" aria-controls="catalogFields">
-          <span class="section-label" style="margin:0;">⚙️ Configurar catálogo (tiempos, requisitos y tarifas)</span>
+          <span class="section-label" style="margin:0;">⚙️ Configurar catálogo (tiempos, requisitos y tarifas por defecto)</span>
           <span class="chev" id="catalogChev">▸</span>
         </button>
         <div id="catalogFields" style="display:none;"></div>
       </fieldset>
 
-      <button type="button" class="btn-primary" id="calcBtn">🧾 Generar cotización</button>
-      <div class="status-msg" id="statusMsg"></div>
+      <div class="actions">
+        <div class="status-msg" id="statusMsg"></div>
+        <button type="button" class="btn-primary" id="generateBtn">⬇ Generar y descargar PDF</button>
+        <button type="button" class="btn-secondary" id="printBtn">🖨️ Imprimir vista previa (alternativa)</button>
+      </div>
     </div>
 
-    <div class="results-col">
-      <div class="panel" id="resultsPlaceholder">
-        <p class="results-placeholder">Agrega al menos un trámite y presiona <strong>Generar cotización</strong> para ver el reporte listo para enviar al cliente.</p>
+    <div class="preview-col">
+      <div class="preview-toolbar">
+        <p class="section-label">Vista previa</p>
       </div>
-
-      <div class="export-actions" id="exportActions" style="display:none;">
-        <button type="button" class="btn-secondary" id="exportJpegBtn">🖼 Exportar JPEG</button>
-        <button type="button" class="btn-secondary" id="exportPdfBtn">📄 Exportar PDF</button>
-      </div>
-
-      <div class="panel" id="resultsPaper">
-        <div class="results-header">
-          <div>
-            <h2>Cotización de Trámite de Marca</h2>
-            <div class="client-line" id="clientLine">Cliente: —</div>
-            <div class="date-line" id="dateLine"></div>
+      <div class="paper-wrap">
+        <div id="previewPaper">
+          <div class="pv-header">
+            <img src="../icon-512.png" alt="Marca Segura" />
+            <div class="pv-title">Cotización de<br>Trámite de Marca</div>
           </div>
-          <img src="../icon-512.png" alt="Marca Segura" style="height:28px;" />
+          <div class="pv-date" id="pvDate"></div>
+          <div class="pv-to" id="pvTo"></div>
+          <div class="pv-body">
+            <p>Con gusto le compartimos la cotización de los siguientes trámites:</p>
+          </div>
+          <div id="pvItems"></div>
+          <div id="pvTotalWrap"></div>
+          <p class="pv-disclaimer">Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.</p>
         </div>
-
-        <div id="itemsContainer"></div>
-
-        <div class="total-box">
-          <span class="total-label">Costo total de la cotización</span>
-          <span class="total-val" id="rTotal">—</span>
-        </div>
-
-        <p class="disclaimer">Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.</p>
       </div>
+      <p class="footnote">Los datos se procesan en tu navegador; nada se sube a un servidor.</p>
     </div>
 
   </div>
-
-  <p class="footnote">Marca Segura · Cotizador de Trámites</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-function $(id) { return document.getElementById(id); }
+(function () {
+  "use strict";
 
-var LS_KEY = "cotizadorCatalogo_v1";
+  function $(id) { return document.getElementById(id); }
 
-var DEFAULT_CATALOG = [
-  {
-    id: "busqueda",
-    nombre: "Búsqueda de Viabilidad (Anterioridades)",
-    incluye: [
-      "Búsqueda fonética y gráfica en la base de marcas registradas ante el IMPI",
-      "Análisis de las clases de Niza relacionadas con tu producto o servicio",
-      "Dictamen de viabilidad con % estimado de éxito de registro"
-    ],
-    tiempo: "2 a 3 días hábiles",
-    requisitos: [
-      "Nombre o logotipo de la marca a buscar",
-      "Descripción del producto o servicio que se va a proteger"
-    ],
-    escalaPorClase: true,
-    costoBase: 0,
-    costoPorClaseExtra: 0
-  },
-  {
-    id: "registro_regular",
-    nombre: "Registro de Marca (servicio regular)",
-    incluye: [
-      "Gestión completa de la solicitud ante el IMPI (formato, pago de derechos, presentación electrónica)",
-      "Seguimiento del expediente durante todo el proceso",
-      "Entrega del título de registro al cliente"
-    ],
-    tiempo: "De 4 a 6 meses",
-    requisitos: [
-      "Nombre o logotipo definitivo de la marca",
-      "Descripción de los productos o servicios a proteger",
-      "Identificación oficial del titular"
-    ],
-    escalaPorClase: true,
-    costoBase: 15000,
-    costoPorClaseExtra: 3000
-  },
-  {
-    id: "registro_apoyo",
-    nombre: "Registro de Marca (Apoyo de Gobierno)",
-    incluye: [
-      "Aprovecha el cupo limitado del programa de apoyo de gobierno para MiPymes",
-      "Gestión completa de la solicitud ante el IMPI",
-      "Seguimiento del expediente y entrega del título de registro"
-    ],
-    tiempo: "Sujeto a la apertura del periodo de inscripción del programa + 4 a 6 meses de trámite ante el IMPI",
-    requisitos: [
-      "Nombre o logotipo definitivo de la marca",
-      "Cumplir los criterios de elegibilidad del programa (MiPyme)",
-      "Identificación oficial del titular"
-    ],
-    escalaPorClase: false,
-    costoBase: 3500,
-    costoPorClaseExtra: 0,
-    notaCosto: "+ IVA"
-  },
-  {
-    id: "declaracion_uso",
-    nombre: "Declaración de Uso",
-    incluye: [
-      "Llenado y presentación del formato oficial IMPI de Declaración de Uso",
-      "Integración de la evidencia de uso de la marca"
-    ],
-    tiempo: "Se presenta dentro de los 3 meses posteriores al 3er aniversario del registro; el trámite toma unos días hábiles",
-    requisitos: [
-      "Título de registro de la marca",
-      "Evidencia de uso (facturas, fotos de producto o empaque, publicidad, etc.)"
-    ],
-    escalaPorClase: false,
-    costoBase: 3000,
-    costoPorClaseExtra: 0,
-    notaCosto: "+ IVA (promoción de $1,000 para clientes Marca Segura dentro del plazo)"
-  },
-  {
-    id: "renovacion",
-    nombre: "Renovación de Marca",
-    incluye: [
-      "Presentación de la solicitud de renovación ante el IMPI antes del vencimiento del registro (vigencia de 10 años)",
-      "Gestión del pago de derechos correspondiente",
-      "Entrega de la constancia de renovación"
-    ],
-    tiempo: "1 a 2 meses",
-    requisitos: [
-      "Número de registro y título de la marca",
-      "Identificación oficial del titular",
-      "Presentarse dentro de los 6 meses previos al vencimiento (o en el plazo de gracia de 6 meses posteriores, con recargo)"
-    ],
-    escalaPorClase: true,
-    costoBase: 0,
-    costoPorClaseExtra: 0
-  },
-  {
-    id: "cambio_titular",
-    nombre: "Cambio de Titular",
-    incluye: [
-      "Gestión de la cesión/traspaso de derechos ante el IMPI",
-      "Actualización del titular en el registro"
-    ],
-    tiempo: "2 a 4 meses",
-    requisitos: [
-      "Contrato o documento que acredite la cesión de derechos",
-      "Identificación oficial de cedente y cesionario"
-    ],
-    escalaPorClase: false,
-    costoBase: 0,
-    costoPorClaseExtra: 0
-  },
-  {
-    id: "licencia_uso",
-    nombre: "Licencia de Uso",
-    incluye: [
-      "Elaboración e inscripción del contrato de licencia de uso ante el IMPI"
-    ],
-    tiempo: "2 a 3 meses",
-    requisitos: [
-      "Contrato de licencia de uso firmado",
-      "Identificación oficial de licenciante y licenciatario"
-    ],
-    escalaPorClase: false,
-    costoBase: 0,
-    costoPorClaseExtra: 0
-  },
-  {
-    id: "oposicion",
-    nombre: "Oposición a Solicitud de Marca",
-    incluye: [
-      "Presentación del escrito de oposición fundamentado dentro del plazo legal"
-    ],
-    tiempo: "Debe presentarse dentro del mes siguiente a la publicación de la solicitud en la Gaceta de la Propiedad Industrial",
-    requisitos: [
-      "Publicación de la Gaceta con la solicitud a oponer",
-      "Fundamento y argumentos de la oposición"
-    ],
-    escalaPorClase: false,
-    costoBase: 0,
-    costoPorClaseExtra: 0
+  var LS_KEY = "cotizadorCatalogo_v2";
+
+  var DEFAULT_CATALOG = [
+    {
+      id: "busqueda",
+      nombre: "Búsqueda de Viabilidad (Anterioridades)",
+      incluye: [
+        "Búsqueda fonética y gráfica en la base de marcas registradas ante el IMPI",
+        "Análisis de las clases de Niza relacionadas con tu producto o servicio",
+        "Dictamen de viabilidad con % estimado de éxito de registro"
+      ],
+      tiempo: "2 a 3 días hábiles",
+      requisitos: [
+        "Nombre o logotipo de la marca a buscar",
+        "Descripción del producto o servicio que se va a proteger"
+      ],
+      escalaPorClase: true,
+      costoBase: 0,
+      costoPorClaseExtra: 0
+    },
+    {
+      id: "registro_regular",
+      nombre: "Registro de Marca (servicio regular)",
+      incluye: [
+        "Gestión completa de la solicitud ante el IMPI (formato, pago de derechos, presentación electrónica)",
+        "Seguimiento del expediente durante todo el proceso",
+        "Entrega del título de registro al cliente"
+      ],
+      tiempo: "De 4 a 6 meses",
+      requisitos: [
+        "Nombre o logotipo definitivo de la marca",
+        "Descripción de los productos o servicios a proteger",
+        "Identificación oficial del titular"
+      ],
+      escalaPorClase: true,
+      costoBase: 15000,
+      costoPorClaseExtra: 3000
+    },
+    {
+      id: "registro_apoyo",
+      nombre: "Registro de Marca (Apoyo de Gobierno)",
+      incluye: [
+        "Aprovecha el cupo limitado del programa de apoyo de gobierno para MiPymes",
+        "Gestión completa de la solicitud ante el IMPI",
+        "Seguimiento del expediente y entrega del título de registro"
+      ],
+      tiempo: "Sujeto a la apertura del periodo de inscripción del programa + 4 a 6 meses de trámite ante el IMPI",
+      requisitos: [
+        "Nombre o logotipo definitivo de la marca",
+        "Cumplir los criterios de elegibilidad del programa (MiPyme)",
+        "Identificación oficial del titular"
+      ],
+      escalaPorClase: false,
+      costoBase: 3500,
+      costoPorClaseExtra: 0,
+      notaCosto: "+ IVA"
+    },
+    {
+      id: "declaracion_uso",
+      nombre: "Declaración de Uso",
+      incluye: [
+        "Llenado y presentación del formato oficial IMPI de Declaración de Uso",
+        "Integración de la evidencia de uso de la marca"
+      ],
+      tiempo: "Se presenta dentro de los 3 meses posteriores al 3er aniversario del registro; el trámite toma unos días hábiles",
+      requisitos: [
+        "Título de registro de la marca",
+        "Evidencia de uso (facturas, fotos de producto o empaque, publicidad, etc.)"
+      ],
+      escalaPorClase: false,
+      costoBase: 3000,
+      costoPorClaseExtra: 0,
+      notaCosto: "+ IVA (promoción de $1,000 para clientes Marca Segura dentro del plazo)"
+    },
+    {
+      id: "renovacion",
+      nombre: "Renovación de Marca",
+      incluye: [
+        "Presentación de la solicitud de renovación ante el IMPI antes del vencimiento del registro (vigencia de 10 años)",
+        "Gestión del pago de derechos correspondiente",
+        "Entrega de la constancia de renovación"
+      ],
+      tiempo: "1 a 2 meses",
+      requisitos: [
+        "Número de registro y título de la marca",
+        "Identificación oficial del titular",
+        "Presentarse dentro de los 6 meses previos al vencimiento (o en el plazo de gracia de 6 meses posteriores, con recargo)"
+      ],
+      escalaPorClase: true,
+      costoBase: 0,
+      costoPorClaseExtra: 0
+    },
+    {
+      id: "cambio_titular",
+      nombre: "Cambio de Titular",
+      incluye: [
+        "Gestión de la cesión/traspaso de derechos ante el IMPI",
+        "Actualización del titular en el registro"
+      ],
+      tiempo: "2 a 4 meses",
+      requisitos: [
+        "Contrato o documento que acredite la cesión de derechos",
+        "Identificación oficial de cedente y cesionario"
+      ],
+      escalaPorClase: false,
+      costoBase: 0,
+      costoPorClaseExtra: 0
+    },
+    {
+      id: "licencia_uso",
+      nombre: "Licencia de Uso",
+      incluye: ["Elaboración e inscripción del contrato de licencia de uso ante el IMPI"],
+      tiempo: "2 a 3 meses",
+      requisitos: [
+        "Contrato de licencia de uso firmado",
+        "Identificación oficial de licenciante y licenciatario"
+      ],
+      escalaPorClase: false,
+      costoBase: 0,
+      costoPorClaseExtra: 0
+    },
+    {
+      id: "oposicion",
+      nombre: "Oposición a Solicitud de Marca",
+      incluye: ["Presentación del escrito de oposición fundamentado dentro del plazo legal"],
+      tiempo: "Debe presentarse dentro del mes siguiente a la publicación de la solicitud en la Gaceta de la Propiedad Industrial",
+      requisitos: [
+        "Publicación de la Gaceta con la solicitud a oponer",
+        "Fundamento y argumentos de la oposición"
+      ],
+      escalaPorClase: false,
+      costoBase: 0,
+      costoPorClaseExtra: 0
+    }
+  ];
+
+  function lsGet() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
   }
-];
+  function lsSet(catalog) {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(catalog)); } catch (e) { /* ignore */ }
+  }
 
-function lsGet() {
-  try {
-    var raw = localStorage.getItem(LS_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (e) { return null; }
-}
-function lsSet(catalog) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(catalog)); } catch (e) {}
-}
-
-var CATALOG = lsGet() || JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-// Merge in any new default items that don't exist yet in a saved catalog (future-proof).
-DEFAULT_CATALOG.forEach(function (def) {
-  if (!CATALOG.some(function (c) { return c.id === def.id; })) CATALOG.push(JSON.parse(JSON.stringify(def)));
-});
-
-function getItem(id) {
-  return CATALOG.filter(function (c) { return c.id === id; })[0];
-}
-
-function fmtMoney(n) {
-  if (!isFinite(n)) return "—";
-  return n.toLocaleString("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
-}
-
-function linesToArray(text) {
-  return text.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
-}
-
-// ---------- Catalog config panel ----------
-function renderCatalogFields() {
-  var wrap = $("catalogFields");
-  wrap.innerHTML = "";
-  CATALOG.forEach(function (item, idx) {
-    var box = document.createElement("div");
-    box.className = "catalog-item";
-    var scaleFieldsHtml = item.escalaPorClase
-      ? '<div class="field-row">' +
-          '<div class="field"><label>Costo base (1 clase)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>' +
-          '<div class="field"><label>Costo por clase extra</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoPorClaseExtra" value="' + item.costoPorClaseExtra + '" /></div></div>' +
-        '</div>'
-      : '<div class="field"><label>Costo</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>';
-
-    box.innerHTML =
-      '<h4>' + item.nombre + '</h4>' +
-      '<div class="field"><label>Tiempo estimado</label><input type="text" data-idx="' + idx + '" data-key="tiempo" value="' + item.tiempo.replace(/"/g, "&quot;") + '" /></div>' +
-      '<div class="field"><label>Qué incluye (un punto por línea)</label><textarea data-idx="' + idx + '" data-key="incluye">' + item.incluye.join("\n") + '</textarea></div>' +
-      '<div class="field"><label>Requisitos (un punto por línea)</label><textarea data-idx="' + idx + '" data-key="requisitos">' + item.requisitos.join("\n") + '</textarea></div>' +
-      scaleFieldsHtml +
-      '<div class="field"><label>Nota sobre el costo (opcional, ej. "+ IVA")</label><input type="text" data-idx="' + idx + '" data-key="notaCosto" value="' + (item.notaCosto || "").replace(/"/g, "&quot;") + '" /></div>';
-    wrap.appendChild(box);
+  var CATALOG = lsGet() || JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+  DEFAULT_CATALOG.forEach(function (def) {
+    if (!CATALOG.some(function (c) { return c.id === def.id; })) CATALOG.push(JSON.parse(JSON.stringify(def)));
   });
 
-  wrap.querySelectorAll("input, textarea").forEach(function (el) {
-    el.addEventListener("change", function () {
-      var idx = parseInt(this.getAttribute("data-idx"), 10);
-      var key = this.getAttribute("data-key");
-      var item = CATALOG[idx];
-      if (key === "incluye" || key === "requisitos") {
-        item[key] = linesToArray(this.value);
-      } else if (key === "costoBase" || key === "costoPorClaseExtra") {
-        item[key] = parseFloat(this.value) || 0;
-      } else {
-        item[key] = this.value;
-      }
-      lsSet(CATALOG);
-      refreshAllRowPreviews();
+  function getItem(id) { return CATALOG.filter(function (c) { return c.id === id; })[0]; }
+
+  function fmtMoney(n) {
+    if (!isFinite(n)) return "—";
+    return n.toLocaleString("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
+  }
+  function linesToArray(text) {
+    return text.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+  }
+  function escapeHtml(s) {
+    return (s || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
-  });
-}
-
-$("catalogToggle").addEventListener("click", function () {
-  var expanded = this.getAttribute("aria-expanded") === "true";
-  this.setAttribute("aria-expanded", String(!expanded));
-  $("catalogFields").style.display = expanded ? "none" : "block";
-});
-
-// ---------- Tramite rows (quote builder) ----------
-var rowCount = 0;
-
-function catalogOptionsHtml(selectedId) {
-  return CATALOG.map(function (c) {
-    return '<option value="' + c.id + '"' + (c.id === selectedId ? " selected" : "") + '>' + c.nombre + '</option>';
-  }).join("");
-}
-
-function addTramiteRow() {
-  rowCount++;
-  var rowId = "row" + rowCount;
-  var row = document.createElement("div");
-  row.className = "tramite-row";
-  row.id = rowId;
-  var firstId = CATALOG[0].id;
-  row.innerHTML =
-    '<div class="tramite-row-head">' +
-      '<select class="tramite-select">' + catalogOptionsHtml(firstId) + '</select>' +
-      '<button type="button" class="remove-row-btn" title="Quitar">✕</button>' +
-    '</div>' +
-    '<div class="qty-field qty-field-clases"><label>Clases de Niza:</label><input type="number" class="qty-clases" min="1" step="1" value="1" /></div>' +
-    '<div class="row-preview"></div>';
-
-  $("tramiteRows").appendChild(row);
-
-  var select = row.querySelector(".tramite-select");
-  var removeBtn = row.querySelector(".remove-row-btn");
-  removeBtn.addEventListener("click", function () {
-    row.remove();
-  });
-  select.addEventListener("change", function () { updateRowPreview(row); });
-  row.querySelector(".qty-clases").addEventListener("input", function () { updateRowPreview(row); });
-
-  updateRowPreview(row);
-}
-
-function updateRowPreview(row) {
-  var id = row.querySelector(".tramite-select").value;
-  var item = getItem(id);
-  var qtyField = row.querySelector(".qty-field-clases");
-  var qtyInput = row.querySelector(".qty-clases");
-  qtyField.style.display = item.escalaPorClase ? "flex" : "none";
-  var clases = item.escalaPorClase ? (parseInt(qtyInput.value, 10) || 1) : 1;
-  var costo = item.costoBase + (item.escalaPorClase && clases > 1 ? (clases - 1) * item.costoPorClaseExtra : 0);
-  var preview = row.querySelector(".row-preview");
-  var costoTxt = costo > 0
-    ? fmtMoney(costo) + (item.notaCosto ? " " + item.notaCosto : "")
-    : '<span class="no-price-warn">Define la tarifa de este trámite en «Configurar catálogo»</span>';
-  preview.innerHTML = '<b>Tiempo:</b> ' + item.tiempo + ' · <b>Costo:</b> ' + costoTxt;
-}
-
-function refreshAllRowPreviews() {
-  document.querySelectorAll(".tramite-row").forEach(function (row) { updateRowPreview(row); });
-}
-
-$("addRowBtn").addEventListener("click", addTramiteRow);
-
-// ---------- Quote generation ----------
-function showStatus(msg, type) {
-  var el = $("statusMsg");
-  el.textContent = msg;
-  el.className = "status-msg show " + (type || "info");
-}
-function clearStatus() {
-  $("statusMsg").className = "status-msg";
-}
-
-$("calcBtn").addEventListener("click", function () {
-  clearStatus();
-  var clientName = $("clientName").value.trim();
-  var rows = Array.prototype.slice.call(document.querySelectorAll(".tramite-row"));
-
-  if (rows.length === 0) {
-    showStatus("Agrega al menos un trámite para cotizar.", "error");
-    return;
+  }
+  function fmtDateLong(isoStr) {
+    if (!isoStr) return "";
+    var parts = isoStr.split("-");
+    if (parts.length !== 3) return isoStr;
+    var months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+    var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10) - 1, d = parseInt(parts[2], 10);
+    return d + " de " + months[m] + " de " + y;
   }
 
-  var itemsHtml = "";
-  var total = 0;
-  var missingPrice = false;
+  // ---------- catalog config panel ----------
+  function renderCatalogFields() {
+    var wrap = $("catalogFields");
+    wrap.innerHTML = "";
+    CATALOG.forEach(function (item, idx) {
+      var box = document.createElement("div");
+      box.className = "catalog-item";
+      var scaleFieldsHtml = item.escalaPorClase
+        ? '<div class="field-row">' +
+            '<div class="field"><label>Costo base (1 marca, 1 clase)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>' +
+            '<div class="field"><label>Costo por clase extra</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoPorClaseExtra" value="' + item.costoPorClaseExtra + '" /></div></div>' +
+          '</div>'
+        : '<div class="field"><label>Costo (por marca)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>';
 
-  rows.forEach(function (row) {
-    var id = row.querySelector(".tramite-select").value;
-    var item = getItem(id);
-    var clases = item.escalaPorClase ? (parseInt(row.querySelector(".qty-clases").value, 10) || 1) : 1;
-    var costo = item.costoBase + (item.escalaPorClase && clases > 1 ? (clases - 1) * item.costoPorClaseExtra : 0);
-    if (costo <= 0) missingPrice = true;
-    total += costo;
+      box.innerHTML =
+        '<h4>' + item.nombre + '</h4>' +
+        '<div class="field"><label>Tiempo estimado</label><input type="text" data-idx="' + idx + '" data-key="tiempo" value="' + item.tiempo.replace(/"/g, "&quot;") + '" /></div>' +
+        '<div class="field"><label>Qué incluye (un punto por línea)</label><textarea data-idx="' + idx + '" data-key="incluye">' + item.incluye.join("\n") + '</textarea></div>' +
+        '<div class="field"><label>Requisitos (un punto por línea)</label><textarea data-idx="' + idx + '" data-key="requisitos">' + item.requisitos.join("\n") + '</textarea></div>' +
+        scaleFieldsHtml +
+        '<div class="field"><label>Nota sobre el costo (opcional, ej. "+ IVA")</label><input type="text" data-idx="' + idx + '" data-key="notaCosto" value="' + (item.notaCosto || "").replace(/"/g, "&quot;") + '" /></div>';
+      wrap.appendChild(box);
+    });
 
-    var incluyeHtml = item.incluye.map(function (l) { return "<li>" + l + "</li>"; }).join("");
-    var requisitosHtml = item.requisitos.map(function (l) { return "<li>" + l + "</li>"; }).join("");
-    var qtyTxt = item.escalaPorClase ? clases + " clase(s) de Niza" : "";
-
-    itemsHtml +=
-      '<div class="item-card">' +
-        '<div class="item-card-head"><h3>' + item.nombre + '</h3>' + (qtyTxt ? '<span class="item-qty">' + qtyTxt + '</span>' : '') + '</div>' +
-        '<div class="item-block"><div class="lbl">Qué incluye</div><ul>' + incluyeHtml + '</ul></div>' +
-        '<div class="item-block"><div class="lbl">Tiempo estimado</div><div class="tiempo-val">' + item.tiempo + '</div></div>' +
-        '<div class="item-block"><div class="lbl">Requisitos</div><ul>' + requisitosHtml + '</ul></div>' +
-        '<div class="item-cost-row"><span class="cost-label">Costo de este trámite</span><span class="cost-val">' + (costo > 0 ? fmtMoney(costo) + (item.notaCosto ? " " + item.notaCosto : "") : "Por definir") + '</span></div>' +
-      '</div>';
-  });
-
-  $("clientLine").textContent = "Cliente: " + (clientName || "—");
-  $("dateLine").textContent = "Fecha: " + new Date().toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" });
-  $("itemsContainer").innerHTML = itemsHtml;
-  $("rTotal").textContent = fmtMoney(total);
-
-  $("resultsPlaceholder").style.display = "none";
-  $("resultsPaper").className = "panel show";
-  $("exportActions").style.display = "flex";
-
-  if (missingPrice) {
-    showStatus("Cotización generada. Uno o más trámites no tienen tarifa configurada — ajústala en «Configurar catálogo» antes de enviarla al cliente.", "error");
-  } else {
-    showStatus("Cotización generada. Ya puedes exportarla en JPEG o PDF.", "info");
+    wrap.querySelectorAll("input, textarea").forEach(function (el) {
+      el.addEventListener("change", function () {
+        var idx = parseInt(this.getAttribute("data-idx"), 10);
+        var key = this.getAttribute("data-key");
+        var item = CATALOG[idx];
+        if (key === "incluye" || key === "requisitos") item[key] = linesToArray(this.value);
+        else if (key === "costoBase" || key === "costoPorClaseExtra") item[key] = parseFloat(this.value) || 0;
+        else item[key] = this.value;
+        lsSet(CATALOG);
+        rows.forEach(function (row) { if (!row.costoManual && row.tramiteId === item.id) recomputeRowCost(row); });
+        renderPreview();
+      });
+    });
   }
-});
 
-function withResultsCanvas(cb) {
-  var node = $("resultsPaper");
-  html2canvas(node, { scale: 2, backgroundColor: getComputedStyle(node).backgroundColor || "#ffffff" }).then(cb);
-}
-
-$("exportJpegBtn").addEventListener("click", function () {
-  withResultsCanvas(function (canvas) {
-    var link = document.createElement("a");
-    link.download = "cotizacion-marca-segura.jpg";
-    link.href = canvas.toDataURL("image/jpeg", 0.95);
-    link.click();
+  $("catalogToggle").addEventListener("click", function () {
+    var expanded = this.getAttribute("aria-expanded") === "true";
+    this.setAttribute("aria-expanded", String(!expanded));
+    $("catalogFields").style.display = expanded ? "none" : "block";
   });
-});
 
-$("exportPdfBtn").addEventListener("click", function () {
-  withResultsCanvas(function (canvas) {
+  // ---------- tramite rows (quote builder) ----------
+  var rows = [];
+  var rowSeq = 0;
+
+  function catalogOptionsHtml(selectedId) {
+    return CATALOG.map(function (c) {
+      return '<option value="' + c.id + '"' + (c.id === selectedId ? " selected" : "") + '>' + c.nombre + '</option>';
+    }).join("");
+  }
+
+  function catalogLineCost(item, cantidad, clases) {
+    var costoUnit = item.costoBase + (item.escalaPorClase && clases > 1 ? (clases - 1) * item.costoPorClaseExtra : 0);
+    return costoUnit * cantidad;
+  }
+
+  function recomputeRowCost(row) {
+    var item = getItem(row.tramiteId);
+    row.costoValue = catalogLineCost(item, row.cantidad, row.clases);
+    row.costInput.value = row.costoValue || "";
+    row.manualTag.style.display = "none";
+  }
+
+  function addTramiteRow() {
+    rowSeq++;
+    var el = document.createElement("div");
+    el.className = "tramite-row";
+    var firstId = CATALOG[0].id;
+    el.innerHTML =
+      '<div class="tramite-row-head">' +
+        '<select class="tramite-select">' + catalogOptionsHtml(firstId) + '</select>' +
+        '<button type="button" class="remove-row-btn" title="Quitar">✕</button>' +
+      '</div>' +
+      '<div class="qty-cols">' +
+        '<div class="field"><label>Cantidad de marcas</label><input type="number" class="qty-cantidad" min="1" step="1" value="1" /></div>' +
+        '<div class="field qty-field-clases"><label>Clases de Niza (por marca)</label><input type="number" class="qty-clases" min="1" step="1" value="1" /></div>' +
+      '</div>' +
+      '<div class="cost-field-row">' +
+        '<div class="field">' +
+          '<label>Costo de esta línea <span class="cost-manual-tag" style="display:none;">· editado a mano</span></label>' +
+          '<div class="currency-input-wrap"><span>$</span><input type="number" class="cost-input" min="0" step="100" /></div>' +
+        '</div>' +
+        '<button type="button" class="reset-cost-btn" title="Volver a la tarifa del catálogo">↺ Catálogo</button>' +
+      '</div>' +
+      '<div class="row-warn"></div>';
+
+    $("tramiteRows").appendChild(el);
+
+    var row = {
+      id: rowSeq,
+      el: el,
+      tramiteId: firstId,
+      cantidad: 1,
+      clases: 1,
+      costoValue: 0,
+      costoManual: false,
+      costInput: el.querySelector(".cost-input"),
+      manualTag: el.querySelector(".cost-manual-tag"),
+      warnEl: el.querySelector(".row-warn")
+    };
+    rows.push(row);
+
+    var select = el.querySelector(".tramite-select");
+    var cantidadInput = el.querySelector(".qty-cantidad");
+    var clasesInput = el.querySelector(".qty-clases");
+    var qtyClasesField = el.querySelector(".qty-field-clases");
+    var costInput = row.costInput;
+    var resetBtn = el.querySelector(".reset-cost-btn");
+    var removeBtn = el.querySelector(".remove-row-btn");
+
+    function syncClasesVisibility() {
+      var item = getItem(row.tramiteId);
+      qtyClasesField.style.display = item.escalaPorClase ? "flex" : "none";
+    }
+
+    function updateWarn() {
+      row.warnEl.innerHTML = row.costoValue > 0 ? "" : '<span class="no-price-warn">Sin tarifa — defínela aquí o en «Configurar catálogo»</span>';
+    }
+
+    select.addEventListener("change", function () {
+      row.tramiteId = select.value;
+      syncClasesVisibility();
+      row.costoManual = false;
+      recomputeRowCost(row);
+      updateWarn();
+      renderPreview();
+    });
+    cantidadInput.addEventListener("input", function () {
+      row.cantidad = parseInt(cantidadInput.value, 10) || 1;
+      if (!row.costoManual) recomputeRowCost(row);
+      updateWarn();
+      renderPreview();
+    });
+    clasesInput.addEventListener("input", function () {
+      row.clases = parseInt(clasesInput.value, 10) || 1;
+      if (!row.costoManual) recomputeRowCost(row);
+      updateWarn();
+      renderPreview();
+    });
+    costInput.addEventListener("input", function () {
+      row.costoManual = true;
+      row.costoValue = parseFloat(costInput.value) || 0;
+      row.manualTag.style.display = "inline";
+      updateWarn();
+      renderPreview();
+    });
+    resetBtn.addEventListener("click", function () {
+      row.costoManual = false;
+      recomputeRowCost(row);
+      updateWarn();
+      renderPreview();
+    });
+    removeBtn.addEventListener("click", function () {
+      if (rows.length <= 1) return;
+      rows = rows.filter(function (r) { return r.id !== row.id; });
+      el.remove();
+      renderPreview();
+    });
+
+    syncClasesVisibility();
+    recomputeRowCost(row);
+    updateWarn();
+    renderPreview();
+  }
+
+  $("addRowBtn").addEventListener("click", addTramiteRow);
+
+  // ---------- live preview ----------
+  function renderPreview() {
+    var clientName = $("clientName").value.trim();
+    var dateIso = $("quoteDate").value;
+    var dateLong = fmtDateLong(dateIso);
+
+    $("pvDate").textContent = "Zapopan, Jalisco" + (dateLong ? (" a " + dateLong) : "");
+    $("pvTo").innerHTML = "<strong>Cliente:</strong> " + escapeHtml(clientName || "—");
+
+    var itemsHtml = "";
+    var total = 0;
+    rows.forEach(function (row) {
+      var item = getItem(row.tramiteId);
+      var costo = row.costoValue || 0;
+      total += costo;
+      var qtyTxt = row.cantidad + " marca(s)" + (item.escalaPorClase ? " · " + row.clases + " clase(s) de Niza c/u" : "");
+      var incluyeHtml = item.incluye.map(function (l) { return "<li>" + escapeHtml(l) + "</li>"; }).join("");
+      var requisitosHtml = item.requisitos.map(function (l) { return "<li>" + escapeHtml(l) + "</li>"; }).join("");
+      var costoTxt = costo > 0 ? fmtMoney(costo) : "Por definir";
+      var notaHtml = (costo > 0 && item.notaCosto) ? ' <span class="nota">' + escapeHtml(item.notaCosto) + '</span>' : "";
+
+      itemsHtml +=
+        '<div class="pv-item">' +
+          '<div class="pv-item-head"><span class="name">' + escapeHtml(item.nombre) + '</span><span class="qty">' + qtyTxt + '</span></div>' +
+          '<div class="pv-lbl">Qué incluye</div><ul>' + incluyeHtml + '</ul>' +
+          '<div class="pv-lbl">Tiempo estimado</div><div class="pv-tiempo-val">' + escapeHtml(item.tiempo) + '</div>' +
+          '<div class="pv-lbl">Requisitos</div><ul>' + requisitosHtml + '</ul>' +
+          '<div class="pv-item-cost"><span class="lbl2">Costo de este trámite</span><span class="val2">' + costoTxt + notaHtml + '</span></div>' +
+        '</div>';
+    });
+
+    $("pvItems").innerHTML = itemsHtml || '<p class="pv-empty-note">Agrega al menos un trámite para verlo aquí.</p>';
+    $("pvTotalWrap").innerHTML = rows.length
+      ? '<div class="pv-total"><span class="lbl3">Costo total de la cotización</span><span class="val3">' + fmtMoney(total) + '</span></div>'
+      : "";
+  }
+
+  ["clientName", "quoteDate"].forEach(function (id) {
+    $(id).addEventListener("input", renderPreview);
+    $(id).addEventListener("change", renderPreview);
+  });
+
+  // ---------- PDF generation (drawn with jsPDF text, no html2canvas) ----------
+  function fetchAsDataUrl(url) {
+    return fetch(url)
+      .then(function (res) { if (!res.ok) throw new Error("fetch failed"); return res.blob(); })
+      .then(function (blob) {
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function () { resolve(reader.result); };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      });
+  }
+  function loadImgMeta(dataUrl) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () { resolve({ dataUrl: dataUrl, w: img.naturalWidth || 1, h: img.naturalHeight || 1 }); };
+      img.onerror = function () { resolve(null); };
+      img.src = dataUrl;
+    });
+  }
+
+  var logoMeta = null;
+  fetchAsDataUrl("../icon-512.png").then(loadImgMeta).then(function (meta) { logoMeta = meta; }).catch(function () {});
+
+  function buildPdf() {
     var jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
-    var imgData = canvas.toDataURL("image/jpeg", 0.95);
-    var pdf = new jsPDFCtor({ orientation: "portrait", unit: "mm", format: "a4" });
-    var pageWidth = pdf.internal.pageSize.getWidth();
-    var pageHeight = pdf.internal.pageSize.getHeight();
-    var imgWidth = pageWidth - 20;
-    var imgHeight = (canvas.height * imgWidth) / canvas.width;
-    var y = 10;
-    if (imgHeight > pageHeight - 20) { imgHeight = pageHeight - 20; imgWidth = (canvas.width * imgHeight) / canvas.height; }
-    pdf.addImage(imgData, "JPEG", (pageWidth - imgWidth) / 2, y, imgWidth, imgHeight);
-    pdf.save("cotizacion-marca-segura.pdf");
-  });
-});
+    var doc = new jsPDFCtor({ unit: "mm", format: "a4" });
 
-renderCatalogFields();
-addTramiteRow();
+    var pageW = 210, pageH = 297;
+    var marginL = 22, marginR = 22, marginBottom = 20, marginTop = 20;
+    var contentW = pageW - marginL - marginR;
+    var y = marginTop;
+
+    function ensureSpace(h) {
+      if (y + h > pageH - marginBottom) { doc.addPage(); y = marginTop; }
+    }
+    function para(text, opts) {
+      opts = opts || {};
+      var size = opts.size || 10.5;
+      doc.setFont(opts.font || "helvetica", opts.style || "normal");
+      doc.setFontSize(size);
+      var lines = doc.splitTextToSize(text, opts.width || contentW);
+      var lineHeight = opts.lineHeight || (size * 0.42);
+      var gapAfter = opts.gapAfter != null ? opts.gapAfter : 4;
+      var blockH = lines.length * lineHeight;
+      ensureSpace(blockH + gapAfter);
+      var xPos = opts.x != null ? opts.x : marginL;
+      lines.forEach(function (line, idx) {
+        var o = {};
+        if (opts.align === "right") { o.align = "right"; }
+        else if (opts.align === "center") { o.align = "center"; }
+        doc.text(line, xPos, y + idx * lineHeight, o);
+      });
+      y += blockH + gapAfter;
+      return blockH + gapAfter;
+    }
+
+    // header
+    if (logoMeta) {
+      try {
+        var ar = logoMeta.h / logoMeta.w;
+        var lw = 20, lh = lw * ar;
+        doc.addImage(logoMeta.dataUrl, "PNG", marginL, y, lw, lh);
+      } catch (e) { /* ignore */ }
+    }
+    doc.setFont("times", "italic");
+    doc.setFontSize(16);
+    doc.text("Cotización de", marginL + contentW, y + 6, { align: "right" });
+    doc.text("Trámite de Marca", marginL + contentW, y + 13, { align: "right" });
+    y += 26;
+
+    var clientName = ($("clientName").value || "").trim();
+    var dateLong = fmtDateLong($("quoteDate").value);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    ensureSpace(6);
+    doc.text("Zapopan, Jalisco" + (dateLong ? (" a " + dateLong) : ""), marginL + contentW, y, { align: "right" });
+    y += 10;
+
+    doc.setFont("helvetica", "bold");
+    ensureSpace(6);
+    doc.text("Cliente: " + (clientName || "—"), marginL, y);
+    y += 10;
+
+    para("Con gusto le compartimos la cotización de los siguientes trámites:", { size: 11, gapAfter: 6 });
+
+    var total = 0;
+    rows.forEach(function (row, i) {
+      var item = getItem(row.tramiteId);
+      var costo = row.costoValue || 0;
+      total += costo;
+
+      para((i + 1) + ") " + item.nombre, { size: 12.5, style: "bold", gapAfter: 1 });
+      var qtyTxt = row.cantidad + " marca(s)" + (item.escalaPorClase ? " · " + row.clases + " clase(s) de Niza c/u" : "");
+      para(qtyTxt, { size: 9.5, style: "italic", gapAfter: 4 });
+
+      para("Qué incluye:", { size: 10, style: "bold", gapAfter: 1.5 });
+      item.incluye.forEach(function (l) { para("• " + l, { size: 10, gapAfter: 1.5, width: contentW - 4, x: marginL + 4 }); });
+
+      y += 1;
+      para("Tiempo estimado: " + item.tiempo, { size: 10, style: "bold", gapAfter: 3 });
+
+      para("Requisitos:", { size: 10, style: "bold", gapAfter: 1.5 });
+      item.requisitos.forEach(function (l) { para("• " + l, { size: 10, gapAfter: 1.5, width: contentW - 4, x: marginL + 4 }); });
+
+      var costoTxt = costo > 0 ? ("Costo de este trámite: " + fmtMoney(costo) + (item.notaCosto ? " " + item.notaCosto : "")) : "Costo de este trámite: por definir";
+      y += 1;
+      para(costoTxt, { size: 11, style: "bold", gapAfter: 7 });
+    });
+
+    ensureSpace(14);
+    doc.setDrawColor(180, 190, 210);
+    doc.setLineWidth(0.4);
+    doc.line(marginL, y, marginL + contentW, y);
+    y += 7;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("Costo total de la cotización:", marginL, y);
+    doc.text(fmtMoney(total), marginL + contentW, y, { align: "right" });
+    y += 12;
+
+    para(
+      "Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.",
+      { size: 8.5, style: "italic", gapAfter: 0 }
+    );
+
+    return doc;
+  }
+
+  function showStatus(text, kind) {
+    var el = $("statusMsg");
+    el.textContent = text;
+    el.className = "status-msg show " + (kind || "info");
+  }
+
+  async function handleGenerate() {
+    if (!rows.length) { showStatus("Agrega al menos un trámite para cotizar.", "warning"); return; }
+    var missing = rows.some(function (r) { return !(r.costoValue > 0); });
+
+    var btn = $("generateBtn");
+    btn.disabled = true;
+    showStatus("Generando PDF…", "info");
+
+    var doc;
+    try {
+      doc = buildPdf();
+    } catch (e) {
+      console.error(e);
+      showStatus("Ocurrió un error al construir el PDF.", "error");
+      btn.disabled = false;
+      return;
+    }
+
+    var clientSlug = (($("clientName").value || "cliente").trim() || "cliente").replace(/[^a-zA-Z0-9]+/g, "_");
+    var filename = "Cotizacion_" + clientSlug + "_" + ($("quoteDate").value || "") + ".pdf";
+    var buffer = doc.output("arraybuffer");
+
+    try {
+      var downloads = (window.claude && typeof window.claude.use === "function") ? await window.claude.use("downloads") : null;
+      if (downloads) {
+        try {
+          await downloads.save({ filename: filename, data: buffer });
+          showStatus(missing ? "PDF descargado. Ojo: hay trámites sin tarifa definida." : "PDF descargado correctamente.", missing ? "warning" : "success");
+          btn.disabled = false;
+          return;
+        } catch (err2) {
+          if (err2 && err2.code === "declined") { showStatus("Descarga cancelada.", "info"); btn.disabled = false; return; }
+          console.warn("downloads.save failed", err2);
+        }
+      }
+    } catch (e) { console.warn(e); }
+
+    try {
+      var blob = new Blob([buffer], { type: "application/pdf" });
+      var blobUrl = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(function () { URL.revokeObjectURL(blobUrl); }, 4000);
+      showStatus(missing ? "PDF descargado. Ojo: hay trámites sin tarifa definida." : "PDF descargado correctamente.", missing ? "warning" : "success");
+      btn.disabled = false;
+      return;
+    } catch (e2) {
+      console.warn("blob download failed", e2);
+    }
+
+    showStatus("No se pudo descargar el archivo directamente en este visor. Usa «Imprimir vista previa» para guardarlo como PDF.", "warning");
+    btn.disabled = false;
+  }
+
+  $("generateBtn").addEventListener("click", handleGenerate);
+  $("printBtn").addEventListener("click", function () { window.print(); });
+
+  // ---------- init ----------
+  var today = new Date();
+  var iso = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+  $("quoteDate").value = iso;
+
+  renderCatalogFields();
+  addTramiteRow();
+})();
 </script>
 </body>
 </html>

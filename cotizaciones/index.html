@@ -232,6 +232,20 @@ fieldset { border: none; padding: 0; margin: 0; }
 .pv-totals-row.grand .val3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 21px; color: #0a2f66; }
 
 .pv-disclaimer { font-size: 10px; color: #8791a5; line-height: 1.5; border-top: 0.3mm dashed #d8dce6; padding-top: 3mm; margin-top: 6mm; }
+
+.pv-fiscal-ad { margin-top: 8mm; border: 0.4mm solid #0050c6; border-radius: 3mm; padding: 7mm; background: linear-gradient(180deg, #eaf1fc, #f7f9fd); }
+.pv-fiscal-ad .fa-badge { display: inline-block; font-family: "Poppins", sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: #fe6a00; border-radius: 999px; padding: 1.5mm 4mm; margin-bottom: 3mm; }
+.pv-fiscal-ad .fa-headline { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15px; color: #0a2f66; margin: 0 0 3mm; line-height: 1.3; }
+.pv-fiscal-ad .fa-copy { font-size: 12px; line-height: 1.6; color: #1a2233; margin: 0 0 3mm; }
+.pv-fiscal-ad .fa-assumptions { font-size: 11px; line-height: 1.5; color: #5b6478; font-style: italic; margin: 0 0 4mm; }
+.pv-fiscal-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4mm; margin-bottom: 4mm; }
+.pv-fiscal-stat { background: #fff; border: 0.3mm solid #d8dce6; border-radius: 2mm; padding: 4mm; text-align: center; }
+.pv-fiscal-stat .fs-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #8791a5; margin-bottom: 1.5mm; }
+.pv-fiscal-stat .fs-value { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 17px; color: #0050c6; }
+.pv-fiscal-stat.warn .fs-value { color: #c62828; }
+.pv-fiscal-ad .fa-cta { font-size: 12.5px; color: #0a2f66; margin: 0 0 4mm; }
+.pv-fiscal-ad .fa-cta strong { color: #fe6a00; }
+.pv-fiscal-ad .fa-legal { font-size: 8.5px; font-weight: 700; letter-spacing: 0.01em; color: #5b6478; line-height: 1.5; border-top: 0.3mm solid #bcd4ff; padding-top: 3mm; text-transform: uppercase; }
 .pv-empty-note { font-size: 12px; color: #8791a5; font-style: italic; }
 
 .footnote { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 18px; }
@@ -313,6 +327,15 @@ fieldset { border: none; padding: 0; margin: 0; }
       </fieldset>
 
       <fieldset>
+        <p class="section-label">Impacto fiscal y ROI</p>
+        <div class="checkbox-field">
+          <input type="checkbox" id="fiscalAdToggle" checked />
+          <label for="fiscalAdToggle">Incluir sección de impacto fiscal (ejemplo ilustrativo)</label>
+        </div>
+        <p class="hint" style="margin-top:6px;">Usa un ejemplo fijo (empresa con $100,000 de ingresos/mes, ISR 30%, riesgo medio, 1 dueño) y el costo/número de marcas de esta cotización — no requiere que captures datos financieros del cliente.</p>
+      </fieldset>
+
+      <fieldset>
         <button type="button" class="section-toggle" id="catalogToggle" aria-expanded="false" aria-controls="catalogFields">
           <span class="section-label" style="margin:0;">⚙️ Configurar catálogo (tiempos, requisitos y tarifas por defecto)</span>
           <span class="chev" id="catalogChev">▸</span>
@@ -343,6 +366,7 @@ fieldset { border: none; padding: 0; margin: 0; }
           <div id="pvItems"></div>
           <div id="pvTotalsWrap"></div>
           <p class="pv-disclaimer">Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.</p>
+          <div id="pvFiscalAd"></div>
         </div>
       </div>
       <p class="footnote">Los datos se procesan en tu navegador; nada se sube a un servidor.</p>
@@ -762,6 +786,51 @@ fieldset { border: none; padding: 0; margin: 0; }
     return { subtotal: subtotal, discountPct: discountPct, discountAmt: discountAmt, afterDiscount: afterDiscount, ivaOn: ivaOn, ivaAmt: ivaAmt, grandTotal: grandTotal };
   }
 
+  // ---------- fiscal impact / ROI ad (fixed illustrative example) ----------
+  function computeFiscalAd() {
+    var registroRows = rows.filter(function (r) { return r.tramiteId.indexOf("registro_") === 0; });
+    var useRows = registroRows.length ? registroRows : rows;
+    var numMarcas = useRows.reduce(function (s, r) { return s + r.cantidad; }, 0) || 1;
+    var costoTotal = useRows.reduce(function (s, r) { return s + (r.unitCost || 0) * r.cantidad; }, 0);
+
+    var ingresosMensuales = 100000;
+    var ingresosAnual = ingresosMensuales * 12;
+    var tasaISR = 30, tasaAmortizacion = 15, tasaRegalia = 5.5, aniosVidaUtil = 10;
+    var valorIntangible = ingresosAnual * (tasaRegalia / 100) * aniosVidaUtil;
+    var beneficioFiscalAnual = valorIntangible * (tasaAmortizacion / 100) * (tasaISR / 100);
+    var ahorro10 = beneficioFiscalAnual * 10;
+    var mesesEquilibrio = (costoTotal > 0 && beneficioFiscalAnual > 0) ? costoTotal / (beneficioFiscalAnual / 12) : null;
+
+    var probLitigio = 30, costoDefensa = 350000, pctIngresosRiesgo = 15;
+    var probAcumulada10 = 1 - Math.pow(1 - probLitigio / 100, 10);
+    var perdidaIngresosEstimada = ingresosAnual * (pctIngresosRiesgo / 100);
+    var riesgoEconomico = (costoDefensa + perdidaIngresosEstimada) * probAcumulada10;
+
+    return { numMarcas: numMarcas, costoTotal: costoTotal, beneficioFiscalAnual: beneficioFiscalAnual, ahorro10: ahorro10, mesesEquilibrio: mesesEquilibrio, riesgoEconomico: riesgoEconomico };
+  }
+
+  function renderFiscalAd() {
+    if (!$("fiscalAdToggle").checked || !rows.length) { $("pvFiscalAd").innerHTML = ""; return; }
+    var f = computeFiscalAd();
+    var equilibrioTxt = f.mesesEquilibrio != null ? Math.max(0, Math.round(f.mesesEquilibrio)) + " meses" : "—";
+
+    $("pvFiscalAd").innerHTML =
+      '<div class="pv-fiscal-ad">' +
+        '<span class="fa-badge">¿Sabías que...?</span>' +
+        '<p class="fa-headline">Te explico cómo recuperar la inversión del registro de marcas</p>' +
+        '<p class="fa-copy">No solo tienes una marca: tu marca vale como activo de tu empresa, y por lo tanto puedes usar su valor de mercado para bajar tu carga fiscal. Mira este ejemplo:</p>' +
+        '<p class="fa-assumptions">Basado en una empresa con ingresos de $100,000 pesos al mes, tasa de ISR del 30%, nivel de riesgo de litigio medio y un solo dueño:</p>' +
+        '<div class="pv-fiscal-stats">' +
+          '<div class="pv-fiscal-stat"><div class="fs-label">Ahorro fiscal anual</div><div class="fs-value">' + fmtMoney(f.beneficioFiscalAnual) + '</div></div>' +
+          '<div class="pv-fiscal-stat"><div class="fs-label">Ahorro acumulado a 10 años</div><div class="fs-value">' + fmtMoney(f.ahorro10) + '</div></div>' +
+          '<div class="pv-fiscal-stat"><div class="fs-label">Recuperas tu inversión en</div><div class="fs-value">' + equilibrioTxt + '</div></div>' +
+          '<div class="pv-fiscal-stat warn"><div class="fs-label">Costo de no proteger tu marca</div><div class="fs-value">' + fmtMoney(f.riesgoEconomico) + '</div></div>' +
+        '</div>' +
+        '<p class="fa-cta">¿Quieres saber cómo aplica en tu caso? <strong>Contáctanos.</strong></p>' +
+        '<p class="fa-legal">DATOS DE MUESTRA ÚNICAMENTE. LAS PROYECCIONES PERSONALIZADAS REQUIEREN INFORMACIÓN CASO POR CASO. ESTRATEGIA AVALADA POR LA REGULACIÓN FISCAL VIGENTE.</p>' +
+      '</div>';
+  }
+
   // ---------- live preview ----------
   function renderPreview() {
     var clientName = $("clientName").value.trim();
@@ -830,6 +899,8 @@ fieldset { border: none; padding: 0; margin: 0; }
     } else {
       $("pvTotalsWrap").innerHTML = "";
     }
+
+    renderFiscalAd();
   }
 
   ["clientName", "brandName", "quoteDate", "discountPct"].forEach(function (id) {
@@ -837,6 +908,7 @@ fieldset { border: none; padding: 0; margin: 0; }
     $(id).addEventListener("change", renderPreview);
   });
   $("ivaToggle").addEventListener("change", renderPreview);
+  $("fiscalAdToggle").addEventListener("change", renderPreview);
 
   // ---------- PDF generation (drawn with jsPDF text, no html2canvas) ----------
   function fetchAsDataUrl(url) {
@@ -1164,6 +1236,115 @@ fieldset { border: none; padding: 0; margin: 0; }
       "Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.",
       { size: 8.5, style: "italic", gapAfter: 0, color: COLOR_FAINT }
     );
+
+    if ($("fiscalAdToggle").checked && rows.length) {
+      y += 6;
+      var f = computeFiscalAd();
+      var equilibrioTxt = f.mesesEquilibrio != null ? Math.max(0, Math.round(f.mesesEquilibrio)) + " meses" : "—";
+
+      var padX = 6, padY = 6;
+      var innerW = contentW - padX * 2;
+
+      var headlineTxt = "Te explico cómo recuperar la inversión del registro de marcas";
+      var copyTxt = "No solo tienes una marca: tu marca vale como activo de tu empresa, y por lo tanto puedes usar su valor de mercado para bajar tu carga fiscal. Mira este ejemplo:";
+      var assumptionsTxt = "Basado en una empresa con ingresos de $100,000 pesos al mes, tasa de ISR del 30%, nivel de riesgo de litigio medio y un solo dueño:";
+      var ctaTxt = "¿Quieres saber cómo aplica en tu caso? Contáctanos.";
+      var legalTxt = "DATOS DE MUESTRA ÚNICAMENTE. LAS PROYECCIONES PERSONALIZADAS REQUIEREN INFORMACIÓN CASO POR CASO. ESTRATEGIA AVALADA POR LA REGULACIÓN FISCAL VIGENTE.";
+
+      doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+      var headlineLines = doc.splitTextToSize(headlineTxt, innerW);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(11);
+      var copyLines = doc.splitTextToSize(copyTxt, innerW);
+      doc.setFont("helvetica", "italic"); doc.setFontSize(9.5);
+      var assumpLines = doc.splitTextToSize(assumptionsTxt, innerW);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+      var ctaLines = doc.splitTextToSize(ctaTxt, innerW);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5);
+      var legalLines = doc.splitTextToSize(legalTxt, innerW);
+
+      var badgeH = 8;
+      var headlineH = headlineLines.length * 6.2 + 3;
+      var copyH = copyLines.length * 4.8 + 3;
+      var assumpH = assumpLines.length * 4.2 + 5;
+      var statsH = 34;
+      var ctaH = ctaLines.length * 4.8 + 4;
+      var legalH = legalLines.length * 3.6 + 3;
+      var totalH = padY * 2 + badgeH + headlineH + copyH + assumpH + statsH + ctaH + legalH;
+
+      ensureSpace(totalH);
+      var boxY = y;
+
+      doc.setDrawColor(0, 80, 198);
+      doc.setLineWidth(0.5);
+      doc.setFillColor(234, 241, 252);
+      doc.roundedRect(marginL, boxY, contentW, totalH, 2.5, 2.5, "FD");
+
+      var cx = marginL + padX;
+      var cy = boxY + padY;
+
+      var badgeTxt = "¿SABÍAS QUE...?";
+      doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+      var badgeW = doc.getTextWidth(badgeTxt) + 6;
+      doc.setFillColor(254, 106, 0);
+      doc.roundedRect(cx, cy, badgeW, 5.5, 2.75, 2.75, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.text(badgeTxt, cx + 3, cy + 3.7);
+      cy += badgeH;
+
+      doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+      doc.setTextColor.apply(doc, COLOR_BLUE_INK);
+      headlineLines.forEach(function (l, i) { doc.text(l, cx, cy + 3.5 + i * 6.2); });
+      cy += headlineH;
+
+      doc.setFont("helvetica", "normal"); doc.setFontSize(11);
+      doc.setTextColor.apply(doc, COLOR_INK);
+      copyLines.forEach(function (l, i) { doc.text(l, cx, cy + 3 + i * 4.8); });
+      cy += copyH;
+
+      doc.setFont("helvetica", "italic"); doc.setFontSize(9.5);
+      doc.setTextColor.apply(doc, COLOR_MUTED);
+      assumpLines.forEach(function (l, i) { doc.text(l, cx, cy + 3 + i * 4.2); });
+      cy += assumpH;
+
+      var stats = [
+        { label: "Ahorro fiscal anual", value: fmtMoney(f.beneficioFiscalAnual), color: COLOR_BLUE },
+        { label: "Ahorro acumulado a 10 años", value: fmtMoney(f.ahorro10), color: COLOR_BLUE },
+        { label: "Recuperas tu inversión en", value: equilibrioTxt, color: COLOR_BLUE },
+        { label: "Costo de no proteger tu marca", value: fmtMoney(f.riesgoEconomico), color: [198, 40, 40] }
+      ];
+      var gGap = 4;
+      var gW = (innerW - gGap) / 2;
+      var gH = 15;
+      stats.forEach(function (s, idx) {
+        var col = idx % 2, row = Math.floor(idx / 2);
+        var bx = cx + col * (gW + gGap);
+        var by = cy + row * (gH + gGap);
+        doc.setDrawColor(216, 220, 230);
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(bx, by, gW, gH, 1.5, 1.5, "FD");
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5);
+        doc.setTextColor.apply(doc, COLOR_FAINT);
+        doc.text(s.label.toUpperCase(), bx + gW / 2, by + 5, { align: "center" });
+        doc.setFont("helvetica", "bold"); doc.setFontSize(12.5);
+        doc.setTextColor.apply(doc, s.color);
+        doc.text(s.value, bx + gW / 2, by + 11.5, { align: "center" });
+      });
+      cy += statsH;
+
+      doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+      doc.setTextColor.apply(doc, COLOR_BLUE_INK);
+      ctaLines.forEach(function (l, i) { doc.text(l, cx, cy + 3 + i * 4.8); });
+      cy += ctaH;
+
+      doc.setDrawColor(188, 212, 255);
+      doc.line(cx, cy - 1, cx + innerW, cy - 1);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5);
+      doc.setTextColor.apply(doc, COLOR_MUTED);
+      legalLines.forEach(function (l, i) { doc.text(l, cx, cy + 3 + i * 3.6); });
+
+      doc.setTextColor.apply(doc, COLOR_INK);
+      y = boxY + totalH + 4;
+    }
 
     return doc;
   }

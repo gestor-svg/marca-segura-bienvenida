@@ -244,6 +244,9 @@ fieldset { border: none; padding: 0; margin: 0; }
 .pv-fiscal-stat .fs-value { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 17px; color: #0050c6; }
 .pv-fiscal-stat.warn .fs-value { color: #c62828; }
 .pv-fiscal-stat .fs-sub { font-size: 9px; color: #8791a5; margin-top: 1mm; line-height: 1.3; }
+.pv-fiscal-stat.roi { grid-column: 1 / -1; background: #eaf1fc; border: 0.4mm solid #0050c6; padding: 5mm; }
+.pv-fiscal-stat.roi .fs-label { color: #0a2f66; }
+.pv-fiscal-stat.roi .fs-value { font-size: 24px; color: #0050c6; }
 .pv-fiscal-ad .fa-cta { font-size: 12.5px; color: #0a2f66; margin: 0 0 4mm; }
 .pv-fiscal-ad .fa-cta strong { color: #fe6a00; }
 .pv-fiscal-ad .fa-legal { font-size: 8.5px; font-weight: 700; letter-spacing: 0.01em; color: #5b6478; line-height: 1.5; border-top: 0.3mm solid #bcd4ff; padding-top: 3mm; text-transform: uppercase; }
@@ -805,19 +808,26 @@ fieldset { border: none; padding: 0; margin: 0; }
     var beneficioFiscalAnual = valorIntangible * (tasaAmortizacion / 100) * (tasaISR / 100);
     var ahorro10 = beneficioFiscalAnual * 10;
     var mesesEquilibrio = (costoUnaMarca > 0 && beneficioFiscalAnual > 0) ? costoUnaMarca / (beneficioFiscalAnual / 12) : null;
+    var roi10 = (costoUnaMarca > 0) ? ((ahorro10 - costoUnaMarca) / costoUnaMarca) * 100 : null;
 
     var probLitigio = 30, costoDefensa = 350000, pctIngresosRiesgo = 15;
     var probAcumulada10 = 1 - Math.pow(1 - probLitigio / 100, 10);
     var perdidaIngresosEstimada = ingresosAnual * (pctIngresosRiesgo / 100);
     var riesgoEconomico = (costoDefensa + perdidaIngresosEstimada) * probAcumulada10;
 
-    return { costoUnaMarca: costoUnaMarca, beneficioFiscalAnual: beneficioFiscalAnual, ahorro10: ahorro10, mesesEquilibrio: mesesEquilibrio, riesgoEconomico: riesgoEconomico };
+    return { costoUnaMarca: costoUnaMarca, beneficioFiscalAnual: beneficioFiscalAnual, ahorro10: ahorro10, mesesEquilibrio: mesesEquilibrio, roi10: roi10, riesgoEconomico: riesgoEconomico };
+  }
+
+  function fmtPct(n) {
+    if (!isFinite(n)) return "—";
+    return (n >= 0 ? "+" : "") + Math.round(n).toLocaleString("es-MX") + "%";
   }
 
   function renderFiscalAd() {
     if (!$("fiscalAdToggle").checked || !rows.length) { $("pvFiscalAd").innerHTML = ""; return; }
     var f = computeFiscalAd();
     var equilibrioTxt = f.mesesEquilibrio != null ? Math.max(0, Math.round(f.mesesEquilibrio)) + " meses" : "—";
+    var roiTxt = f.roi10 != null ? fmtPct(f.roi10) : "—";
 
     $("pvFiscalAd").innerHTML =
       '<div class="pv-fiscal-ad">' +
@@ -828,6 +838,7 @@ fieldset { border: none; padding: 0; margin: 0; }
         '<div class="pv-fiscal-stats">' +
           '<div class="pv-fiscal-stat"><div class="fs-label">Ahorro fiscal anual</div><div class="fs-value">' + fmtMoney(f.beneficioFiscalAnual) + '</div></div>' +
           '<div class="pv-fiscal-stat"><div class="fs-label">Ahorro acumulado a 10 años</div><div class="fs-value">' + fmtMoney(f.ahorro10) + '</div></div>' +
+          '<div class="pv-fiscal-stat roi"><div class="fs-label">ROI esperado a 10 años</div><div class="fs-value">' + roiTxt + '</div><div class="fs-sub">Sobre el ahorro fiscal acumulado</div></div>' +
           '<div class="pv-fiscal-stat"><div class="fs-label">Recuperas tu inversión en</div><div class="fs-value">' + equilibrioTxt + '</div></div>' +
           '<div class="pv-fiscal-stat warn"><div class="fs-label">Costo por no proteger tu marca</div><div class="fs-value">' + fmtMoney(f.riesgoEconomico) + '</div><div class="fs-sub">Costos de litigio y pérdida de mercado</div></div>' +
         '</div>' +

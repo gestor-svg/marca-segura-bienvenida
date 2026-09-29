@@ -684,7 +684,7 @@ fieldset { border: none; padding: 0; margin: 0; }
     rowSeq++;
     var el = document.createElement("div");
     el.className = "tramite-row";
-    var firstId = CATALOG[0].id;
+    var firstId = getItem("registro_regular") ? "registro_regular" : CATALOG[0].id;
     el.innerHTML =
       '<div class="tramite-row-head">' +
         '<select class="tramite-select">' + catalogOptionsHtml(firstId) + '</select>' +

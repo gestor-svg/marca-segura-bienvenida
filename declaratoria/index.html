@@ -16,6 +16,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // pdf.js necesita saber dónde está su worker (mismo CDN/versión que Kit de Bienvenida)
+  window.addEventListener('DOMContentLoaded', () => {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  });
+</script>
 <style>
 :root {
   --blue: #0050c6;
@@ -258,6 +265,16 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
 
 .footnote { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 18px; }
 
+.autofill-panel { border-color: color-mix(in srgb, var(--blue) 35%, var(--border)); }
+.autofill-panel .desc { font-size: 12.5px; color: var(--ink-faint); margin: -6px 0 14px; line-height: 1.5; }
+.autofill-drop-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.autofill-file-item { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-muted); background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+.autofill-file-item .tag { font-family: "Poppins", sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; flex-shrink: 0; }
+.autofill-file-item .tag.titulo { color: var(--blue); background: color-mix(in srgb, var(--blue) 14%, var(--surface)); }
+.autofill-file-item .tag.solicitud { color: color-mix(in srgb, var(--orange) 85%, var(--ink)); background: color-mix(in srgb, var(--orange) 16%, var(--surface)); }
+.autofill-file-item .tag.desconocido { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, var(--surface)); }
+.autofill-file-item .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 </style>
 </head>
 <body>
@@ -333,7 +350,10 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
 
 </div>
 
-<script>
+<script type="module">
+import { extractImpiTitulo } from '../extract.mjs';
+import { extractImpiSolicitud } from './extractSolicitud.mjs';
+
 (function () {
   "use strict";
 
@@ -441,6 +461,10 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
         poderNumero: "undefined"
       },
       firmaRect: [48.7, 145.6, 563.0, 174.4],
+      // Caja real del campo "declaraTexto" (Text1), medida con pdf-lib sobre
+      // el PDF oficial: multilínea, Arial 7.5pt — usada para estimar si el
+      // texto de productos/servicios se desborda y necesita hoja de anexo.
+      declaraRect: { width: 462.8, height: 40.45, fontSize: 7.5 },
       anexoKeys: ["1", "2", "3", "4", "5", "6"],
       anexoLabels: [
         "Comprobante de pago por la renovación, así como por la declaración de uso. Original.",
@@ -483,6 +507,8 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
         poderNumero: "undefined"
       },
       firmaRect: [49.9, 146.6, 564.2, 175.4],
+      // Caja real del campo "declaraTexto" (Text16), medida con pdf-lib.
+      declaraRect: { width: 461.5, height: 39.13, fontSize: 7.5 },
       anexoKeys: ["1", "2", "3", "4", "5", "6", "7"],
       anexoLabels: [
         "Comprobante de pago. Original.",
@@ -586,6 +612,32 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
       '<span class="homoclave-badge">' + def.homoclave + '</span>' +
       "<h2>" + escapeHtml(def.titleFull) + "</h2>");
     host.appendChild(header);
+
+    // ---- Panel: prellenado automático desde PDF ----
+    var pAutofill = el("div", "panel autofill-panel");
+    var pAutofillBody = el("div", "form-panel");
+    pAutofillBody.appendChild(el("div", "section-label", "⚡ Prellenado automático (opcional)"));
+    pAutofillBody.appendChild(el("p", "desc",
+      "Sube el título de registro y/o el acuse de la solicitud electrónica del IMPI (uno o ambos). " +
+      "Se detecta automáticamente cuál es cuál y se prellenan los campos de abajo — revísalos antes de generar el PDF."));
+    var autofillList = el("div", "autofill-drop-list");
+    autofillList.id = "autofillFileList";
+    pAutofillBody.appendChild(autofillList);
+    var autofillDrop = el("div", "file-drop");
+    autofillDrop.innerHTML =
+      '<div class="thumb">📎</div>' +
+      '<div class="txt"><strong>Sube 1 o 2 PDFs</strong> (título y/o solicitud del IMPI).</div>' +
+      '<input type="file" id="autofillInput" accept="application/pdf" multiple />';
+    pAutofillBody.appendChild(autofillDrop);
+    var autofillStatus = el("div", "status-msg");
+    autofillStatus.id = "autofillStatus";
+    pAutofillBody.appendChild(autofillStatus);
+    pAutofill.appendChild(pAutofillBody);
+    host.appendChild(pAutofill);
+    autofillDrop.addEventListener("click", function () { $("autofillInput").click(); });
+    $("autofillInput").addEventListener("change", function (e) {
+      if (e.target.files && e.target.files.length) handleAutofillFiles(e.target.files);
+    });
 
     // ---- Panel: trámite ----
     var pTramite = el("div", "panel");
@@ -829,6 +881,159 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
   }
 
   // ---------------------------------------------------------------------
+  // Prellenado automático desde PDF (título de registro y/o acuse de
+  // solicitud electrónica). Cada archivo subido se intenta leer primero
+  // como título y, si no, como solicitud; el que no se reconozca como
+  // ninguno de los dos se reporta y se ignora.
+  // ---------------------------------------------------------------------
+  async function classifyAndExtract(file) {
+    var buf = await file.arrayBuffer();
+    try {
+      var data1 = await extractImpiTitulo(window.pdfjsLib, new Uint8Array(buf.slice(0)));
+      return { type: "titulo", data: data1 };
+    } catch (e1) { /* no es un título */ }
+    try {
+      var data2 = await extractImpiSolicitud(window.pdfjsLib, new Uint8Array(buf.slice(0)));
+      return { type: "solicitud", data: data2 };
+    } catch (e2) { /* no es una solicitud reconocida */ }
+    return { type: "desconocido", data: null };
+  }
+
+  function renderAutofillFileList(entries) {
+    var list = $("autofillFileList");
+    if (!list) return;
+    list.innerHTML = "";
+    var labels = { titulo: "Título", solicitud: "Solicitud", desconocido: "No reconocido" };
+    entries.forEach(function (entry) {
+      var item = el("div", "autofill-file-item");
+      item.innerHTML =
+        '<span class="tag ' + entry.type + '">' + labels[entry.type] + '</span>' +
+        '<span class="name">' + escapeHtml(entry.name) + '</span>';
+      list.appendChild(item);
+    });
+  }
+
+  function setPillSelected(value) {
+    var radio = document.querySelector('input[name="tipoTramite"][value="' + value + '"]');
+    if (!radio) return;
+    var group = radio.closest(".pill-group");
+    if (group) group.querySelectorAll(".pill-option").forEach(function (o) { o.classList.remove("checked"); });
+    radio.checked = true;
+    var opt = radio.closest(".pill-option");
+    if (opt) opt.classList.add("checked");
+  }
+
+  function applyAutofill(tituloData, solicitudData) {
+    if (tituloData && tituloData.registro) $("f_numeroRegistro").value = tituloData.registro;
+
+    var clase = (tituloData && tituloData.clase) || (solicitudData && solicitudData.clase) || null;
+    if (clase) {
+      var claseOpt = Array.from($("f_clase").options).find(function (o) { return o.value === String(Number(clase)); });
+      if (claseOpt) $("f_clase").value = claseOpt.value;
+    }
+
+    // El título refleja lo que IMPI otorgó (puede diferir de lo pedido en la
+    // solicitud); por eso "SE APLICA A" del título tiene prioridad sobre el
+    // texto original de productos/servicios de la solicitud.
+    var declara = (tituloData && tituloData.seAplicaA) || (solicitudData && solicitudData.productosServicios) || null;
+    if (declara) $("f_declara").value = declara;
+
+    if (solicitudData) {
+      if (solicitudData.fechaTramite) $("f_fecha").value = solicitudData.fechaTramite;
+
+      if (solicitudData.tipoTramite) {
+        var norm = solicitudData.tipoTramite.trim().toUpperCase();
+        var match = TIPO_TRAMITE_OPTIONS.find(function (o) { return o.label.toUpperCase() === norm; });
+        if (match) setPillSelected(match.value);
+      }
+
+      var pf = solicitudData.personaFisica || {};
+      var pm = solicitudData.personaMoral || {};
+      if (pf.curp) $("f_curp").value = pf.curp;
+      if (pf.nombres) $("f_nombres").value = pf.nombres;
+      if (pf.apellido1) $("f_apellido1").value = pf.apellido1;
+      if (pf.apellido2) $("f_apellido2").value = pf.apellido2;
+      if (pf.nacionalidad) $("f_nacionalidadFisica").value = pf.nacionalidad;
+      if (pf.telefono) $("f_telefonoFisica").value = pf.telefono;
+
+      if (pm.rfc) $("f_rfc").value = pm.rfc;
+      if (pm.denominacion) $("f_denominacion").value = pm.denominacion;
+      if (pm.nacionalidad) $("f_nacionalidadMoral").value = pm.nacionalidad;
+      if (pm.telefono) $("f_telefonoMoral").value = pm.telefono;
+
+      // Cambia el toggle física/moral según cuál trajo datos — el usuario
+      // sigue pudiendo corregirlo a mano, esto solo evita un clic.
+      if (solicitudData.personaSugerida === "moral" && (pm.rfc || pm.denominacion)) {
+        var btnMoral = document.querySelector('.segmented button[data-persona="moral"]');
+        if (btnMoral) btnMoral.click();
+      }
+
+      var dom = solicitudData.domicilioNotificaciones || {};
+      if (dom.cp) $("f_cp").value = dom.cp;
+      if (dom.calle) $("f_calle").value = dom.calle;
+      if (dom.numExt) $("f_numExt").value = dom.numExt;
+      if (dom.numInt) $("f_numInt").value = dom.numInt;
+      if (dom.colonia) $("f_colonia").value = dom.colonia;
+      if (dom.municipio) $("f_municipio").value = dom.municipio;
+      if (dom.entidad) $("f_entidad").value = dom.entidad;
+
+      var correo = pf.correo || pm.correo;
+      if (correo) $("f_correo").value = correo;
+
+      var nombreFirma = solicitudData.nombreFirma || solicitudData.solicitanteNombre;
+      if (nombreFirma) {
+        var firmaInput = $("f_nombreFirma");
+        firmaInput.value = nombreFirma;
+        firmaInput.dataset.userEdited = "true"; // no lo pise el nombre archivado en Configuración
+      }
+    } else if (tituloData && tituloData.titulares && tituloData.titulares[0]) {
+      // Solo se subió el título: el titular es la mejor aproximación al firmante.
+      var firmaInput2 = $("f_nombreFirma");
+      firmaInput2.value = tituloData.titulares[0];
+      firmaInput2.dataset.userEdited = "true";
+    }
+  }
+
+  async function handleAutofillFiles(fileList) {
+    var statusEl = $("autofillStatus");
+    function setStatus(kind, text) {
+      statusEl.className = "status-msg show " + kind;
+      statusEl.textContent = text;
+    }
+    setStatus("info", "Leyendo documento(s)…");
+
+    var tituloData = null, solicitudData = null;
+    var entries = [];
+    for (var i = 0; i < fileList.length; i++) {
+      var file = fileList[i];
+      try {
+        var result = await classifyAndExtract(file);
+        entries.push({ name: file.name, type: result.type });
+        if (result.type === "titulo") tituloData = result.data;
+        else if (result.type === "solicitud") solicitudData = result.data;
+      } catch (e) {
+        entries.push({ name: file.name, type: "desconocido" });
+      }
+    }
+    renderAutofillFileList(entries);
+
+    if (!tituloData && !solicitudData) {
+      setStatus("error", "No se reconoció ningún documento como título o solicitud del IMPI.");
+      return;
+    }
+
+    applyAutofill(tituloData, solicitudData);
+
+    var parts = [];
+    if (tituloData) parts.push("título");
+    if (solicitudData) parts.push("solicitud");
+    var unknownCount = entries.filter(function (e) { return e.type === "desconocido"; }).length;
+    var msg = "✅ Formulario prellenado con: " + parts.join(" + ") + ". Revisa y corrige antes de generar.";
+    if (unknownCount) msg += " (" + unknownCount + " archivo(s) no reconocido(s))";
+    setStatus(unknownCount && !(tituloData && solicitudData) ? "warning" : "success", msg);
+  }
+
+  // ---------------------------------------------------------------------
   // PDF generation
   // ---------------------------------------------------------------------
   function setText(form, name, value) {
@@ -842,6 +1047,80 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
   function setRadio(form, name, value) {
     if (!value) return;
     try { form.getRadioGroup(name).select(value); } catch (e) { /* ignore */ }
+  }
+
+  // Ajuste de línea "a mano" (medido con las métricas reales de la fuente)
+  // para saber si el texto de productos/servicios cabe en su campo antes de
+  // llenarlo — el campo del PDF es multilínea pero de alto fijo, y lo que
+  // no cabe se recorta visualmente en vez de crecer la caja.
+  function wrapTextToLines(font, text, fontSize, maxWidth) {
+    var words = text.split(/\s+/).filter(Boolean);
+    var lines = [];
+    var current = "";
+    words.forEach(function (word) {
+      var candidate = current ? current + " " + word : word;
+      if (!current || font.widthOfTextAtSize(candidate, fontSize) <= maxWidth) {
+        current = candidate;
+      } else {
+        lines.push(current);
+        current = word;
+      }
+    });
+    if (current) lines.push(current);
+    return lines;
+  }
+
+  // Prepara el texto de productos/servicios: si cabe en la caja del campo,
+  // lo regresa completo; si no, regresa una versión recortada para el campo
+  // visible ("…continúa en anexo") y marca que hace falta la hoja de anexo.
+  function fitDeclaraText(font, fullText, rect) {
+    var padding = 4;
+    var maxWidth = rect.width - padding;
+    var lineHeight = rect.fontSize * 1.15;
+    var maxLines = Math.max(1, Math.floor(rect.height / lineHeight));
+    var wrapped = wrapTextToLines(font, fullText, rect.fontSize, maxWidth);
+
+    if (wrapped.length <= maxLines) {
+      return { visibleText: fullText, overflow: false };
+    }
+
+    var suffix = " (continúa en anexo)";
+    var visibleLines = wrapped.slice(0, maxLines - 1);
+    var lastLine = wrapped[maxLines - 1] || "";
+    while (lastLine.length > 0 && font.widthOfTextAtSize(lastLine + suffix, rect.fontSize) > maxWidth) {
+      lastLine = lastLine.slice(0, -1);
+    }
+    visibleLines.push((lastLine + suffix).trim());
+    return { visibleText: visibleLines.join(" "), overflow: true };
+  }
+
+  // Genera la(s) hoja(s) de anexo con el texto completo de productos/
+  // servicios cuando no cupo en el campo del PDF, y las agrega al final
+  // del documento (mismo tamaño de página que el formato oficial).
+  function addAnexoProductosServicios(pdfDoc, font, boldFont, fullText, refLabel) {
+    var pageWidth = 612, pageHeight = 1008;
+    var marginX = 50, topY = 940, bottomY = 60;
+    var page = pdfDoc.addPage([pageWidth, pageHeight]);
+    var cursorY = topY;
+
+    page.drawText("ANEXO", { x: marginX, y: cursorY, size: 14, font: boldFont });
+    cursorY -= 22;
+    page.drawText("Productos o servicios sobre los que se declara el uso", { x: marginX, y: cursorY, size: 11, font: boldFont });
+    cursorY -= 20;
+    if (refLabel) {
+      page.drawText(refLabel, { x: marginX, y: cursorY, size: 10, font: font });
+      cursorY -= 24;
+    }
+
+    var lines = wrapTextToLines(font, fullText, 10, pageWidth - marginX * 2);
+    lines.forEach(function (line) {
+      if (cursorY < bottomY) {
+        page = pdfDoc.addPage([pageWidth, pageHeight]);
+        cursorY = topY;
+      }
+      page.drawText(line, { x: marginX, y: cursorY, size: 10, font: font });
+      cursorY -= 14;
+    });
   }
 
   function handleGenerate() {
@@ -867,7 +1146,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
         return res.arrayBuffer();
       })
       .then(function (templateBytes) { return PDFLib.PDFDocument.load(templateBytes); })
-      .then(function (pdfDoc) {
+      .then(async function (pdfDoc) {
         var form = pdfDoc.getForm();
         var f = def.fields;
 
@@ -889,8 +1168,16 @@ input::placeholder, textarea::placeholder { color: var(--ink-faint); }
         setText(form, f.claseD1, claseDigits.charAt(0));
         setText(form, f.claseD2, claseDigits.charAt(1));
 
-        setText(form, f.declaraTexto, $("f_declara").value.trim());
-        setCheck(form, f.declaraContinua, $("f_declaraContinua").checked);
+        var declaraFull = $("f_declara").value.trim();
+        var helvetica = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+        var fit = fitDeclaraText(helvetica, declaraFull, def.declaraRect);
+        setText(form, f.declaraTexto, fit.visibleText);
+        setCheck(form, f.declaraContinua, $("f_declaraContinua").checked || fit.overflow);
+        if (fit.overflow) {
+          var helveticaBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+          var refLabel = "Número de registro: " + numeroRegistro;
+          addAnexoProductosServicios(pdfDoc, helvetica, helveticaBold, declaraFull, refLabel);
+        }
 
         if (state.personaType === "fisica") {
           setText(form, f.curp, $("f_curp").value.trim());

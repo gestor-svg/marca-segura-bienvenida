@@ -231,7 +231,7 @@ fieldset { border: none; padding: 0; margin: 0; }
 .pv-totals-row.grand .lbl3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13.5px; color: #0a2f66; }
 .pv-totals-row.grand .val3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 21px; color: #0a2f66; }
 
-.pv-disclaimer { font-size: 10px; color: #8791a5; line-height: 1.5; border-top: 0.3mm dashed #d8dce6; padding-top: 3mm; margin-top: 6mm; }
+.pv-disclaimer { font-size: 10px; color: #1a2233; line-height: 1.5; border-top: 0.3mm dashed #d8dce6; padding-top: 3mm; margin-top: 6mm; }
 
 .pv-fiscal-ad { margin-top: 8mm; border: 0.4mm solid #0050c6; border-radius: 3mm; padding: 7mm; background: linear-gradient(180deg, #eaf1fc, #f7f9fd); }
 .pv-fiscal-ad .fa-badge { display: inline-block; font-family: "Poppins", sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: #fe6a00; border-radius: 999px; padding: 1.5mm 4mm; margin-bottom: 3mm; }
@@ -321,7 +321,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       <fieldset>
         <p class="section-label">Descuento e IVA</p>
         <div class="field">
-          <label for="discountPct">% de descuento sobre el gran total (opcional)</label>
+          <label for="discountPct">% de descuento por pronto pago (opcional)</label>
           <div class="pct-input-wrap"><input type="number" id="discountPct" min="0" max="100" step="1" placeholder="0" /><span>%</span></div>
         </div>
         <div class="checkbox-field">
@@ -372,7 +372,7 @@ fieldset { border: none; padding: 0; margin: 0; }
           <div id="pvItems"></div>
           <div id="pvTotalsBlock">
             <div id="pvTotalsWrap"></div>
-            <p class="pv-disclaimer">Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.</p>
+            <p class="pv-disclaimer">Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura. El descuento por pronto pago aplica anticipando o pagando dentro de los primeros 5 días de emisión de esta cotización.</p>
           </div>
           <div id="pvFiscalAd"></div>
         </div>
@@ -907,7 +907,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       var t = computeTotals();
       var totalsHtml = '<div class="pv-totals">';
       totalsHtml += '<div class="pv-totals-row"><span>Subtotal</span><span>' + fmtMoney(t.subtotal) + '</span></div>';
-      if (t.discountPct > 0) totalsHtml += '<div class="pv-totals-row"><span>Descuento (-' + t.discountPct + '%)</span><span>-' + fmtMoney(t.discountAmt) + '</span></div>';
+      if (t.discountPct > 0) totalsHtml += '<div class="pv-totals-row"><span>Descuento por pronto pago (-' + t.discountPct + '%)</span><span>-' + fmtMoney(t.discountAmt) + '</span></div>';
       if (t.ivaOn) totalsHtml += '<div class="pv-totals-row"><span>IVA (16%)</span><span>' + fmtMoney(t.ivaAmt) + '</span></div>';
       totalsHtml += '<div class="pv-totals-row grand"><span class="lbl3">Gran total</span><span class="val3">' + fmtMoney(t.grandTotal) + '</span></div>';
       totalsHtml += '</div>';

@@ -21,6 +21,7 @@
   --ink-faint: #8791a5;
   --danger: #c62828;
   --success: #1a7d4a;
+  --paper-border: #d8dce6;
   --shadow: 0 1px 2px rgba(20, 30, 60, 0.06), 0 8px 24px -12px rgba(20, 30, 60, 0.18);
   --radius: 10px;
 }
@@ -72,8 +73,7 @@ a { color: var(--blue); }
 .field .hint { font-size: 11.5px; color: var(--ink-faint); margin-top: -2px; line-height: 1.4; }
 
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.field-row-3 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 480px) { .field-row, .field-row-3 { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
 
 input[type="text"], input[type="date"], input[type="number"], select, textarea {
   font-family: "Work Sans", sans-serif; font-size: 14.5px; color: var(--ink);
@@ -87,6 +87,13 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--b
 .currency-input-wrap { position: relative; }
 .currency-input-wrap input { padding-left: 28px; }
 .currency-input-wrap span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--ink-faint); pointer-events: none; }
+.pct-input-wrap { position: relative; }
+.pct-input-wrap input { padding-right: 30px; }
+.pct-input-wrap span { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--ink-faint); pointer-events: none; }
+
+.checkbox-field { display: flex; align-items: center; gap: 8px; }
+.checkbox-field input[type="checkbox"] { width: 16px; height: 16px; }
+.checkbox-field label { font-size: 13px; font-weight: 600; color: var(--ink-muted); }
 
 fieldset { border: none; padding: 0; margin: 0; }
 
@@ -156,30 +163,46 @@ fieldset { border: none; padding: 0; margin: 0; }
    WYSIWYG stand-in for the exported PDF, so it does not follow app theming. */
 #previewPaper { width: 210mm; min-height: 297mm; background: #ffffff; border: 1px solid #d8dce6; box-shadow: var(--shadow); padding: 20mm 22mm; color: #1a2233; flex-shrink: 0; }
 
-.pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 10mm; }
+.pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 14mm; }
 .pv-header img { height: 15mm; width: auto; object-fit: contain; }
-.pv-header .pv-title { font-family: "Lora", "Times New Roman", serif; font-style: italic; font-size: 17px; line-height: 1.5; text-align: right; color: #1a2233; }
+.pv-header .pv-title { font-family: "Lora", "Times New Roman", serif; font-style: italic; font-size: 16.5px; line-height: 1.6; text-align: right; color: #1a2233; max-width: 62%; }
 
 .pv-date { text-align: right; font-size: 12.5px; margin-bottom: 8mm; color: #1a2233; }
 .pv-to { font-size: 12.5px; margin-bottom: 6mm; line-height: 1.6; color: #1a2233; }
+.pv-to .marca-line { text-transform: uppercase; }
 
-.pv-body p { font-size: 12px; line-height: 1.6; text-align: justify; margin: 0 0 5mm; color: #1a2233; }
+.pv-body-intro p { font-size: 12px; line-height: 1.6; text-align: justify; margin: 0 0 5mm; color: #1a2233; }
 
-.pv-item { border: 0.3mm solid #d8dce6; border-radius: 2mm; padding: 5mm; margin-bottom: 5mm; background: #f7f9fd; }
+.pv-item { border: 0.3mm solid #d8dce6; border-radius: 2mm; padding: 6mm; margin-bottom: 5mm; background: #f7f9fd; }
 .pv-item-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; margin-bottom: 3mm; flex-wrap: wrap; }
-.pv-item-head .name { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13px; color: #0a2f66; }
+.pv-item-head .name { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 14px; color: #fe6a00; }
 .pv-item-head .qty { font-size: 11px; color: #5b6478; }
-.pv-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #8791a5; margin: 3mm 0 1.5mm; }
-.pv-item ul { margin: 0; padding-left: 5mm; font-size: 11.5px; line-height: 1.55; }
-.pv-tiempo-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 12.5px; color: #0a2f66; }
-.pv-item-cost { display: flex; justify-content: space-between; align-items: center; border-top: 0.3mm dashed #d8dce6; margin-top: 3mm; padding-top: 3mm; }
-.pv-item-cost .lbl2 { font-size: 11.5px; color: #5b6478; }
-.pv-item-cost .val2 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 14px; color: #1a7d4a; }
-.pv-item-cost .nota { font-size: 10px; color: #8791a5; font-weight: 400; }
+.pv-lbl { font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #8791a5; margin: 3.5mm 0 1.5mm; }
+.pv-item ul { margin: 0; padding-left: 5mm; font-size: 12px; line-height: 1.6; color: #1a2233; }
+.pv-tiempo-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13px; color: #fe6a00; }
 
-.pv-total { display: flex; justify-content: space-between; align-items: center; background: #eaf1fc; border: 0.3mm solid #bcd4ff; border-radius: 2mm; padding: 5mm; margin-top: 2mm; }
-.pv-total .lbl3 { font-family: "Poppins", sans-serif; font-weight: 600; font-size: 12.5px; color: #0a2f66; }
-.pv-total .val3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 20px; color: #0a2f66; }
+.pv-etapas-intro { font-size: 11.5px; line-height: 1.6; color: #1a2233; margin: 2mm 0 3mm; }
+.pv-timeline { position: relative; margin: 2mm 0 3mm; padding: 5mm 2mm 0; }
+.pv-timeline-line { position: absolute; top: 5mm; left: 8%; right: 8%; height: 0.5mm; background: #0050c6; }
+.pv-timeline-stages { display: flex; justify-content: space-between; position: relative; }
+.pv-timeline-stage { flex: 1; text-align: center; position: relative; padding: 0 2mm; }
+.pv-timeline-dot { width: 3.4mm; height: 3.4mm; background: #fe6a00; transform: rotate(45deg); margin: 0 auto; border-radius: 1px; }
+.pv-timeline-stage .st-title { font-family: "Poppins", sans-serif; font-size: 9.5px; font-weight: 700; color: #0a2f66; margin-top: 2.5mm; line-height: 1.3; }
+.pv-timeline-stage .st-time { font-size: 8.5px; color: #5b6478; margin-top: 0.5mm; }
+
+.pv-item-cost { border-top: 0.3mm dashed #d8dce6; margin-top: 3.5mm; padding-top: 3mm; }
+.pv-cost-line { font-size: 11px; color: #5b6478; margin-bottom: 1.5mm; }
+.pv-cost-line b { color: #0050c6; font-weight: 700; }
+.pv-subtotal-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5mm; }
+.pv-subtotal-row .lbl2 { font-size: 12px; color: #1a2233; font-weight: 600; }
+.pv-subtotal-row .val2 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15px; color: #0050c6; }
+.pv-item-nota { font-size: 10px; color: #8791a5; margin-top: 1mm; }
+
+.pv-totals { border: 0.3mm solid #bcd4ff; border-radius: 2mm; padding: 5mm 6mm; margin-top: 2mm; background: #eaf1fc; }
+.pv-totals-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #1a2233; padding: 1mm 0; }
+.pv-totals-row.grand { border-top: 0.3mm solid #bcd4ff; margin-top: 2mm; padding-top: 3mm; }
+.pv-totals-row.grand .lbl3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13.5px; color: #0a2f66; }
+.pv-totals-row.grand .val3 { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 21px; color: #0a2f66; }
 
 .pv-disclaimer { font-size: 10px; color: #8791a5; line-height: 1.5; border-top: 0.3mm dashed #d8dce6; padding-top: 3mm; margin-top: 6mm; }
 .pv-empty-note { font-size: 12px; color: #8791a5; font-style: italic; }
@@ -204,7 +227,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       <h1>Cotizador de Trámites</h1>
     </div>
   </div>
-  <p class="subtitle">Captura el nombre del cliente, elige el o los trámites que quiere cotizar (con cuántas marcas y clases aplican a cada uno) y ve al instante la cotización lista para enviar — con lo que incluye, cuánto tarda, requisitos y costo.</p>
+  <p class="subtitle">Captura el nombre del cliente y de la marca, elige el o los trámites que quieres cotizar (con cuántas marcas y clases aplican a cada uno) y ve al instante la cotización lista para enviar.</p>
 
   <div class="layout">
 
@@ -216,6 +239,10 @@ fieldset { border: none; padding: 0; margin: 0; }
           <input type="text" id="clientName" placeholder="Ej. Carlos Rivas" />
         </div>
         <div class="field">
+          <label for="brandName">Nombre de la marca</label>
+          <input type="text" id="brandName" placeholder="Ej. THE HAPPY CLUB" />
+        </div>
+        <div class="field">
           <label for="quoteDate">Fecha</label>
           <input type="date" id="quoteDate" />
         </div>
@@ -225,6 +252,18 @@ fieldset { border: none; padding: 0; margin: 0; }
         <p class="section-label">Trámites a cotizar</p>
         <div id="tramiteRows"></div>
         <button type="button" class="add-row-btn" id="addRowBtn">+ Agregar trámite</button>
+      </fieldset>
+
+      <fieldset>
+        <p class="section-label">Descuento e IVA</p>
+        <div class="field">
+          <label for="discountPct">% de descuento sobre el gran total (opcional)</label>
+          <div class="pct-input-wrap"><input type="number" id="discountPct" min="0" max="100" step="1" placeholder="0" /><span>%</span></div>
+        </div>
+        <div class="checkbox-field">
+          <input type="checkbox" id="ivaToggle" checked />
+          <label for="ivaToggle">Aplicar IVA (16%)</label>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -250,15 +289,13 @@ fieldset { border: none; padding: 0; margin: 0; }
         <div id="previewPaper">
           <div class="pv-header">
             <img src="../icon-512.png" alt="Marca Segura" />
-            <div class="pv-title">Cotización de<br>Trámite de Marca</div>
+            <div class="pv-title" id="pvTitle"></div>
           </div>
           <div class="pv-date" id="pvDate"></div>
           <div class="pv-to" id="pvTo"></div>
-          <div class="pv-body">
-            <p>Con gusto le compartimos la cotización de los siguientes trámites:</p>
-          </div>
+          <div class="pv-body-intro"><p>Con gusto le compartimos la cotización de los siguientes trámites:</p></div>
           <div id="pvItems"></div>
-          <div id="pvTotalWrap"></div>
+          <div id="pvTotalsWrap"></div>
           <p class="pv-disclaimer">Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.</p>
         </div>
       </div>
@@ -275,18 +312,22 @@ fieldset { border: none; padding: 0; margin: 0; }
 
   function $(id) { return document.getElementById(id); }
 
-  var LS_KEY = "cotizadorCatalogo_v2";
+  var LS_KEY = "cotizadorCatalogo_v3";
+  var IVA_RATE = 0.16;
 
   var DEFAULT_CATALOG = [
     {
       id: "busqueda",
       nombre: "Búsqueda de Viabilidad (Anterioridades)",
+      nombreDoc: "Búsqueda de Viabilidad",
       incluye: [
         "Búsqueda fonética y gráfica en la base de marcas registradas ante el IMPI",
         "Análisis de las clases de Niza relacionadas con tu producto o servicio",
         "Dictamen de viabilidad con % estimado de éxito de registro"
       ],
       tiempo: "2 a 3 días hábiles",
+      etapas: [],
+      introEtapas: "",
       requisitos: [
         "Nombre o logotipo de la marca a buscar",
         "Descripción del producto o servicio que se va a proteger"
@@ -298,12 +339,20 @@ fieldset { border: none; padding: 0; margin: 0; }
     {
       id: "registro_regular",
       nombre: "Registro de Marca (servicio regular)",
+      nombreDoc: "Registro de Marca",
       incluye: [
+        "Incluye el Examen de Viabilidad (búsqueda de anterioridades y dictamen de % de éxito)",
         "Gestión completa de la solicitud ante el IMPI (formato, pago de derechos, presentación electrónica)",
         "Seguimiento del expediente durante todo el proceso",
         "Entrega del título de registro al cliente"
       ],
       tiempo: "De 4 a 6 meses",
+      etapas: [
+        { titulo: "Examen de Viabilidad", tiempo: "2 a 3 días hábiles" },
+        { titulo: "Ingreso y estudio de solicitud", tiempo: "4 a 6 meses" },
+        { titulo: "Expedición del título", tiempo: "—" }
+      ],
+      introEtapas: "Un registro de marca pasa por 3 etapas principales:",
       requisitos: [
         "Nombre o logotipo definitivo de la marca",
         "Descripción de los productos o servicios a proteger",
@@ -316,12 +365,20 @@ fieldset { border: none; padding: 0; margin: 0; }
     {
       id: "registro_apoyo",
       nombre: "Registro de Marca (Apoyo de Gobierno)",
+      nombreDoc: "Registro de Marca (Apoyo de Gobierno)",
       incluye: [
+        "Incluye el Examen de Viabilidad (búsqueda de anterioridades y dictamen de % de éxito)",
         "Aprovecha el cupo limitado del programa de apoyo de gobierno para MiPymes",
         "Gestión completa de la solicitud ante el IMPI",
         "Seguimiento del expediente y entrega del título de registro"
       ],
       tiempo: "Sujeto a la apertura del periodo de inscripción del programa + 4 a 6 meses de trámite ante el IMPI",
+      etapas: [
+        { titulo: "Examen de Viabilidad", tiempo: "2 a 3 días hábiles" },
+        { titulo: "Ingreso y estudio de solicitud", tiempo: "4 a 6 meses" },
+        { titulo: "Expedición del título", tiempo: "—" }
+      ],
+      introEtapas: "Un registro de marca pasa por 3 etapas principales:",
       requisitos: [
         "Nombre o logotipo definitivo de la marca",
         "Cumplir los criterios de elegibilidad del programa (MiPyme)",
@@ -329,17 +386,19 @@ fieldset { border: none; padding: 0; margin: 0; }
       ],
       escalaPorClase: false,
       costoBase: 3500,
-      costoPorClaseExtra: 0,
-      notaCosto: "+ IVA"
+      costoPorClaseExtra: 0
     },
     {
       id: "declaracion_uso",
       nombre: "Declaración de Uso",
+      nombreDoc: "Declaración de Uso",
       incluye: [
         "Llenado y presentación del formato oficial IMPI de Declaración de Uso",
         "Integración de la evidencia de uso de la marca"
       ],
       tiempo: "Se presenta dentro de los 3 meses posteriores al 3er aniversario del registro; el trámite toma unos días hábiles",
+      etapas: [],
+      introEtapas: "",
       requisitos: [
         "Título de registro de la marca",
         "Evidencia de uso (facturas, fotos de producto o empaque, publicidad, etc.)"
@@ -347,17 +406,20 @@ fieldset { border: none; padding: 0; margin: 0; }
       escalaPorClase: false,
       costoBase: 3000,
       costoPorClaseExtra: 0,
-      notaCosto: "+ IVA (promoción de $1,000 para clientes Marca Segura dentro del plazo)"
+      notaCosto: "Promoción de $1,000 para clientes Marca Segura dentro del plazo"
     },
     {
       id: "renovacion",
       nombre: "Renovación de Marca",
+      nombreDoc: "Renovación de Marca",
       incluye: [
         "Presentación de la solicitud de renovación ante el IMPI antes del vencimiento del registro (vigencia de 10 años)",
         "Gestión del pago de derechos correspondiente",
         "Entrega de la constancia de renovación"
       ],
       tiempo: "1 a 2 meses",
+      etapas: [],
+      introEtapas: "",
       requisitos: [
         "Número de registro y título de la marca",
         "Identificación oficial del titular",
@@ -370,11 +432,14 @@ fieldset { border: none; padding: 0; margin: 0; }
     {
       id: "cambio_titular",
       nombre: "Cambio de Titular",
+      nombreDoc: "Cambio de Titular",
       incluye: [
         "Gestión de la cesión/traspaso de derechos ante el IMPI",
         "Actualización del titular en el registro"
       ],
       tiempo: "2 a 4 meses",
+      etapas: [],
+      introEtapas: "",
       requisitos: [
         "Contrato o documento que acredite la cesión de derechos",
         "Identificación oficial de cedente y cesionario"
@@ -386,8 +451,11 @@ fieldset { border: none; padding: 0; margin: 0; }
     {
       id: "licencia_uso",
       nombre: "Licencia de Uso",
+      nombreDoc: "Licencia de Uso",
       incluye: ["Elaboración e inscripción del contrato de licencia de uso ante el IMPI"],
       tiempo: "2 a 3 meses",
+      etapas: [],
+      introEtapas: "",
       requisitos: [
         "Contrato de licencia de uso firmado",
         "Identificación oficial de licenciante y licenciatario"
@@ -399,8 +467,11 @@ fieldset { border: none; padding: 0; margin: 0; }
     {
       id: "oposicion",
       nombre: "Oposición a Solicitud de Marca",
+      nombreDoc: "Oposición a Solicitud de Marca",
       incluye: ["Presentación del escrito de oposición fundamentado dentro del plazo legal"],
       tiempo: "Debe presentarse dentro del mes siguiente a la publicación de la solicitud en la Gaceta de la Propiedad Industrial",
+      etapas: [],
+      introEtapas: "",
       requisitos: [
         "Publicación de la Gaceta con la solicitud a oponer",
         "Fundamento y argumentos de la oposición"
@@ -412,10 +483,7 @@ fieldset { border: none; padding: 0; margin: 0; }
   ];
 
   function lsGet() {
-    try {
-      var raw = localStorage.getItem(LS_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
+    try { var raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
   }
   function lsSet(catalog) {
     try { localStorage.setItem(LS_KEY, JSON.stringify(catalog)); } catch (e) { /* ignore */ }
@@ -424,6 +492,11 @@ fieldset { border: none; padding: 0; margin: 0; }
   var CATALOG = lsGet() || JSON.parse(JSON.stringify(DEFAULT_CATALOG));
   DEFAULT_CATALOG.forEach(function (def) {
     if (!CATALOG.some(function (c) { return c.id === def.id; })) CATALOG.push(JSON.parse(JSON.stringify(def)));
+  });
+  CATALOG.forEach(function (item) {
+    if (!item.nombreDoc) item.nombreDoc = item.nombre;
+    if (!item.etapas) item.etapas = [];
+    if (item.introEtapas === undefined) item.introEtapas = "";
   });
 
   function getItem(id) { return CATALOG.filter(function (c) { return c.id === id; })[0]; }
@@ -448,6 +521,15 @@ fieldset { border: none; padding: 0; margin: 0; }
     var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10) - 1, d = parseInt(parts[2], 10);
     return d + " de " + months[m] + " de " + y;
   }
+  function etapasToText(etapas) {
+    return (etapas || []).map(function (e) { return e.titulo + (e.tiempo ? (" | " + e.tiempo) : ""); }).join("\n");
+  }
+  function parseEtapas(text) {
+    return (text || "").split("\n").map(function (l) { return l.trim(); }).filter(Boolean).map(function (l) {
+      var parts = l.split("|").map(function (s) { return s.trim(); });
+      return { titulo: parts[0] || "", tiempo: parts[1] || "" };
+    });
+  }
 
   // ---------- catalog config panel ----------
   function renderCatalogFields() {
@@ -458,18 +540,21 @@ fieldset { border: none; padding: 0; margin: 0; }
       box.className = "catalog-item";
       var scaleFieldsHtml = item.escalaPorClase
         ? '<div class="field-row">' +
-            '<div class="field"><label>Costo base (1 marca, 1 clase)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>' +
+            '<div class="field"><label>Costo unitario base (1 marca, 1 clase)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>' +
             '<div class="field"><label>Costo por clase extra</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoPorClaseExtra" value="' + item.costoPorClaseExtra + '" /></div></div>' +
           '</div>'
-        : '<div class="field"><label>Costo (por marca)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>';
+        : '<div class="field"><label>Costo unitario (por marca)</label><div class="currency-input-wrap"><span>$</span><input type="number" min="0" step="500" data-idx="' + idx + '" data-key="costoBase" value="' + item.costoBase + '" /></div></div>';
 
       box.innerHTML =
         '<h4>' + item.nombre + '</h4>' +
-        '<div class="field"><label>Tiempo estimado</label><input type="text" data-idx="' + idx + '" data-key="tiempo" value="' + item.tiempo.replace(/"/g, "&quot;") + '" /></div>' +
+        '<div class="field"><label>Nombre en el documento (sin coletillas como "servicio regular")</label><input type="text" data-idx="' + idx + '" data-key="nombreDoc" value="' + item.nombreDoc.replace(/"/g, "&quot;") + '" /></div>' +
+        '<div class="field"><label>Tiempo estimado (resumen)</label><input type="text" data-idx="' + idx + '" data-key="tiempo" value="' + item.tiempo.replace(/"/g, "&quot;") + '" /></div>' +
         '<div class="field"><label>Qué incluye (un punto por línea)</label><textarea data-idx="' + idx + '" data-key="incluye">' + item.incluye.join("\n") + '</textarea></div>' +
         '<div class="field"><label>Requisitos (un punto por línea)</label><textarea data-idx="' + idx + '" data-key="requisitos">' + item.requisitos.join("\n") + '</textarea></div>' +
+        '<div class="field"><label>Frase introductoria de etapas (opcional)</label><input type="text" data-idx="' + idx + '" data-key="introEtapas" value="' + (item.introEtapas || "").replace(/"/g, "&quot;") + '" /></div>' +
+        '<div class="field"><label>Etapas / línea de tiempo (opcional — formato "Título | Duración", una por línea)</label><textarea data-idx="' + idx + '" data-key="etapas">' + etapasToText(item.etapas) + '</textarea></div>' +
         scaleFieldsHtml +
-        '<div class="field"><label>Nota sobre el costo (opcional, ej. "+ IVA")</label><input type="text" data-idx="' + idx + '" data-key="notaCosto" value="' + (item.notaCosto || "").replace(/"/g, "&quot;") + '" /></div>';
+        '<div class="field"><label>Nota debajo del costo (opcional)</label><input type="text" data-idx="' + idx + '" data-key="notaCosto" value="' + (item.notaCosto || "").replace(/"/g, "&quot;") + '" /></div>';
       wrap.appendChild(box);
     });
 
@@ -479,10 +564,11 @@ fieldset { border: none; padding: 0; margin: 0; }
         var key = this.getAttribute("data-key");
         var item = CATALOG[idx];
         if (key === "incluye" || key === "requisitos") item[key] = linesToArray(this.value);
+        else if (key === "etapas") item[key] = parseEtapas(this.value);
         else if (key === "costoBase" || key === "costoPorClaseExtra") item[key] = parseFloat(this.value) || 0;
         else item[key] = this.value;
         lsSet(CATALOG);
-        rows.forEach(function (row) { if (!row.costoManual && row.tramiteId === item.id) recomputeRowCost(row); });
+        rows.forEach(function (row) { if (!row.costoManual && row.tramiteId === item.id) recomputeRowUnitCost(row); });
         renderPreview();
       });
     });
@@ -504,15 +590,14 @@ fieldset { border: none; padding: 0; margin: 0; }
     }).join("");
   }
 
-  function catalogLineCost(item, cantidad, clases) {
-    var costoUnit = item.costoBase + (item.escalaPorClase && clases > 1 ? (clases - 1) * item.costoPorClaseExtra : 0);
-    return costoUnit * cantidad;
+  function catalogUnitCost(item, clases) {
+    return item.costoBase + (item.escalaPorClase && clases > 1 ? (clases - 1) * item.costoPorClaseExtra : 0);
   }
 
-  function recomputeRowCost(row) {
+  function recomputeRowUnitCost(row) {
     var item = getItem(row.tramiteId);
-    row.costoValue = catalogLineCost(item, row.cantidad, row.clases);
-    row.costInput.value = row.costoValue || "";
+    row.unitCost = catalogUnitCost(item, row.clases);
+    row.costInput.value = row.unitCost || "";
     row.manualTag.style.display = "none";
   }
 
@@ -532,7 +617,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       '</div>' +
       '<div class="cost-field-row">' +
         '<div class="field">' +
-          '<label>Costo de esta línea <span class="cost-manual-tag" style="display:none;">· editado a mano</span></label>' +
+          '<label>Costo unitario (por marca) <span class="cost-manual-tag" style="display:none;">· editado a mano</span></label>' +
           '<div class="currency-input-wrap"><span>$</span><input type="number" class="cost-input" min="0" step="100" /></div>' +
         '</div>' +
         '<button type="button" class="reset-cost-btn" title="Volver a la tarifa del catálogo">↺ Catálogo</button>' +
@@ -547,7 +632,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       tramiteId: firstId,
       cantidad: 1,
       clases: 1,
-      costoValue: 0,
+      unitCost: 0,
       costoManual: false,
       costInput: el.querySelector(".cost-input"),
       manualTag: el.querySelector(".cost-manual-tag"),
@@ -567,41 +652,39 @@ fieldset { border: none; padding: 0; margin: 0; }
       var item = getItem(row.tramiteId);
       qtyClasesField.style.display = item.escalaPorClase ? "flex" : "none";
     }
-
     function updateWarn() {
-      row.warnEl.innerHTML = row.costoValue > 0 ? "" : '<span class="no-price-warn">Sin tarifa — defínela aquí o en «Configurar catálogo»</span>';
+      row.warnEl.innerHTML = row.unitCost > 0 ? "" : '<span class="no-price-warn">Sin tarifa — defínela aquí o en «Configurar catálogo»</span>';
     }
 
     select.addEventListener("change", function () {
       row.tramiteId = select.value;
       syncClasesVisibility();
       row.costoManual = false;
-      recomputeRowCost(row);
+      recomputeRowUnitCost(row);
       updateWarn();
       renderPreview();
     });
     cantidadInput.addEventListener("input", function () {
       row.cantidad = parseInt(cantidadInput.value, 10) || 1;
-      if (!row.costoManual) recomputeRowCost(row);
       updateWarn();
       renderPreview();
     });
     clasesInput.addEventListener("input", function () {
       row.clases = parseInt(clasesInput.value, 10) || 1;
-      if (!row.costoManual) recomputeRowCost(row);
+      if (!row.costoManual) recomputeRowUnitCost(row);
       updateWarn();
       renderPreview();
     });
     costInput.addEventListener("input", function () {
       row.costoManual = true;
-      row.costoValue = parseFloat(costInput.value) || 0;
+      row.unitCost = parseFloat(costInput.value) || 0;
       row.manualTag.style.display = "inline";
       updateWarn();
       renderPreview();
     });
     resetBtn.addEventListener("click", function () {
       row.costoManual = false;
-      recomputeRowCost(row);
+      recomputeRowUnitCost(row);
       updateWarn();
       renderPreview();
     });
@@ -613,54 +696,101 @@ fieldset { border: none; padding: 0; margin: 0; }
     });
 
     syncClasesVisibility();
-    recomputeRowCost(row);
+    recomputeRowUnitCost(row);
     updateWarn();
     renderPreview();
   }
 
   $("addRowBtn").addEventListener("click", addTramiteRow);
 
+  // ---------- totals ----------
+  function computeTotals() {
+    var subtotal = 0;
+    rows.forEach(function (row) { subtotal += (row.unitCost || 0) * row.cantidad; });
+    var discountPct = parseFloat($("discountPct").value) || 0;
+    var discountAmt = subtotal * (discountPct / 100);
+    var afterDiscount = subtotal - discountAmt;
+    var ivaOn = $("ivaToggle").checked;
+    var ivaAmt = ivaOn ? afterDiscount * IVA_RATE : 0;
+    var grandTotal = afterDiscount + ivaAmt;
+    return { subtotal: subtotal, discountPct: discountPct, discountAmt: discountAmt, afterDiscount: afterDiscount, ivaOn: ivaOn, ivaAmt: ivaAmt, grandTotal: grandTotal };
+  }
+
   // ---------- live preview ----------
   function renderPreview() {
     var clientName = $("clientName").value.trim();
+    var brandName = $("brandName").value.trim();
     var dateIso = $("quoteDate").value;
     var dateLong = fmtDateLong(dateIso);
 
+    var firstItem = rows.length ? getItem(rows[0].tramiteId) : null;
+    var titleHtml = "Cotización";
+    if (firstItem) titleHtml += "<br>" + escapeHtml(firstItem.nombreDoc);
+    if (brandName) titleHtml += "<br>“" + escapeHtml(brandName) + "”";
+    $("pvTitle").innerHTML = titleHtml;
+
     $("pvDate").textContent = "Zapopan, Jalisco" + (dateLong ? (" a " + dateLong) : "");
-    $("pvTo").innerHTML = "<strong>Cliente:</strong> " + escapeHtml(clientName || "—");
+    $("pvTo").innerHTML = escapeHtml(clientName || "Nombre del cliente") + (brandName ? ("<br><span class='marca-line'>" + escapeHtml(brandName) + "</span>") : "");
 
     var itemsHtml = "";
-    var total = 0;
     rows.forEach(function (row) {
       var item = getItem(row.tramiteId);
-      var costo = row.costoValue || 0;
-      total += costo;
+      var unitCost = row.unitCost || 0;
+      var subtotalLine = unitCost * row.cantidad;
       var qtyTxt = row.cantidad + " marca(s)" + (item.escalaPorClase ? " · " + row.clases + " clase(s) de Niza c/u" : "");
       var incluyeHtml = item.incluye.map(function (l) { return "<li>" + escapeHtml(l) + "</li>"; }).join("");
       var requisitosHtml = item.requisitos.map(function (l) { return "<li>" + escapeHtml(l) + "</li>"; }).join("");
-      var costoTxt = costo > 0 ? fmtMoney(costo) : "Por definir";
-      var notaHtml = (costo > 0 && item.notaCosto) ? ' <span class="nota">' + escapeHtml(item.notaCosto) + '</span>' : "";
+
+      var timelineHtml = "";
+      if (item.etapas && item.etapas.length > 1) {
+        timelineHtml =
+          (item.introEtapas ? '<p class="pv-etapas-intro">' + escapeHtml(item.introEtapas) + '</p>' : "") +
+          '<div class="pv-timeline"><div class="pv-timeline-line"></div><div class="pv-timeline-stages">' +
+          item.etapas.map(function (e) {
+            return '<div class="pv-timeline-stage"><div class="pv-timeline-dot"></div><div class="st-title">' + escapeHtml(e.titulo) + '</div><div class="st-time">' + escapeHtml(e.tiempo) + '</div></div>';
+          }).join("") +
+          '</div></div>';
+      }
+
+      var costHtml = unitCost > 0
+        ? '<div class="pv-cost-line">Costo unitario (por marca): <b>' + fmtMoney(unitCost) + '</b></div>' +
+          '<div class="pv-cost-line">Cantidad: ' + qtyTxt + '</div>' +
+          '<div class="pv-subtotal-row"><span class="lbl2">Subtotal de este trámite</span><span class="val2">' + fmtMoney(subtotalLine) + '</span></div>' +
+          (item.notaCosto ? '<div class="pv-item-nota">' + escapeHtml(item.notaCosto) + '</div>' : "")
+        : '<div class="pv-cost-line"><span class="no-price-warn">Costo por definir</span></div>';
 
       itemsHtml +=
         '<div class="pv-item">' +
-          '<div class="pv-item-head"><span class="name">' + escapeHtml(item.nombre) + '</span><span class="qty">' + qtyTxt + '</span></div>' +
+          '<div class="pv-item-head"><span class="name">' + escapeHtml(item.nombreDoc) + '</span><span class="qty">' + qtyTxt + '</span></div>' +
           '<div class="pv-lbl">Qué incluye</div><ul>' + incluyeHtml + '</ul>' +
           '<div class="pv-lbl">Tiempo estimado</div><div class="pv-tiempo-val">' + escapeHtml(item.tiempo) + '</div>' +
+          timelineHtml +
           '<div class="pv-lbl">Requisitos</div><ul>' + requisitosHtml + '</ul>' +
-          '<div class="pv-item-cost"><span class="lbl2">Costo de este trámite</span><span class="val2">' + costoTxt + notaHtml + '</span></div>' +
+          '<div class="pv-item-cost">' + costHtml + '</div>' +
         '</div>';
     });
 
     $("pvItems").innerHTML = itemsHtml || '<p class="pv-empty-note">Agrega al menos un trámite para verlo aquí.</p>';
-    $("pvTotalWrap").innerHTML = rows.length
-      ? '<div class="pv-total"><span class="lbl3">Costo total de la cotización</span><span class="val3">' + fmtMoney(total) + '</span></div>'
-      : "";
+
+    if (rows.length) {
+      var t = computeTotals();
+      var totalsHtml = '<div class="pv-totals">';
+      totalsHtml += '<div class="pv-totals-row"><span>Subtotal</span><span>' + fmtMoney(t.subtotal) + '</span></div>';
+      if (t.discountPct > 0) totalsHtml += '<div class="pv-totals-row"><span>Descuento (-' + t.discountPct + '%)</span><span>-' + fmtMoney(t.discountAmt) + '</span></div>';
+      if (t.ivaOn) totalsHtml += '<div class="pv-totals-row"><span>IVA (16%)</span><span>' + fmtMoney(t.ivaAmt) + '</span></div>';
+      totalsHtml += '<div class="pv-totals-row grand"><span class="lbl3">Gran total</span><span class="val3">' + fmtMoney(t.grandTotal) + '</span></div>';
+      totalsHtml += '</div>';
+      $("pvTotalsWrap").innerHTML = totalsHtml;
+    } else {
+      $("pvTotalsWrap").innerHTML = "";
+    }
   }
 
-  ["clientName", "quoteDate"].forEach(function (id) {
+  ["clientName", "brandName", "quoteDate", "discountPct"].forEach(function (id) {
     $(id).addEventListener("input", renderPreview);
     $(id).addEventListener("change", renderPreview);
   });
+  $("ivaToggle").addEventListener("change", renderPreview);
 
   // ---------- PDF generation (drawn with jsPDF text, no html2canvas) ----------
   function fetchAsDataUrl(url) {
@@ -687,6 +817,13 @@ fieldset { border: none; padding: 0; margin: 0; }
   var logoMeta = null;
   fetchAsDataUrl("../icon-512.png").then(loadImgMeta).then(function (meta) { logoMeta = meta; }).catch(function () {});
 
+  var COLOR_INK = [26, 34, 51];
+  var COLOR_ORANGE = [254, 106, 0];
+  var COLOR_BLUE = [0, 80, 198];
+  var COLOR_BLUE_INK = [10, 47, 102];
+  var COLOR_MUTED = [91, 100, 120];
+  var COLOR_FAINT = [135, 145, 165];
+
   function buildPdf() {
     var jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
     var doc = new jsPDFCtor({ unit: "mm", format: "a4" });
@@ -697,13 +834,25 @@ fieldset { border: none; padding: 0; margin: 0; }
     var y = marginTop;
 
     function ensureSpace(h) {
-      if (y + h > pageH - marginBottom) { doc.addPage(); y = marginTop; }
+      if (y + h > pageH - marginBottom) {
+        doc.addPage();
+        y = marginTop;
+        if (logoMeta) {
+          try {
+            var arLogo = logoMeta.h / logoMeta.w;
+            var lwLogo = 20, lhLogo = lwLogo * arLogo;
+            doc.addImage(logoMeta.dataUrl, "PNG", marginL, y, lwLogo, lhLogo);
+          } catch (e) { /* ignore */ }
+        }
+        y += 14;
+      }
     }
     function para(text, opts) {
       opts = opts || {};
       var size = opts.size || 10.5;
       doc.setFont(opts.font || "helvetica", opts.style || "normal");
       doc.setFontSize(size);
+      doc.setTextColor.apply(doc, opts.color || COLOR_INK);
       var lines = doc.splitTextToSize(text, opts.width || contentW);
       var lineHeight = opts.lineHeight || (size * 0.42);
       var gapAfter = opts.gapAfter != null ? opts.gapAfter : 4;
@@ -717,24 +866,85 @@ fieldset { border: none; padding: 0; margin: 0; }
         doc.text(line, xPos, y + idx * lineHeight, o);
       });
       y += blockH + gapAfter;
+      doc.setTextColor.apply(doc, COLOR_INK);
       return blockH + gapAfter;
     }
 
-    // header
+    function drawTimeline(etapas) {
+      var n = etapas.length;
+      var insetPct = 0.06;
+      var xStart = marginL + contentW * insetPct;
+      var xEnd = marginL + contentW * (1 - insetPct);
+      var colW = (xEnd - xStart) / n - 4;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.3);
+      var titleLinesArr = etapas.map(function (st) { return doc.splitTextToSize(st.titulo, colW); });
+      var maxLines = 1;
+      titleLinesArr.forEach(function (l) { if (l.length > maxLines) maxLines = l.length; });
+      var blockH = 5 + maxLines * 3.2 + 2.6 + 3.5 + 3;
+      ensureSpace(blockH);
+
+      var cy = y + 3;
+      doc.setDrawColor(0, 80, 198);
+      doc.setLineWidth(0.5);
+      doc.line(xStart, cy, xEnd, cy);
+
+      etapas.forEach(function (st, i) {
+        var cx = n === 1 ? (xStart + xEnd) / 2 : xStart + ((xEnd - xStart) / (n - 1)) * i;
+        var d = 1.7;
+        doc.setFillColor(254, 106, 0);
+        doc.lines([[d, d], [-d, d], [-d, -d], [d, -d]], cx, cy - d, [1, 1], "F", true);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8.3);
+        doc.setTextColor.apply(doc, COLOR_BLUE_INK);
+        titleLinesArr[i].forEach(function (tl, li) {
+          doc.text(tl, cx, y + 8 + li * 3.2, { align: "center" });
+        });
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7.5);
+        doc.setTextColor.apply(doc, COLOR_MUTED);
+        doc.text(st.tiempo || "", cx, y + 8 + maxLines * 3.2 + 2.6, { align: "center" });
+      });
+
+      doc.setTextColor.apply(doc, COLOR_INK);
+      y += blockH;
+    }
+
+    function bulletList(items) {
+      items.forEach(function (l) { para("• " + l, { size: 10, gapAfter: 1.5, width: contentW - 4, x: marginL + 4 }); });
+    }
+
+    // ---- header ----
     if (logoMeta) {
       try {
         var ar = logoMeta.h / logoMeta.w;
-        var lw = 20, lh = lw * ar;
+        var lw = 30, lh = lw * ar;
         doc.addImage(logoMeta.dataUrl, "PNG", marginL, y, lw, lh);
       } catch (e) { /* ignore */ }
     }
+
+    var brandName = ($("brandName").value || "").trim();
+    var clientName = ($("clientName").value || "").trim();
+    var firstItem = rows.length ? getItem(rows[0].tramiteId) : null;
+
     doc.setFont("times", "italic");
     doc.setFontSize(16);
-    doc.text("Cotización de", marginL + contentW, y + 6, { align: "right" });
-    doc.text("Trámite de Marca", marginL + contentW, y + 13, { align: "right" });
-    y += 26;
+    var titleColW = contentW * 0.62;
+    var titleLines = ["Cotización"];
+    if (firstItem) titleLines = titleLines.concat(doc.splitTextToSize(firstItem.nombreDoc, titleColW));
+    if (brandName) titleLines = titleLines.concat(doc.splitTextToSize("“" + brandName + "”", titleColW));
+    var titleLineH = 7.2;
+    var titleBlockH = titleLines.length * titleLineH;
+    var titleTopY = y + 6;
+    titleLines.forEach(function (line, idx) {
+      doc.text(line, marginL + contentW, titleTopY + idx * titleLineH, { align: "right" });
+    });
 
-    var clientName = ($("clientName").value || "").trim();
+    y = Math.max(y + 22, titleTopY + titleBlockH) + 6;
+
     var dateLong = fmtDateLong($("quoteDate").value);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(11);
@@ -742,51 +952,96 @@ fieldset { border: none; padding: 0; margin: 0; }
     doc.text("Zapopan, Jalisco" + (dateLong ? (" a " + dateLong) : ""), marginL + contentW, y, { align: "right" });
     y += 10;
 
-    doc.setFont("helvetica", "bold");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
     ensureSpace(6);
-    doc.text("Cliente: " + (clientName || "—"), marginL, y);
+    doc.text(clientName || "—", marginL, y);
+    if (brandName) {
+      y += 5.5;
+      doc.setFont("helvetica", "bold");
+      doc.text(brandName.toUpperCase(), marginL, y);
+    }
     y += 10;
 
     para("Con gusto le compartimos la cotización de los siguientes trámites:", { size: 11, gapAfter: 6 });
 
-    var total = 0;
+    // ---- items ----
     rows.forEach(function (row, i) {
       var item = getItem(row.tramiteId);
-      var costo = row.costoValue || 0;
-      total += costo;
+      var unitCost = row.unitCost || 0;
+      var subtotalLine = unitCost * row.cantidad;
 
-      para((i + 1) + ") " + item.nombre, { size: 12.5, style: "bold", gapAfter: 1 });
+      para((i + 1) + ") " + item.nombreDoc, { size: 13, style: "bold", gapAfter: 1, color: COLOR_ORANGE });
       var qtyTxt = row.cantidad + " marca(s)" + (item.escalaPorClase ? " · " + row.clases + " clase(s) de Niza c/u" : "");
-      para(qtyTxt, { size: 9.5, style: "italic", gapAfter: 4 });
+      para(qtyTxt, { size: 9.5, style: "italic", gapAfter: 4, color: COLOR_MUTED });
 
       para("Qué incluye:", { size: 10, style: "bold", gapAfter: 1.5 });
-      item.incluye.forEach(function (l) { para("• " + l, { size: 10, gapAfter: 1.5, width: contentW - 4, x: marginL + 4 }); });
+      bulletList(item.incluye);
 
       y += 1;
-      para("Tiempo estimado: " + item.tiempo, { size: 10, style: "bold", gapAfter: 3 });
+      para("Tiempo estimado: " + item.tiempo, { size: 10.5, style: "bold", gapAfter: 3, color: COLOR_ORANGE });
+
+      if (item.etapas && item.etapas.length > 1) {
+        if (item.introEtapas) para(item.introEtapas, { size: 10, gapAfter: 2 });
+        drawTimeline(item.etapas);
+        y += 2;
+      }
 
       para("Requisitos:", { size: 10, style: "bold", gapAfter: 1.5 });
-      item.requisitos.forEach(function (l) { para("• " + l, { size: 10, gapAfter: 1.5, width: contentW - 4, x: marginL + 4 }); });
+      bulletList(item.requisitos);
 
-      var costoTxt = costo > 0 ? ("Costo de este trámite: " + fmtMoney(costo) + (item.notaCosto ? " " + item.notaCosto : "")) : "Costo de este trámite: por definir";
       y += 1;
-      para(costoTxt, { size: 11, style: "bold", gapAfter: 7 });
+      if (unitCost > 0) {
+        para("Costo unitario (por marca): " + fmtMoney(unitCost), { size: 10, gapAfter: 1.5, color: COLOR_BLUE });
+        para("Subtotal de este trámite (" + qtyTxt + "): " + fmtMoney(subtotalLine), { size: 11.5, style: "bold", gapAfter: 2, color: COLOR_BLUE });
+        if (item.notaCosto) para(item.notaCosto, { size: 8.5, style: "italic", gapAfter: 5, color: COLOR_FAINT });
+        else y += 3;
+      } else {
+        para("Costo: por definir", { size: 11, style: "bold", gapAfter: 7, color: [198, 40, 40] });
+      }
     });
 
-    ensureSpace(14);
+    // ---- totals ----
+    var t = computeTotals();
+    ensureSpace(30);
     doc.setDrawColor(180, 190, 210);
     doc.setLineWidth(0.4);
     doc.line(marginL, y, marginL + contentW, y);
-    y += 7;
+    y += 6;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor.apply(doc, COLOR_INK);
+    doc.text("Subtotal", marginL, y);
+    doc.text(fmtMoney(t.subtotal), marginL + contentW, y, { align: "right" });
+    y += 6;
+
+    if (t.discountPct > 0) {
+      doc.text("Descuento (-" + t.discountPct + "%)", marginL, y);
+      doc.text("-" + fmtMoney(t.discountAmt), marginL + contentW, y, { align: "right" });
+      y += 6;
+    }
+    if (t.ivaOn) {
+      doc.text("IVA (16%)", marginL, y);
+      doc.text(fmtMoney(t.ivaAmt), marginL + contentW, y, { align: "right" });
+      y += 6;
+    }
+
+    y += 2;
+    doc.setDrawColor(188, 212, 255);
+    doc.line(marginL, y, marginL + contentW, y);
+    y += 8;
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.text("Costo total de la cotización:", marginL, y);
-    doc.text(fmtMoney(total), marginL + contentW, y, { align: "right" });
+    doc.setFontSize(14);
+    doc.setTextColor.apply(doc, COLOR_BLUE_INK);
+    doc.text("Gran total", marginL, y);
+    doc.text(fmtMoney(t.grandTotal), marginL + contentW, y, { align: "right" });
+    doc.setTextColor.apply(doc, COLOR_INK);
     y += 12;
 
     para(
       "Cotización de referencia. Los tiempos son estimados y dependen de los plazos y cargas de trabajo del IMPI, por lo que pueden variar. Precios sujetos a cambio sin previo aviso según la tarifa vigente de Marca Segura.",
-      { size: 8.5, style: "italic", gapAfter: 0 }
+      { size: 8.5, style: "italic", gapAfter: 0, color: COLOR_FAINT }
     );
 
     return doc;
@@ -800,7 +1055,7 @@ fieldset { border: none; padding: 0; margin: 0; }
 
   async function handleGenerate() {
     if (!rows.length) { showStatus("Agrega al menos un trámite para cotizar.", "warning"); return; }
-    var missing = rows.some(function (r) { return !(r.costoValue > 0); });
+    var missing = rows.some(function (r) { return !(r.unitCost > 0); });
 
     var btn = $("generateBtn");
     btn.disabled = true;

@@ -52,12 +52,39 @@ a { color: var(--blue); }
 
 .app-shell { max-width: 1360px; margin: 0 auto; padding: 28px 24px 64px; }
 
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-.topbar img { height: 34px; width: auto; display: block; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { height: 34px; width: auto; display: block; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
 .brand-text .kicker { font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
 .brand-text h1 { font-family: "Poppins", sans-serif; font-size: 20px; font-weight: 700; margin: 2px 0 0; color: var(--ink); }
 .subtitle { font-size: 13.5px; color: var(--ink-muted); margin: 6px 0 0; max-width: 720px; line-height: 1.5; }
+
+.settings-toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  padding: 9px 16px; cursor: pointer; transition: border-color .15s, color .15s;
+}
+.settings-toggle:hover { border-color: var(--blue); color: var(--blue); }
+
+.settings-panel { display: none; padding: 20px 22px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); margin-bottom: 24px; }
+.settings-panel.open { display: block; }
+.settings-panel .desc { font-size: 12.5px; color: var(--ink-faint); margin: -6px 0 16px; max-width: 520px; }
+
+.file-drop {
+  border: 1.5px dashed var(--border); border-radius: 8px; padding: 14px;
+  display: flex; align-items: center; gap: 12px; background: var(--surface); cursor: pointer; transition: border-color .15s;
+  max-width: 420px;
+}
+.file-drop:hover { border-color: var(--blue); }
+.file-drop input[type="file"] { display: none; }
+.file-drop .thumb { width: 44px; height: 44px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+.file-drop .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.file-drop .txt { font-size: 13px; color: var(--ink-muted); }
+.file-drop .txt strong { color: var(--blue); font-weight: 600; }
+.file-drop .clear-btn { margin-left: auto; font-size: 12px; color: var(--ink-faint); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 4px; }
+.file-drop .clear-btn:hover { color: var(--danger); }
 
 .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
 @media (min-width: 1020px) { .layout { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); align-items: start; } }
@@ -182,10 +209,10 @@ fieldset { border: none; padding: 0; margin: 0; }
 .pv-tiempo-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13px; color: #fe6a00; }
 
 .pv-etapas-intro { font-size: 11.5px; line-height: 1.6; color: #1a2233; margin: 2mm 0 3mm; }
-.pv-timeline { position: relative; margin: 2mm 0 3mm; padding: 5mm 2mm 0; }
-.pv-timeline-line { position: absolute; top: 5mm; left: 8%; right: 8%; height: 0.5mm; background: #0050c6; }
+.pv-timeline { margin: 2mm 0 3mm; }
 .pv-timeline-stages { display: flex; justify-content: space-between; position: relative; }
-.pv-timeline-stage { flex: 1; text-align: center; position: relative; padding: 0 2mm; }
+.pv-timeline-line { position: absolute; top: 1.45mm; left: 8%; right: 8%; height: 0.5mm; background: #0050c6; z-index: 0; }
+.pv-timeline-stage { flex: 1; text-align: center; position: relative; z-index: 1; padding: 0 2mm; }
 .pv-timeline-dot { width: 3.4mm; height: 3.4mm; background: #fe6a00; transform: rotate(45deg); margin: 0 auto; border-radius: 1px; }
 .pv-timeline-stage .st-title { font-family: "Poppins", sans-serif; font-size: 9.5px; font-weight: 700; color: #0a2f66; margin-top: 2.5mm; line-height: 1.3; }
 .pv-timeline-stage .st-time { font-size: 8.5px; color: #5b6478; margin-top: 0.5mm; }
@@ -221,13 +248,32 @@ fieldset { border: none; padding: 0; margin: 0; }
 <div class="app-shell">
 
   <div class="topbar">
-    <img src="../icon-512.png" alt="Marca Segura" />
-    <div class="brand-text">
-      <span class="kicker">Marca Segura</span>
-      <h1>Cotizador de Trámites</h1>
+    <div class="brand">
+      <img id="topbarLogo" alt="Marca Segura" />
+      <div class="brand-text">
+        <span class="kicker">Marca Segura</span>
+        <h1>Cotizador de Trámites</h1>
+      </div>
     </div>
+    <button type="button" class="settings-toggle" id="settingsToggleBtn" aria-expanded="false" aria-controls="settingsPanel">
+      ⚙️ Configurar logo
+    </button>
   </div>
   <p class="subtitle">Captura el nombre del cliente y de la marca, elige el o los trámites que quieres cotizar (con cuántas marcas y clases aplican a cada uno) y ve al instante la cotización lista para enviar.</p>
+
+  <div class="settings-panel" id="settingsPanel">
+    <p class="section-label" style="margin-bottom:4px;">Logotipo del despacho</p>
+    <p class="desc">Sube una versión del logo sin fondo (PNG transparente) para que se vea grande y limpio en la cotización. Se guarda en este navegador — es el mismo logo que usas en Examen de Viabilidad, así que si ya lo subiste ahí, aparecerá aquí solo.</p>
+    <div class="field">
+      <label for="firmLogoInput">Logotipo (idealmente PNG transparente)</label>
+      <div class="file-drop" id="firmLogoDrop">
+        <div class="thumb"><img id="firmLogoThumb" alt="" /></div>
+        <div class="txt"><strong>Subir</strong> o arrastrar imagen</div>
+        <button type="button" class="clear-btn" id="firmLogoReset">Restaurar</button>
+      </div>
+      <input type="file" id="firmLogoInput" accept="image/png,image/jpeg,image/webp,image/gif" />
+    </div>
+  </div>
 
   <div class="layout">
 
@@ -288,7 +334,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       <div class="paper-wrap">
         <div id="previewPaper">
           <div class="pv-header">
-            <img src="../icon-512.png" alt="Marca Segura" />
+            <img id="pvLogo" alt="Marca Segura" />
             <div class="pv-title" id="pvTitle"></div>
           </div>
           <div class="pv-date" id="pvDate"></div>
@@ -814,8 +860,83 @@ fieldset { border: none; padding: 0; margin: 0; }
     });
   }
 
+  function lsGetKey(key, fallback) {
+    try { var v = localStorage.getItem(key); return v === null ? fallback : v; } catch (e) { return fallback; }
+  }
+  function lsSetKey(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+  }
+  function resolveDefaultLogo() {
+    return fetchAsDataUrl("../icon-512.png").catch(function () { return null; });
+  }
+
   var logoMeta = null;
-  fetchAsDataUrl("../icon-512.png").then(loadImgMeta).then(function (meta) { logoMeta = meta; }).catch(function () {});
+
+  function setLogo(meta, dataUrl) {
+    logoMeta = meta;
+    if (meta) {
+      $("topbarLogo").src = dataUrl;
+      $("pvLogo").src = dataUrl;
+      $("topbarLogo").style.display = "";
+      $("pvLogo").style.display = "";
+    } else {
+      $("topbarLogo").style.display = "none";
+      $("pvLogo").style.display = "none";
+    }
+  }
+
+  var settingsToggleBtn = $("settingsToggleBtn");
+  var settingsPanel = $("settingsPanel");
+  settingsToggleBtn.addEventListener("click", function () {
+    var open = settingsPanel.classList.toggle("open");
+    settingsToggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  (function setupLogoDrop() {
+    var drop = $("firmLogoDrop"), input = $("firmLogoInput"), thumb = $("firmLogoThumb"), resetBtn = $("firmLogoReset");
+    function apply(dataUrl, persist) {
+      loadImgMeta(dataUrl).then(function (meta) {
+        if (!meta) return;
+        if (persist) lsSetKey("ms_firmLogo", dataUrl);
+        thumb.src = dataUrl;
+        setLogo(meta, dataUrl);
+      });
+    }
+    drop.addEventListener("click", function (e) { if (e.target === resetBtn) return; input.click(); });
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () { apply(reader.result, true); };
+      reader.readAsDataURL(file);
+    });
+    resetBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      input.value = "";
+      try { localStorage.removeItem("ms_firmLogo"); } catch (err) { /* ignore */ }
+      resolveDefaultLogo().then(function (dataUrl) {
+        if (!dataUrl) return;
+        thumb.src = dataUrl;
+        apply(dataUrl, false);
+      });
+    });
+    ["dragover"].forEach(function (evt) { drop.addEventListener(evt, function (e) { e.preventDefault(); drop.style.borderColor = "var(--blue)"; }); });
+    ["dragleave", "drop"].forEach(function (evt) { drop.addEventListener(evt, function (e) { e.preventDefault(); drop.style.borderColor = ""; }); });
+    drop.addEventListener("drop", function (e) {
+      var file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () { apply(reader.result, true); };
+      reader.readAsDataURL(file);
+    });
+
+    var stored = lsGetKey("ms_firmLogo", null);
+    (stored ? Promise.resolve(stored) : resolveDefaultLogo()).then(function (dataUrl) {
+      if (!dataUrl) return;
+      thumb.src = dataUrl;
+      apply(dataUrl, false);
+    });
+  })();
 
   var COLOR_INK = [26, 34, 51];
   var COLOR_ORANGE = [254, 106, 0];
@@ -840,7 +961,7 @@ fieldset { border: none; padding: 0; margin: 0; }
         if (logoMeta) {
           try {
             var arLogo = logoMeta.h / logoMeta.w;
-            var lwLogo = 20, lhLogo = lwLogo * arLogo;
+            var lwLogo = 30, lhLogo = lwLogo * arLogo;
             doc.addImage(logoMeta.dataUrl, "PNG", marginL, y, lwLogo, lhLogo);
           } catch (e) { /* ignore */ }
         }
@@ -921,7 +1042,7 @@ fieldset { border: none; padding: 0; margin: 0; }
     if (logoMeta) {
       try {
         var ar = logoMeta.h / logoMeta.w;
-        var lw = 30, lh = lw * ar;
+        var lw = 42, lh = lw * ar;
         doc.addImage(logoMeta.dataUrl, "PNG", marginL, y, lw, lh);
       } catch (e) { /* ignore */ }
     }
@@ -943,7 +1064,7 @@ fieldset { border: none; padding: 0; margin: 0; }
       doc.text(line, marginL + contentW, titleTopY + idx * titleLineH, { align: "right" });
     });
 
-    y = Math.max(y + 22, titleTopY + titleBlockH) + 6;
+    y = Math.max(y + 24, titleTopY + titleBlockH) + 6;
 
     var dateLong = fmtDateLong($("quoteDate").value);
     doc.setFont("helvetica", "normal");

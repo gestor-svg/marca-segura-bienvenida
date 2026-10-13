@@ -122,6 +122,9 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--b
 .checkbox-field input[type="checkbox"] { width: 16px; height: 16px; }
 .checkbox-field label { font-size: 13px; font-weight: 600; color: var(--ink-muted); }
 
+.row-comment-toggle-field { flex-direction: column; gap: 8px; border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 2px; }
+.row-comment-toggle-field .comment-text { min-height: 60px; font-size: 13px; }
+
 fieldset { border: none; padding: 0; margin: 0; }
 
 .section-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; background: none; border: none; padding: 0; margin: 0 0 10px; cursor: pointer; }
@@ -206,6 +209,7 @@ fieldset { border: none; padding: 0; margin: 0; }
 .pv-item-head .qty { font-size: 11px; color: #5b6478; }
 .pv-lbl { font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #8791a5; margin: 2.5mm 0 1.5mm; }
 .pv-item ul { margin: 0; padding-left: 5mm; font-size: 12px; line-height: 1.45; color: #1a2233; }
+.pv-comentario-clase { margin: 0; font-size: 11.5px; line-height: 1.5; color: #1a2233; font-style: italic; background: #fff; border: 0.3mm solid #d8dce6; border-radius: 1.5mm; padding: 2.5mm 3mm; }
 .pv-tiempo-val { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 13px; color: #fe6a00; }
 
 .pv-etapas-intro { font-size: 11.5px; line-height: 1.6; color: #1a2233; margin: 3mm 0 7mm; }
@@ -701,7 +705,14 @@ fieldset { border: none; padding: 0; margin: 0; }
         '</div>' +
         '<button type="button" class="reset-cost-btn" title="Volver a la tarifa del catálogo">↺ Catálogo</button>' +
       '</div>' +
-      '<div class="row-warn"></div>';
+      '<div class="row-warn"></div>' +
+      '<div class="row-comment-toggle-field" style="display:none;">' +
+        '<div class="checkbox-field">' +
+          '<input type="checkbox" class="comment-toggle" />' +
+          '<label>Agregar comentario sobre la clase cotizada</label>' +
+        '</div>' +
+        '<textarea class="comment-text" style="display:none;" placeholder="Explica aquí por qué se eligió esta clase..."></textarea>' +
+      '</div>';
 
     $("tramiteRows").appendChild(el);
 
@@ -713,6 +724,8 @@ fieldset { border: none; padding: 0; margin: 0; }
       clases: 1,
       unitCost: 0,
       costoManual: false,
+      comentarioEnabled: false,
+      comentarioTexto: "",
       costInput: el.querySelector(".cost-input"),
       manualTag: el.querySelector(".cost-manual-tag"),
       warnEl: el.querySelector(".row-warn")
@@ -726,10 +739,22 @@ fieldset { border: none; padding: 0; margin: 0; }
     var costInput = row.costInput;
     var resetBtn = el.querySelector(".reset-cost-btn");
     var removeBtn = el.querySelector(".remove-row-btn");
+    var commentToggleField = el.querySelector(".row-comment-toggle-field");
+    var commentToggle = el.querySelector(".comment-toggle");
+    var commentText = el.querySelector(".comment-text");
 
     function syncClasesVisibility() {
       var item = getItem(row.tramiteId);
       qtyClasesField.style.display = item.escalaPorClase ? "flex" : "none";
+    }
+    function syncCommentVisibility() {
+      var showToggle = row.tramiteId === "registro_regular";
+      commentToggleField.style.display = showToggle ? "flex" : "none";
+      if (!showToggle) {
+        row.comentarioEnabled = false;
+        commentToggle.checked = false;
+      }
+      commentText.style.display = (showToggle && row.comentarioEnabled) ? "block" : "none";
     }
     function updateWarn() {
       row.warnEl.innerHTML = row.unitCost > 0 ? "" : '<span class="no-price-warn">Sin tarifa — defínela aquí o en «Configurar catálogo»</span>';
@@ -738,9 +763,19 @@ fieldset { border: none; padding: 0; margin: 0; }
     select.addEventListener("change", function () {
       row.tramiteId = select.value;
       syncClasesVisibility();
+      syncCommentVisibility();
       row.costoManual = false;
       recomputeRowUnitCost(row);
       updateWarn();
+      renderPreview();
+    });
+    commentToggle.addEventListener("change", function () {
+      row.comentarioEnabled = commentToggle.checked;
+      syncCommentVisibility();
+      renderPreview();
+    });
+    commentText.addEventListener("input", function () {
+      row.comentarioTexto = commentText.value;
       renderPreview();
     });
     cantidadInput.addEventListener("input", function () {
@@ -775,6 +810,7 @@ fieldset { border: none; padding: 0; margin: 0; }
     });
 
     syncClasesVisibility();
+    syncCommentVisibility();
     recomputeRowUnitCost(row);
     updateWarn();
     renderPreview();
@@ -890,6 +926,13 @@ fieldset { border: none; padding: 0; margin: 0; }
           (item.notaCosto ? '<div class="pv-item-nota">' + escapeHtml(item.notaCosto) + '</div>' : "")
         : '<div class="pv-cost-line"><span class="no-price-warn">Costo por definir</span></div>';
 
+      var comentarioClaseHtml = "";
+      if (row.comentarioEnabled && row.comentarioTexto.trim()) {
+        comentarioClaseHtml =
+          '<div class="pv-lbl">Comentario sobre la clase cotizada</div>' +
+          '<p class="pv-comentario-clase">' + escapeHtml(row.comentarioTexto.trim()).replace(/\n/g, "<br>") + '</p>';
+      }
+
       itemsHtml +=
         '<div class="pv-item">' +
           '<div class="pv-item-head"><span class="name">' + escapeHtml(item.nombreDoc) + '</span><span class="qty">' + qtyTxt + '</span></div>' +
@@ -897,6 +940,7 @@ fieldset { border: none; padding: 0; margin: 0; }
           '<div class="pv-lbl">Tiempo estimado</div><div class="pv-tiempo-val">' + escapeHtml(item.tiempo) + '</div>' +
           timelineHtml +
           '<div class="pv-lbl">Requisitos</div><ul>' + requisitosHtml + '</ul>' +
+          comentarioClaseHtml +
           '<div class="pv-item-cost">' + costHtml + '</div>' +
         '</div>';
     });

@@ -689,20 +689,20 @@ export function buildHoja3(data, assets) {
     <div class="service-desc">
       No tiene que preocuparse por recordar la fecha: nosotros monitoreamos su expediente y le avisamos
       con tiempo suficiente para presentar su Declaración de Uso ante el IMPI, durante los tres años que dura
-      la cobertura. Este servicio normalmente cuesta $3,000 + IVA — pero <strong>por ser cliente Marca Segura,
-      hoy lo obtiene en $1,000 MXN</strong> por los tres años.
+      la cobertura. Este servicio normalmente cuesta $5,000 + IVA — pero <strong>por ser cliente Marca Segura,
+      hoy lo obtiene en $2,000 MXN</strong> por los tres años.
     </div>
     <div class="service-guarantee">Garantía 100% de satisfacción: si no le avisamos a tiempo, nosotros pagamos el trámite.</div>
     <div class="price-row">
       <div class="price-col">
         <div class="price-label">Precio público</div>
-        <div class="price-old">$3,000 + IVA</div>
+        <div class="price-old">$5,000 + IVA</div>
       </div>
       <div class="price-col">
         <div class="price-label highlight">Su precio, cliente Marca Segura</div>
-        <div class="price-new">$1,000 MXN</div>
+        <div class="price-new">$2,000 MXN</div>
       </div>
-      <span class="price-gift">LE REGALAMOS $2,000</span>
+      <span class="price-gift">LE REGALAMOS $3,000</span>
     </div>
     <div class="price-window">Precio especial de cliente Marca Segura — válido solo si contrata dentro de los primeros 30 días tras recibir su título.</div>
   </div>

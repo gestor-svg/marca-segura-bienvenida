@@ -2,8 +2,8 @@
  * MARCA SEGURA — Plantillas de las 3 hojas de bienvenida
  * Generadas a partir del diseño aprobado (paleta, tipografía y layout finales).
  * Cada función recibe `data` (campos extraídos/derivados) y `assets` (imágenes
- * en base64: logo de Marca Segura, logo del cliente si existe, QR de referido)
- * y regresa un documento HTML completo listo para renderizar con html2canvas.
+ * en base64: logo de Marca Segura, logo del cliente si existe) y regresa un
+ * documento HTML completo listo para renderizar con html2canvas.
  */
 
 const SHARED_STYLE = `<style>
@@ -99,7 +99,7 @@ const SHARED_STYLE = `<style>
     font-weight:600;
     font-size:52px;
     text-align:center;
-    line-height:1.05;
+    line-height:1.2;
     margin-top:12px;
     max-width:600px;
     color:var(--blue-ink);
@@ -163,13 +163,12 @@ const SHARED_STYLE = `<style>
   }
   .titular-nombre.multi{
     font-size:15px;
-    line-height:1.7;
+    line-height:1.55;
   }
 
   .p1-footer{
-    position:absolute;
-    bottom:44px;
-    left:0; right:0;
+    margin-top:auto;
+    padding-top:32px;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -189,6 +188,7 @@ const SHARED_STYLE = `<style>
 
   /* ---------- PAGE 2 & 3 shared ---------- */
   .p2, .p3{ padding:50px 68px; }
+  .p3{ display:flex; flex-direction:column; }
   .p-header{
     display:flex;
     justify-content:space-between;
@@ -296,17 +296,6 @@ const SHARED_STYLE = `<style>
     border-color:var(--orange);
     background:#FFF8F0;
   }
-  .service-num{
-    position:absolute;
-    top:-13px;
-    left:20px;
-    background:var(--orange);
-    color:white;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:10px;
-    letter-spacing:1px;
-    padding:3px 10px;
-  }
   .service-title{
     font-family:'Fraunces', serif;
     font-size:19px;
@@ -398,38 +387,6 @@ const SHARED_STYLE = `<style>
     font-style:italic;
   }
 
-  .qr-row{
-    margin-top:18px;
-    display:flex;
-    align-items:center;
-  }
-  .qr-row img{
-    width:110px;
-    height:110px;
-    border:1.5px solid var(--orange);
-    padding:6px;
-    background:white;
-    margin-right:20px;
-  }
-  .qr-caption-title{
-    font-family:'Fraunces', serif;
-    font-size:15px;
-    font-weight:600;
-    color:var(--blue-ink);
-    display:flex;
-    align-items:center;
-  }
-  .qr-caption-icon{
-    width:26px;
-    height:26px;
-    min-width:26px;
-    border-radius:50%;
-    background:var(--orange);
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    margin-right:8px;
-  }
   .next-page-block{
     margin-top:22px;
     background:var(--blue-ink);
@@ -439,6 +396,10 @@ const SHARED_STYLE = `<style>
     align-items:center;
     justify-content:center;
     text-align:center;
+  }
+  .next-page-block.standalone{
+    margin-top:auto;
+    margin-bottom:40px;
   }
   .next-page-icon{
     width:40px;
@@ -465,15 +426,6 @@ const SHARED_STYLE = `<style>
     opacity:0.9;
     margin-top:2px;
   }
-  .qr-caption-icon svg{ width:15px; height:15px; }
-  .qr-caption-desc{
-    font-size:12px;
-    color:var(--blue-deep);
-    margin-top:4px;
-    max-width:340px;
-    line-height:1.5;
-  }
-
   .p-footer{
     position:absolute;
     bottom:32px;
@@ -574,26 +526,25 @@ const ICON_CALENDAR = `<svg viewBox="0 0 24 24" fill="none" stroke="white" strok
 const ICON_LICENSE = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 15l2 2 4-4"/></svg>`;
 const ICON_PERCENT = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`;
 const ICON_SHIELD = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3Z"/><path d="M9 12l2 2 4-4"/></svg>`;
-const ICON_GIFT = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>`;
 const ICON_NEXT_PAGE = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>`;
 
 export function buildHoja1(data, assets) {
   const titularLabel = data.titulares.length > 1 ? 'Titulares' : 'Titular';
   const titularClass = data.titulares.length > 1 ? 'titular-nombre multi' : 'titular-nombre';
-  const titularDisplay = data.titulares.length > 2
-    ? data.titulares.map(esc).reduce((acc, name, i) => {
-        if (i === 0) return name;
-        return acc + (i % 2 === 0 ? '<br>' : ' · ') + name;
-      }, '')
-    : data.titulares.map(esc).join(' · ');
+  const titularDisplay = data.titulares.map(esc).join(data.titulares.length > 1 ? '<br>' : '');
+
+  // Nombres de marca largos se encogen para no desbordar la hoja ni pegarse con el pie de página.
+  const marcaLen = (data.marca || '').length;
+  const marcaFontSize = marcaLen > 45 ? 32 : marcaLen > 30 ? 40 : 52;
+  const marcaStyle = `font-size:${marcaFontSize}px;`;
 
   const marcaBlock = assets.clientLogoBase64
     ? `<div class="client-logo-slot"><img src="data:image/png;base64,${assets.clientLogoBase64}" alt="Logo del cliente"></div>
        <div class="eyebrow">Marca registrada</div>
-       <div class="marca-nombre">${esc(data.marca)}</div>`
+       <div class="marca-nombre" style="${marcaStyle}">${esc(data.marca)}</div>`
     : `<div class="no-logo-slot">
          <div class="eyebrow" style="margin-top:0;">Marca registrada</div>
-         <div class="marca-nombre" style="margin-top:14px;">${esc(data.marca)}</div>
+         <div class="marca-nombre" style="margin-top:14px;${marcaStyle}">${esc(data.marca)}</div>
        </div>`;
 
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
@@ -729,12 +680,11 @@ export function buildHoja3(data, assets) {
   <div class="p-header">
     <div>
       <div class="p-sub">Para usted, como cliente Marca Segura</div>
-      <div class="p-title">Dos formas de aprovechar hoy</div>
+      <div class="p-title">Aproveche hoy</div>
     </div>
     <img class="p-header-logo" src="data:image/png;base64,${assets.msLogoBase64}" alt="Marca Segura">
   </div>
   <div class="service-card featured">
-    <div class="service-num">OPCIÓN 1</div>
     <div class="service-title">Monitoreo de Declaración de Uso</div>
     <div class="service-desc">
       No tiene que preocuparse por recordar la fecha: nosotros monitoreamos su expediente y le avisamos
@@ -756,23 +706,7 @@ export function buildHoja3(data, assets) {
     </div>
     <div class="price-window">Precio especial de cliente Marca Segura — válido solo si contrata dentro de los primeros 30 días tras recibir su título.</div>
   </div>
-  <div class="service-card">
-    <div class="service-num">OPCIÓN 2</div>
-    <div class="service-title">Ayúdele a alguien más a tener su marca</div>
-    <div class="service-desc">
-      Comparta este código con alguien que necesite registrar su marca. Al escanearlo, se abre un
-      WhatsApp directo con nosotros — y en cuanto esa persona haga su trámite, <strong>recibe $1,000 pesos
-      de descuento</strong>, cortesía suya.
-    </div>
-    <div class="qr-row">
-      <img src="data:image/png;base64,${assets.qrBase64}" alt="QR de referido">
-      <div>
-        <div class="qr-caption-title"><span class="qr-caption-icon">${ICON_GIFT}</span>Escanee y comparta</div>
-        <div class="qr-caption-desc">Ya tiene su marca — ayúdele a alguien más a tenerla. Comparta este código y su referido tendrá $1,000 pesos de descuento cuando haga su trámite con nosotros.</div>
-      </div>
-    </div>
-  </div>
-  <div class="next-page-block">
+  <div class="next-page-block standalone">
     <div class="next-page-icon">${ICON_NEXT_PAGE}</div>
     <div>
       <div class="next-page-title">En la siguiente página</div>

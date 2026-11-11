@@ -40,9 +40,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Nunca cachear llamadas a tu Apps Script de referidos ni al PDF que suba el usuario
-  if (event.request.url.includes('script.google.com')) return;
-
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;

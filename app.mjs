@@ -5,12 +5,12 @@
  *  1. El usuario sube el PDF del título del IMPI (cédula + título).
  *  2. Se extraen los datos automáticamente (extract.mjs).
  *  3. Se muestran en un formulario editable (por si algo hay que corregir).
- *  4. Al generar: se arma el logo del cliente (si es mixta), el QR de
- *     referido, se renderizan las 3 hojas con html2canvas, y se fusionan
- *     con el PDF original usando pdf-lib. Se descarga el resultado.
+ *  4. Al generar: se arma el logo del cliente (si es mixta), se renderizan
+ *     las 3 hojas con html2canvas, y se fusionan con el PDF original usando
+ *     pdf-lib. Se descarga el resultado.
  *
  * Dependencias externas (cargadas por CDN en index.html):
- *   pdfjsLib, html2canvas, PDFLib, QRCode
+ *   pdfjsLib, html2canvas, PDFLib
  */
 
 import { extractImpiTitulo } from './extract.mjs';
@@ -18,11 +18,6 @@ import { extractClientLogoDataUrl } from './extractLogo.mjs';
 import { buildHoja1, buildHoja2, buildHoja3 } from './templates.mjs';
 import { parseSpanishDate, formatLargo, ventanaDeclaracionUso, formatMesAnio } from './date-utils.mjs';
 import { MS_LOGO_BASE64 } from './assets.mjs';
-
-// ====== CONFIGURACIÓN — AJUSTA ESTOS DOS VALORES ======
-// URL de tu Apps Script Web App (ver referidos_qr.gs) — termina en /exec
-const WEBAPP_URL = localStorage.getItem('ms_webapp_url') || 'https://script.google.com/macros/s/REEMPLAZAR/exec';
-// =======================================================
 
 const state = {
   originalBytes: null,
@@ -101,17 +96,6 @@ function populateForm(data, logoDataUrl) {
     preview.style.display = 'none';
     $('logoPreviewLabel').textContent = 'No se detectó logo del cliente (o la marca es nominativa). Puedes subir uno manualmente abajo si aplica.';
   }
-}
-
-async function generateQrDataUrl(marca, expediente) {
-  const webappUrl = $('webappUrlInput').value.trim() || WEBAPP_URL;
-  const params = new URLSearchParams({ marca, exp: expediente });
-  const url = `${webappUrl}?${params.toString()}`;
-  return new Promise((resolve, reject) => {
-    window.QRCode.toDataURL(url, { width: 400, margin: 1, color: { dark: '#0E51C4', light: '#FFFFFF' } }, (err, dataUrl) => {
-      if (err) reject(err); else resolve(dataUrl);
-    });
-  });
 }
 
 async function renderHojaToCanvas(html) {
@@ -197,23 +181,19 @@ async function generateAndDownload() {
       declaracionVenceStr: ventana ? formatMesAnio(ventana.limite) : '',
     };
 
-    await setStatus('Paso 1 de 5 — Generando código QR de referido…');
-    const qrDataUrl = await generateQrDataUrl(data.marca, data.expediente);
-
     const assets = {
       msLogoBase64: MS_LOGO_BASE64,
-      qrBase64: dataUrlToBase64(qrDataUrl),
       clientLogoBase64: (tipo === 'mixta' && clientLogoDataUrl) ? dataUrlToBase64(clientLogoDataUrl) : null,
     };
 
-    await setStatus('Paso 2 de 5 — Dibujando hoja 1 de 3 (portada)…');
+    await setStatus('Paso 1 de 4 — Dibujando hoja 1 de 3 (portada)…');
     const canvas1 = await renderHojaToCanvas(buildHoja1(templateData, assets));
-    await setStatus('Paso 3 de 5 — Dibujando hoja 2 de 3 (datos)…');
+    await setStatus('Paso 2 de 4 — Dibujando hoja 2 de 3 (datos)…');
     const canvas2 = await renderHojaToCanvas(buildHoja2(templateData, assets));
-    await setStatus('Paso 4 de 5 — Dibujando hoja 3 de 3 (opciones)…');
+    await setStatus('Paso 3 de 4 — Dibujando hoja 3 de 3 (opciones)…');
     const canvas3 = await renderHojaToCanvas(buildHoja3(templateData, assets));
 
-    await setStatus('Paso 5 de 5 — Fusionando con el título original…');
+    await setStatus('Paso 4 de 4 — Fusionando con el título original…');
     const { PDFDocument } = window.PDFLib;
     const merged = await PDFDocument.create();
 
@@ -287,10 +267,4 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.target.files[0]) handleFileUpload(e.target.files[0]);
   });
   $('generateBtn').addEventListener('click', generateAndDownload);
-
-  const webappInput = $('webappUrlInput');
-  webappInput.value = WEBAPP_URL;
-  webappInput.addEventListener('change', () => {
-    localStorage.setItem('ms_webapp_url', webappInput.value.trim());
-  });
 });
